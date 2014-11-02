@@ -20,4 +20,25 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  activerecord:
+    attributes:
+      user:
+        name: "name"
+        email: "email address"
+        password: "password"
+        password_confirmation: "confirmation"
+    errors:
+      models:
+        user:
+          attributes:
+            name:
+              blank: "is required"
+            email:
+              blank: "is required"
+            password:
+              blank: "is required"
+              too_short: "must be at least %{count} characters long"
+            password_confirmation:
+              blank: "is required"
+              confirmation: "does not match the %{attribute}"
+

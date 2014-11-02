@@ -31,6 +31,11 @@ describe User do
     it { is_expected.to be_invalid }
   end
 
+  context "when email is too long" do
+    before { user.email = "#{'a' * 39}@example.com" }
+    it { is_expected.to be_invalid}
+  end
+
   context "when email is already taken" do
     let(:user_with_same_email) { user.dup }
     before do
