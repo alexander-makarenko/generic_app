@@ -35,8 +35,8 @@ $green-light: #ccf5cc;
 $green: #33ad33;
 $green-dark: #0c0;
 
-$blue: #def9ff;
-$blue-dark: #0cf;
+$blue: #ceefff;
+$blue-dark: #33adff;
 
 /* universal */
 
@@ -55,15 +55,41 @@ html {
   border-radius: 5px;
 }
 
+header {
+  margin-bottom: 10px;
+  padding: 20px 40px;
+  background-color: $white;
+  border: 1px solid $gray-light;
+  border-radius: 5px;
+}
+
 h1 {
-  font-size: 2em;
-  margin: 20px 0;
-  padding-bottom: 10px;
+  font-size: 2.2em;
+  margin: 25px 0 40px;
   @extend .center;
+}
+
+p {
+  margin: 5px 0;
+  label {
+    font-weight: normal;
+  }
+}
+
+a {
+  text-decoration: none;
 }
 
 .center {
   text-align: center;
+}
+
+.right {
+  text-align: right;
+}
+
+nav ul {
+  list-style: none;
 }
 
 .debug_dump {
@@ -83,7 +109,6 @@ form {
 }
 
 label {
-  display: block;
   font-weight: bold;
 }
 
@@ -91,15 +116,20 @@ label {
   border-color: $red-dark;
 }
 
+.control-group {
+  margin-bottom: 15px;
+}
+
 .textfield {
-  width: 250px;
-  margin: 6px 0 16px;
-  padding: 6px;  
+  display: block;
+  width: 250px;  
+  padding: 6px;
+  margin: 5px 0 8px;
   border: 2px solid $gray-light;
   border-radius: 3px;
   transition: border-color 0.2s;
   &:hover, &:focus {
-    border-color: $gray;
+    border-color: $blue-dark;
   }
 }
 
@@ -157,7 +187,7 @@ label {
     @extend .center;
     font-weight: bold;
     line-height: 2em;
-    margin-bottom: 5px;
+    margin: 0 0 5px;
     background-color: $red;
     border-bottom: 1px solid $red-dark;
     border-top-left-radius:5px;

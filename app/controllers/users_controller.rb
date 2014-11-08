@@ -8,9 +8,10 @@ class UsersController < ApplicationController
 
     if @user.save
       flash[:success] = 'Your account was successfully created.'
-      redirect_to signup_path
+      sign_in(@user)
+      redirect_to root_path
     else
-      render 'new'
+      render :new
     end
   end
 

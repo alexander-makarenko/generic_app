@@ -7,17 +7,18 @@
       - @user.errors.full_messages.each do |error|
         %li #{error}
 = form_for @user do |f|
-  %div
+  %div.control-group
     = f.label :name, "Name"
     = f.text_field :name, class: "textfield"
-  %div
+  %div.control-group
     = f.label :email, "Email"
     = f.text_field :email, class: "textfield"
-  %div
+  %div.control-group
     = f.label :password, "Password"
     = f.password_field :password, class: "textfield"
-  %div
+  %div.control-group
     = f.label :password_confirmation, "Confirm password"
     = f.password_field :password_confirmation, class: "textfield"
   .center
     = f.submit "Create my account", class: "btn"
+%p.center Already have an account? #{link_to('Sign in', signin_path)} here

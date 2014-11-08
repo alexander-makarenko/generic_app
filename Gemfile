@@ -19,6 +19,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'guard-rspec'
   gem 'spring-commands-rspec'
+  gem 'show_me_the_cookies'
 end
 
 group :test do

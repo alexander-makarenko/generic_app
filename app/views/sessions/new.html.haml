@@ -1,0 +1,15 @@
+%h1 Sign in
+
+= form_tag :sessions do
+  %div.control-group
+    = label_tag :email
+    = text_field_tag :email, nil, class: "textfield"
+  %div.control-group
+    = label_tag :password
+    = password_field_tag :password, nil, class: "textfield"
+    %p.right
+      = label_tag :keep_signed_in, "Keep me signed in"
+      = check_box_tag :keep_signed_in, "yes", false
+  .center
+    = submit_tag "Sign in", class: "btn"
+%p.center Don't have an account? #{link_to('Sign up', signup_path)} now

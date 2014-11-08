@@ -13,6 +13,7 @@ describe User do
   it { is_expected.to respond_to :password }
   it { is_expected.to respond_to :password_confirmation }
   it { is_expected.to respond_to :authenticate }
+  it { is_expected.to respond_to :auth_digest }
 
   it { is_expected.to be_valid }
 
@@ -118,5 +119,10 @@ describe User do
         expect(found_user.authenticate(user.password)).to eq(user)
       end
     end
+  end
+
+  describe "auth digest" do
+    before { user.save }
+    specify { expect(user.reload.auth_digest).to_not be_blank }
   end
 end

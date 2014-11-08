@@ -9,18 +9,15 @@ feature "Signup" do
   end
 
   scenario "submit invalid data" do
-    expect { click_button 'Create my account' }.to_not change(User, :count)
-    expect(page).to have_content('error')
+    expect { fail_to_sign_up }.to_not change(User, :count)
+    expect(page).to have_selector('h1', text: 'Sign up')
+    expect(page).to have_content('error')    
   end
 
   scenario "submit valid data" do
-    expect do
-      fill_in 'Name', with: user.name
-      fill_in 'Email', with: user.email
-      fill_in 'Password', with: user.password
-      fill_in 'Confirm password', with: user.password_confirmation
-      click_button 'Create my account'
-    end.to change(User, :count).by(1)
-    expect(page).to have_content('successfully created')
+    expect { sign_up(user) }.to change(User, :count).by(1)
+    expect(current_path).to eq(root_path)
+    expect(page).to have_selector('div.flash-success', text: 'successfully created')
+    expect(page).to have_link('Sign out')
   end
 end
