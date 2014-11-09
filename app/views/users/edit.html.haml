@@ -1,2 +1,15 @@
-%h1 Users#edit
-%p Find me in app/views/users/edit.html.haml
+%h1 Settings
+
+= render 'validation_errors', user: @user
+= form_for @user do |f|
+  %div.control-group
+    = f.label :name, "Name"
+    = f.text_field :name, class: "textfield"
+  %div.control-group
+    = f.label :email, "Email"
+    = f.text_field :email, class: "textfield"
+  %div.control-group
+    = f.label :password, "Password"
+    = f.password_field :password, class: "textfield"
+  .center
+    = f.submit "Save changes", class: "btn"

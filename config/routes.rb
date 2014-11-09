@@ -2,8 +2,9 @@ Rails.application.routes.draw do
 
   root 'static_pages#home'
 
-  resources :users, only: [:create]
+  resources :users, only: [:create, :update]
   get 'signup' => 'users#new'
+  get 'users/:id/settings' => 'users#edit', as: 'settings'
 
   get 'signin' => 'sessions#new'
   post 'sessions' => 'sessions#create'

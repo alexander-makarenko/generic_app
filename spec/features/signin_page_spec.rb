@@ -18,7 +18,7 @@ feature "Signin" do
   end
 
   scenario "submit valid data" do
-    sign_in(user)
+    sign_in_as(user)
     
     expect(page).to_not have_link('Sign in')
     expect(page).to have_link('Sign out')
@@ -30,7 +30,7 @@ feature "Signin" do
 
     context "when checked" do
       background do
-        sign_in(user, keep_signed_in: true)
+        sign_in_as(user, keep_signed_in: true)
         expire_session_cookies
         visit root_path
       end
@@ -41,7 +41,7 @@ feature "Signin" do
 
     context "when not checked" do
       background do
-        sign_in(user)
+        sign_in_as(user)
         expire_session_cookies
         visit root_path
       end
@@ -52,7 +52,7 @@ feature "Signin" do
   end
 
   scenario "sign out" do
-    sign_in(user)
+    sign_in_as(user)
     click_link('Sign out')
     expect(page).to have_link('Sign in')
     expect(current_path).to eq(root_path)

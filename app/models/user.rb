@@ -5,15 +5,16 @@ class User < ActiveRecord::Base
 
   EMAIL_REGEX = /\A[\w+-]+(\.[\w-]+)*@[a-z\d]+(\.[a-z\d-]+)*(\.[a-z]{2,4})\z/i
 
-  has_secure_password 
+  has_secure_password
 
   validates :name,     presence: true,
                        length: { maximum: 50 }
   validates :email,    presence: true,
                        length: { maximum: 50 },
-                       uniqueness: { case_sensitive: false },
-                       format: { with: EMAIL_REGEX }
-  validates :password, length: { in: 6..30 }
+                       uniqueness: { case_sensitive: false }
+  validates :email,    format: { with: EMAIL_REGEX }, unless: -> { email.blank? }
+  validates :password, presence: true, on: :update
+  validates :password, length: { in: 6..30 }, unless: -> { password.blank? }
 
   class << self
     def new_random_token

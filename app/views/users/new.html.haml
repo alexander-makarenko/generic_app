@@ -1,11 +1,6 @@
 %h1 Sign up
 
-- if @user.errors.any?
-  %div.validation-errors
-    %p Oops! There #{ @user.errors.count == 1 ? 'is an error' : 'are ' + pluralize(@user.errors.count, 'error') }:
-    %ul
-      - @user.errors.full_messages.each do |error|
-        %li #{error}
+= render 'validation_errors', user: @user
 = form_for @user do |f|
   %div.control-group
     = f.label :name, "Name"
