@@ -14,3 +14,18 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
+
+$(document).ready(function() {
+
+  function makeClosable() {
+    $('.closable').append('<div class="close-button">&times</div>');
+    $('.close-button').click(function() {
+      $(this).parent('.closable').fadeTo(200, .1).slideUp(200, function() {
+        $(this).hide();
+      });
+    });
+  } // end makeClosable
+
+  makeClosable();
+
+}); // end ready
