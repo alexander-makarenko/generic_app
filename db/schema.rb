@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141108121845) do
+ActiveRecord::Schema.define(version: 20141123121457) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,10 @@ ActiveRecord::Schema.define(version: 20141108121845) do
     t.datetime "updated_at"
     t.string   "password_digest"
     t.string   "auth_digest"
+    t.string   "activation_digest"
+    t.boolean  "activated",                default: false
+    t.datetime "activated_at"
+    t.datetime "activation_email_sent_at"
   end
 
   add_index "users", ["auth_digest"], name: "index_users_on_auth_digest", using: :btree

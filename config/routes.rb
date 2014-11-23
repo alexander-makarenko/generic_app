@@ -10,6 +10,10 @@ Rails.application.routes.draw do
   post 'sessions' => 'sessions#create'
   delete 'signout' => 'sessions#destroy'
 
+  get 'activate' => 'account_activations#edit', as: 'edit_account_activation'
+  get 'resend-activation' => 'account_activations#new', as: 'new_account_activation'
+  post 'resend-activation' => 'account_activations#create', as: 'account_activations'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

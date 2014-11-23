@@ -1,0 +1,13 @@
+%h1 Request activation email
+
+%p.center Enter your email address and password below:
+
+= form_tag :account_activations do
+  %div.control-group
+    = label_tag :email
+    = text_field_tag :email, nil, class: "textfield"
+  %div.control-group
+    = label_tag :password
+    = password_field_tag :password, nil, class: "textfield"
+  .center
+    = submit_tag "Submit", class: "btn"

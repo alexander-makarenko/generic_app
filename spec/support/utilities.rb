@@ -25,10 +25,21 @@ def fail_to_sign_in
   click_button 'Sign in'
 end
 
-def sign_in_as(user, opts={})
+def sign_in_as(user, options={})
   fill_in 'Email',    with: user.email.upcase
   fill_in 'Password', with: user.password
-  check('Keep me signed in') if opts[:keep_signed_in]
+  
+  # 'Keep me signed in' is not checked by default
+  if options.fetch(:keep_signed_in, false)
+    check('Keep me signed in')
+  end
+
+  # user is activated by default
+  if options.fetch(:activated, true)
+    user.attributes = { activated: true, activated_at: Time.zone.now }
+    user.save(validate: false)
+  end
+
   click_button 'Sign in'
 end
 
@@ -44,4 +55,24 @@ def update_profile_of(user, opts={})
   fill_in 'Email',    with: new_attrs[:email]
   fill_in 'Password', with: new_attrs[:password]
   click_button 'Save changes'
+end
+
+def deliveries
+  ActionMailer::Base.deliveries
+end
+
+def clear_deliveries
+  deliveries.clear
+end
+
+def last_email
+  deliveries.last
+end
+
+def activation_link
+  last_email.body.match(/href=(?:"|')(\S+activate\S+)(?:"|')/i)[1]
+end
+
+def activation_link_with_incorrect_token
+  activation_link.gsub(/(token=)(.+)/, '\\1incorrect')
 end

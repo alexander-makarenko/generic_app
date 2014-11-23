@@ -7,8 +7,8 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      flash[:success] = 'Your account was successfully created.'
-      sign_in(@user)
+      flash[:notice] = 'An activation email has been sent to your email address. Click the link in the message to activate your account.'
+      @user.send_activation_link
       redirect_to root_path
     else
       render :new
