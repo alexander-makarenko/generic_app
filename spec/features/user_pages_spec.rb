@@ -1,36 +1,37 @@
 require 'rails_helper'
 
-feature "Settings page" do
+feature "Update profile" do
   let(:user) { FactoryGirl.create(:user) }
   background { visit settings_path(user) }
   
-  scenario "visit the page" do
+  scenario "page" do
     expect(page).to have_selector('h1', text: 'Settings')
   end
 
-  scenario "submit invalid data" do
-    fail_to_update_profile
+  scenario "with invalid data" do
+    update_profile_of(user, with: {
+      name: '',
+      email: 'invalid' })
 
     expect(page).to have_selector('h1', text: 'Settings')
     expect(page).to have_content('error')
   end
 
-  scenario "submit valid data but wrong password" do
+  scenario "with valid data, providing wrong password" do
     update_profile_of(user, with: {
       name:     'New name',
       email:    'new_email@example.com',
-      password: 'notright'
-    })
+      password: 'notright' })
 
+    expect(page).to have_selector('h1', text: 'Settings')
     expect(page).to have_selector('div.flash-error', text: 'Wrong password')
   end
 
-  scenario "submit valid data and correct password" do
+  scenario "with valid data and correct password" do
     update_profile_of(user, with: {
       name:     'New name',
       email:    'new_email@example.com',
-      password: user.password
-    })
+      password: user.password })
     
     expect(current_path).to eq(root_path)
     expect(page).to have_selector('div.flash-success', text: 'successfully updated')

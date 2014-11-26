@@ -12,7 +12,7 @@ RSpec.describe UserMailer, :type => :mailer do
     end
 
     it "renders the body" do
-      expect(mail.body.encoded).to match(/activate\?(email=.+)&(token=.+)/)
+      expect(mail.body.encoded).to match(/activate\/(.+)\?e=(.+)/i)
     end
   end
 

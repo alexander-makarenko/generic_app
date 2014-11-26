@@ -27,6 +27,10 @@ class User < ActiveRecord::Base
     self.update_attribute(:activation_email_sent_at, Time.zone.now)
   end
 
+  def activated_in_time?
+    self.activation_email_sent_at > 2.days.ago
+  end
+
   class << self
     def new_token
       SecureRandom.urlsafe_base64
