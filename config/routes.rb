@@ -14,6 +14,11 @@ Rails.application.routes.draw do
   get 'resend-activation' => 'account_activations#new', as: 'new_account_activation'
   post 'resend-activation' => 'account_activations#create', as: 'account_activations'
 
+  get 'reset-password' => 'password_resets#new', as: 'new_password_reset'
+  post 'reset-password' => 'password_resets#create', as: 'password_resets'
+  get 'change-password/:token' => 'password_resets#edit', as: 'edit_password'
+  patch 'reset-password' => 'password_resets#update'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

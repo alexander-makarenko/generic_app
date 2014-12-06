@@ -11,9 +11,9 @@ class AccountActivationsController < ApplicationController
 
     user = User.find_by(email: decoded_email)
 
-    if user && user.activation_digest == User.digest(params[:token])
-      if !user.activated_in_time?
-        flash[:error] = "Activation link has expired. To request another activation email, click #{view_context.link_to('here', new_account_activation_path)}."
+    if user && user.authenticated(:activation_token, params[:token])
+      if user.link_expired?(:activation)
+        flash[:error] = "The link has expired. To request another activation email, click #{view_context.link_to('here', new_account_activation_path)}."
         redirect_to root_path
       else
         activate(user)
@@ -21,7 +21,7 @@ class AccountActivationsController < ApplicationController
         redirect_to signin_path
       end
     else
-      flash[:error] = "Activation link is invalid. To request another activation email, click #{view_context.link_to('here', new_account_activation_path)}."
+      flash[:error] = "The link is invalid. To request another activation email, click #{view_context.link_to('here', new_account_activation_path)}."
       redirect_to root_path
     end
   end
@@ -29,7 +29,7 @@ class AccountActivationsController < ApplicationController
   def create
     user = User.find_by(email: params[:email].downcase)
 
-    if user && user.authenticate(params[:password])
+    if user && user.authenticated(:password, params[:password])
       user.send_activation_link
       flash[:notice] = 'An activation email has been sent to your email address. Click the link in the message to activate your account.'
       redirect_to root_path

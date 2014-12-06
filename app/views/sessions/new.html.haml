@@ -6,6 +6,7 @@
     = text_field_tag :email, nil, class: "textfield"
   %div.control-group
     = label_tag :password
+    %span= link_to('Forgot?', new_password_reset_path)
     = password_field_tag :password, nil, class: "textfield"
     %p.right
       = label_tag :keep_signed_in, "Keep me signed in"

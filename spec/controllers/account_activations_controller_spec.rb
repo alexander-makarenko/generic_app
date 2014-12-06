@@ -18,8 +18,8 @@ describe AccountActivationsController, :type => :controller do
       before { get :edit, params }
 
       it "does not activate the user" do
-        expect(user).to_not be_activated
-        expect(user.activated_at).to be_blank
+        expect(user.reload).to_not be_activated
+        expect(user.reload.activated_at).to be_blank
       end
     end
 
@@ -28,14 +28,6 @@ describe AccountActivationsController, :type => :controller do
 
       it "raises BadRequest exception" do
         expect { get :edit, params }.to raise_error(ActionController::BadRequest)
-      end
-    end
-
-    context "when encoded email is missing" do
-      let(:params) { Hash[ token: activation_token ] }
-
-      it "does not raise exception" do
-        expect { get :edit, params }.to_not raise_error
       end
     end
 

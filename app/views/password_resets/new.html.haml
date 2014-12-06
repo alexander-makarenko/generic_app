@@ -1,0 +1,10 @@
+%h1 Reset password
+
+= render 'shared/validation_errors', obj: @password_reset
+%p.center To reset your password, enter your email address below:
+
+= form_for @password_reset do |f|
+  %div.control-group
+    = f.text_field :email, class: "textfield"
+  .center
+    = f.submit "Confirm", class: "btn"

@@ -41,4 +41,21 @@ en:
             password_confirmation:
               blank: "is required"
               confirmation: "does not match the %{attribute}"
-
+  activemodel:
+    attributes:
+      password_reset:
+        email: "email address"
+        password: "password"
+        password_confirmation: "confirmation"
+    errors:
+      models:
+        password_reset:
+          attributes:
+            email:
+              blank: "is required"
+            password:
+              blank: "is required"
+              too_short: "must be at least %{count} characters long"
+            password_confirmation:
+              blank: "is required"
+              confirmation: "does not match the %{attribute}"

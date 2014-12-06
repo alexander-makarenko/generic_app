@@ -24,7 +24,7 @@ class UsersController < ApplicationController
     @user.assign_attributes(user_params)
 
     if @user.valid?
-      if User.find(params[:id]).authenticate(@user.password)
+      if User.find(params[:id]).authenticated(:password, @user.password)
         @user.save
         flash[:success] = 'Your profile was successfully updated.'
         redirect_to root_path
@@ -38,7 +38,6 @@ class UsersController < ApplicationController
   end
 
   private
-
     def user_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end

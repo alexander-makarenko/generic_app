@@ -1,0 +1,6 @@
+- if obj.errors.any?
+  %div.validation-errors
+    %p Oops! There #{ obj.errors.count == 1 ? 'is an error' : 'are ' + pluralize(obj.errors.count, 'error') }:
+    %ul
+      - obj.errors.full_messages.each do |error|
+        %li #{error}

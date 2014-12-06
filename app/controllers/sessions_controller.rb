@@ -4,7 +4,7 @@ class SessionsController < ApplicationController
 
   def create
     user = User.find_by(email: params[:email].downcase)
-    if user && user.authenticate(params[:password])
+    if user && user.authenticated(:password, params[:password])
       if user.activated?
         sign_in(user, params[:keep_signed_in])
         flash[:success] = 'You have signed in.'
