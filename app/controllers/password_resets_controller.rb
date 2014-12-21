@@ -1,4 +1,6 @@
 class PasswordResetsController < ApplicationController
+  before_action { authorize PasswordReset.new }
+
   def new
     @password_reset = PasswordReset.new
   end
@@ -9,9 +11,8 @@ class PasswordResetsController < ApplicationController
 
     if @password_reset.valid?
       user = User.find_by(email: @password_reset.email.downcase)
-      user && user.send_password_reset_link
-      flash[:notice] = 'Password reset instructions sent.'
-      redirect_to root_path
+      user.send_link(:password_reset) if user
+      redirect_to root_path, notice: 'Password reset instructions sent.'
     else
       render :new
     end
@@ -23,14 +24,12 @@ class PasswordResetsController < ApplicationController
 
     if user && user.authenticated(:password_reset_token, params[:token])
       if user.link_expired?(:password_reset)
-        flash[:error] = "The link has expired. If you still want to reset your password, click #{view_context.link_to('here', new_password_reset_path)}."
-        redirect_to root_path
+        redirect_to root_path, error: "The link has expired. If you still want to reset your password, click #{view_context.link_to('here', new_password_reset_path)}."
       else
         render :edit
       end
     else
-      flash[:error] = 'The link is invalid.'
-      redirect_to root_path
+      redirect_to root_path, error: 'The link is invalid.'
     end
   end
 
@@ -41,9 +40,11 @@ class PasswordResetsController < ApplicationController
 
     if user && user.authenticated(:password_reset_token, params[:token])
       if @password_reset.valid?
-        user.update_attribute(:password, @password_reset.password)
-        flash[:success] = 'Password successfully updated. You can now sign in:'
-        redirect_to signin_path
+        user.attributes = {
+          password: @password_reset.password,
+          password_reset_email_sent_at: nil }
+        user.save(validate: false)
+        redirect_to signin_path, success: 'Password successfully updated. You can now sign in.'
       else
         render :edit
       end
@@ -51,13 +52,4 @@ class PasswordResetsController < ApplicationController
       redirect_to root_path
     end
   end
-
-  private
-    def decode(encoded_param)
-      begin
-        encoded_param && Base64.urlsafe_decode64(URI.decode(encoded_param))
-      rescue ArgumentError
-        raise ActionController::BadRequest
-      end
-    end
 end

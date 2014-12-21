@@ -1,8 +1,12 @@
 require 'rails_helper'
 
 feature "Profile" do
-  given(:user) { FactoryGirl.create(:user) }
-  background { visit settings_path(user) }
+  given(:user) { FactoryGirl.create(:user, :activated) }
+  background do
+    visit signin_path
+    sign_in_as(user)
+    visit settings_path(user)
+  end
   
   specify "update page" do
     expect(page).to have_selector('h1', text: 'Settings')

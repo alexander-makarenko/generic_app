@@ -4,7 +4,7 @@ describe UserMailer, :type => :mailer do
   let(:user) { FactoryGirl.create(:user) }
 
   describe "#account_activation" do
-    let(:mail) { UserMailer.account_activation(user) }
+    let(:mail) { UserMailer.activation(user) }
 
     it "renders the headers" do
       expect(mail.subject).to eq('Account activation')
@@ -27,7 +27,7 @@ describe UserMailer, :type => :mailer do
     end
 
     it "renders the body" do
-      expect(mail.body.encoded).to match(/change-password\/(.+)\?e=(.+)/i)
+      expect(mail.body.encoded).to match(/recover\/(.+)\?e=(.+)/i)
     end
   end
 end

@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  before_action { authorize :session }
+
   def new
   end
 
@@ -9,7 +11,7 @@ class SessionsController < ApplicationController
         sign_in(user, params[:keep_signed_in])
         flash[:success] = 'You have signed in.'
       else
-        # REFACTOR THIS MESSAGE INTO A HERE DOCUMENT
+        # REFACTOR THIS
         message  = "Account not activated. Please check your email for the "
         message += "activation link. If you haven't received it, be sure to look "
         message += "into your spam folder, or request another activation email "
@@ -25,7 +27,6 @@ class SessionsController < ApplicationController
 
   def destroy
     sign_out
-    flash[:notice] = 'You have signed out.'
-    redirect_to root_path
+    redirect_to root_path, notice: 'You have signed out.'
   end
 end

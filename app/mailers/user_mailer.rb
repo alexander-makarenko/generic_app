@@ -6,7 +6,7 @@ class UserMailer < ActionMailer::Base
   #
   #   en.user_mailer.account_activation.subject
   #
-  def account_activation(user)
+  def activation(user)
     @activation_token = user.activation_token
     @encoded_email = Base64.urlsafe_encode64(user.email)
 

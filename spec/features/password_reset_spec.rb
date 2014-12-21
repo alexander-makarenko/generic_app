@@ -143,6 +143,10 @@ feature "Password" do
         expect(user.password_digest).to eql(user.reload.password_digest)
       end
 
+      it "does not clear user's password_reset_email_sent_at attribute" do
+        expect(user.reload.password_reset_email_sent_at).to_not be_nil
+      end
+
       it "re-renders current page" do
         expect(page).to have_selector('h1', text: 'Change password')
       end
@@ -158,9 +162,13 @@ feature "Password" do
           password: 'new_password',
           confirmation: 'new_password')
       end
-  
+
       it "updates user's password" do
         expect(user.password_digest).to_not eql(user.reload.password_digest)
+      end
+
+      it "clears user's password_reset_email_sent_at attribute" do
+        expect(user.reload.password_reset_email_sent_at).to be_nil
       end
 
       it "redirects to signin page" do

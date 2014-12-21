@@ -136,7 +136,7 @@ describe User do
       end
 
       context "on update" do
-        let(:persisted_user) { User.find_by(email: user.email) }
+        subject(:persisted_user) { User.find_by(email: user.email) }
         before do
           user.save
           persisted_user.password = ' ' * 6
@@ -177,59 +177,6 @@ describe User do
     end
   end
 
-  describe "#authenticated" do
-    let(:found_user) { User.find_by(email: user.email) }
-    before { user.save }
-
-    context "with password" do
-      context "that is invalid" do
-        it "returns false" do
-          expect(found_user.authenticated(
-            :password, 'incorrect')).to eq(false)
-        end
-      end
-
-      context "that is valid" do
-        it "returns user" do
-          expect(found_user.authenticated(
-            :password, user.password)).to eq(user)
-        end
-      end
-    end
-
-    context "with activation token" do
-      context "that is invalid" do
-        it "returns false" do
-          expect(found_user.authenticated(
-            :activation_token, 'incorrect')).to eq(false)
-        end
-      end
-
-      context "that is valid" do
-        it "returns user" do
-          expect(found_user.authenticated(
-            :activation_token, user.activation_token)).to eq(user)
-        end
-      end
-    end
-
-    context "with password reset token" do
-      context "that is invalid" do
-        it "returns false" do
-          expect(found_user.authenticated(
-            :password_reset_token, 'incorrect')).to eq(false)
-        end
-      end
-
-      context "that is valid" do
-        it "returns user" do
-          expect(found_user.authenticated(
-            :password_reset_token, user.password_reset_token)).to eq(user)
-        end
-      end
-    end
-  end
-
   context "when created" do
     it "is assigned auth digest" do
       user.save
@@ -262,50 +209,52 @@ describe User do
     end
   end
 
-  describe "#send_activation_link" do
-    it "sets activation_email_sent_at time" do
-      expect { user.send_activation_link }.to change {
-        user.activation_email_sent_at
-      }.from(nil).to(ActiveSupport::TimeWithZone)
-    end
+  describe "#authenticated" do
+    let(:found_user) { User.find_by(email: user.email) }
+    before { user.save }
 
-    context "when activation token is blank" do
-      let(:found_user) { User.find_by(email: user.email) }
-      before { user.save }      
-            
-      it "generates new activation token" do
-        expect { found_user.send_activation_link }.to change {
-          found_user.activation_token
-        }.from(nil).to(String)
-      end
+    accepted_attributes = [:password, :activation_token, :password_reset_token]
+    accepted_attributes.each do |attribute|
+      context "with #{attribute}" do
+        context "that is incorrect" do
+          it "returns false" do
+            expect(found_user.authenticated(
+              attribute, 'incorrect')).to eq(false)
+          end
+        end
 
-      it "updates activation digest" do
-        expect { found_user.send_activation_link }.to change(
-          found_user.reload, :activation_digest)
+        context "that is correct" do
+          it "returns user" do
+            expect(found_user.authenticated(
+              attribute, user.send(attribute))).to eq(user)
+          end
+        end
       end
     end
   end
 
-  describe "#send_password_reset_link" do
-    it "sets password_reset_email_sent_at time" do
-      expect { user.send_password_reset_link }.to change {
-        user.password_reset_email_sent_at
-      }.from(nil).to(ActiveSupport::TimeWithZone)
-    end
-
-    context "when password reset token is blank" do
-      let(:found_user) { User.find_by(email: user.email) }
-      before { user.save }      
-            
-      it "generates new password reset token" do
-        expect { found_user.send_password_reset_link }.to change {
-          found_user.password_reset_token
-        }.from(nil).to(String)
+  describe "#send_link" do
+    [:activation, :password_reset].each do |link_type|
+      it "sets email_sent_at time" do
+        expect { user.send_link(link_type) }.to change {
+          user.send("#{link_type}_email_sent_at")
+        }.from(nil).to(ActiveSupport::TimeWithZone)
       end
 
-      it "updates password reset digest" do
-        expect { found_user.send_password_reset_link }.to change(
-          found_user.reload, :password_reset_digest)
+      context "when #{link_type}_token is blank" do
+        let(:found_user) { User.find_by(email: user.email) }
+        before { user.save }
+
+        it "generates new token" do
+          expect { found_user.send_link(link_type) }.to change {
+            found_user.send("#{link_type}_token")
+          }.from(nil).to(String)
+        end
+
+        it "updates #{link_type}_digest" do
+          expect { found_user.send_link(link_type) }.to change(
+            found_user.reload, "#{link_type}_digest")
+        end
       end
     end
   end

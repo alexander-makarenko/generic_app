@@ -1,7 +1,7 @@
 %header
   %nav.right
     %ul
-      - unless signed_in?
+      - if policy(:session).new?
         %li #{link_to('Sign in', signin_path)}
       - else
         %li= link_to('Sign out', signout_path, method: :delete)

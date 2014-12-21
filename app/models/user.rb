@@ -16,40 +16,11 @@ class User < ActiveRecord::Base
                        length: { maximum: 50 },
                        uniqueness: { case_sensitive: false }
   validates :email,    format: { with: EMAIL_REGEX }, unless: -> { email.blank? }
-  validates :password, presence: true, on: :update
+  validates :password, presence: true, allow_blank: false
   validates :password, length: { in: 6..30 }, unless: -> { password.blank? }
 
-  def send_activation_link
-    unless activation_token
-      generate_activation_digest
-      save(validate: false)
-    end
-    UserMailer.account_activation(self).deliver
-    self.update_attribute(:activation_email_sent_at, Time.zone.now)
-  end
-
-  def send_password_reset_link
-    unless password_reset_token
-      generate_password_reset_digest
-      save(validate: false)
-    end
-    UserMailer.password_reset(self).deliver
-    self.update_attribute(:password_reset_email_sent_at, Time.zone.now)
-  end
-
-  def link_expired?(link_name)
-    time_to_expire = case link_name
-    when :activation
-      2.days.ago
-    when :password_reset
-      2.hours.ago    
-    end
-
-    self.send("#{link_name}_email_sent_at") < time_to_expire
-  end
-
-  def authenticated(param, value)
-    case param
+  def authenticated(attribute, value)
+    case attribute
     when :password
       self.authenticate(value)
     when :activation_token
@@ -57,6 +28,25 @@ class User < ActiveRecord::Base
     when :password_reset_token
       self.password_reset_digest == User.digest(value) && self
     end
+  end
+
+  def send_link(link_type)
+    unless self.send("#{link_type.to_s}_token")
+      self.send("generate_#{link_type.to_s}_digest")
+      save(validate: false)
+    end
+    UserMailer.send(link_type, self).deliver_now
+    self.update_attribute("#{link_type}_email_sent_at", Time.zone.now)
+  end
+  
+  def link_expired?(link_type)
+    time_to_expire = case link_type
+    when :activation
+      2.days.ago
+    when :password_reset
+      2.hours.ago    
+    end
+    self.send("#{link_type}_email_sent_at") < time_to_expire
   end
 
   class << self

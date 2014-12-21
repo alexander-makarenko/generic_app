@@ -11,14 +11,12 @@ module SessionsHelper
     self.current_user = user
   end
 
-  def signed_in?
-    !current_user.nil?
-  end
-
   def sign_out
-    current_user.update_attribute(:auth_digest, User.digest(User.new_token))
-    cookies.delete(:auth_token)
-    self.current_user = nil
+    if current_user
+      current_user.update_attribute(:auth_digest, User.digest(User.new_token))
+      cookies.delete(:auth_token)
+      self.current_user = nil
+    end
   end
 
   def current_user
@@ -27,9 +25,5 @@ module SessionsHelper
 
   def current_user=(user)
     @current_user = user
-  end
-
-  def current_user?(user)
-    user == current_user
   end
 end

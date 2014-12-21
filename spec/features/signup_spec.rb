@@ -10,35 +10,41 @@ feature "Signup" do
   end
 
   context "with invalid data" do
+    before(hook: true) { sign_up_as(invalid_user) }
+
     it "does not save user" do
       expect { sign_up_as(invalid_user) }.to_not change(User, :count)
     end
 
-    it "re-renders current page" do
-      sign_up_as(invalid_user)
+    it "does not send activation link" do
+      expect { sign_up_as(invalid_user) }.to_not change(deliveries, :count)
+    end
+
+    it "re-renders current page", hook: true do
       expect(page).to have_selector('h1', text: 'Sign up')
     end
 
-    it "displays validation errors" do
-      sign_up_as(invalid_user)
+    it "displays validation errors", hook: true do
       expect(page).to have_content('error')    
     end
   end
 
   context "with valid data" do
+    before(hook: true) { sign_up_as(user) }
+
     it "saves user" do
-      expect { sign_up_as(user) }.to change {
-        [User.count, deliveries.count]
-      }.from([0,0]).to([1,1])
+      expect { sign_up_as(user) }.to change(User, :count).from(0).to(1)
     end
-    
-    it "redirects to home page" do
-      sign_up_as(user)
+
+    it "sends activation link" do
+      expect { sign_up_as(user) }.to change(deliveries, :count).from(0).to(1)
+    end
+
+    it "redirects to home page", hook: true do
       expect(current_path).to eq(root_path)
     end
     
-    it "displays flash message" do
-      sign_up_as(user)
+    it "displays flash message", hook: true do
       expect(page).to have_flash(:notice, 'activation email has been sent')
     end
   end

@@ -1,3 +1,5 @@
+include SessionsHelper
+
 module Capybara
   class Session
     def has_flash?(type, contents)
@@ -13,9 +15,7 @@ end
 # emulate reopening of the browser by deleting session cookies
 def expire_session_cookies
   get_me_the_cookies.each do |cookie|
-    cookie[:expires].nil? && delete_cookie(cookie[:name])
-    # the above line works the same as
-    # delete_cookie(cookie[:name]) if cookie[:expires].nil?
+    delete_cookie(cookie[:name]) if cookie[:expires].nil?
   end
 end
 
@@ -28,10 +28,14 @@ def sign_up_as(user)
 end
 
 def sign_in_as(user, options={})
-  fill_in 'Email',    with: user.email.upcase
-  fill_in 'Password', with: user.password
-  options[:keep_signed_in] && check('Keep me signed in')
-  click_button 'Sign in'
+  if options[:no_capybara] # sign in without Capybara
+    sign_in(user, keep_signed_in = options[:keep_signed_in])
+  else
+    fill_in 'Email',    with: user.email.upcase
+    fill_in 'Password', with: user.password
+    check('Keep me signed in') if options[:keep_signed_in]
+    click_button 'Sign in'
+  end
 end
 
 def update_profile_of(user, options={})
@@ -73,16 +77,16 @@ def last_email
   deliveries.last
 end
 
+############# REFACTOR INTO A SINGLE METHOD ############
 def activation_link(options = {})
   link_regex = /href=(?:"|')(\S+activate\S+)(?:"|')/i
-
   link = last_email.body.match(link_regex)[1]
 
   case options[:with]
   when :invalid_token
-    link.gsub!(/(activate\/)(.+)(\?)/, '\\1incorrect\\3')
+    link.gsub!(/(activate\/)(.+)(\?)/, '\\1invalid\\3')
   when :invalid_encoded_email
-    link.gsub!(/(\?e=)(.+)/, '\\1incorrect')
+    link.gsub!(/(\?e=)(.+)/, '\\1invalid')
   when :no_encoded_email
     link.gsub!(/\?e=.+/, '')
   end
@@ -91,18 +95,18 @@ def activation_link(options = {})
 end
 
 def password_reset_link(options = {})
-  link_regex = /href=(?:"|')(\S+password\S+)(?:"|')/i
-
+  link_regex = /href=(?:"|')(\S+recover\S+)(?:"|')/i
   link = last_email.body.match(link_regex)[1]
 
   case options[:with]
   when :invalid_token
-    link.gsub!(/(password\/)(.+)(\?)/, '\\1incorrect\\3')
+    link.gsub!(/(recover\/)(.+)(\?)/, '\\1invalid\\3')
   when :invalid_encoded_email
-    link.gsub!(/(\?e=)(.+)/, '\\1incorrect')
+    link.gsub!(/(\?e=)(.+)/, '\\1invalid')
   when :no_encoded_email
     link.gsub!(/\?e=.+/, '')
   end
 
   link
 end
+########################################################

@@ -46,7 +46,7 @@ feature "Account activation" do
     context "that has expired" do
       background do
         persisted_user = User.find_by(email: user.email)
-        persisted_user.update_attribute(:activation_email_sent_at, 3.days.ago)
+        persisted_user.update_attribute(:activation_email_sent_at, 1.week.ago)
         visit activation_link
       end
 
@@ -61,7 +61,7 @@ feature "Account activation" do
 
     context "that is valid" do
       background { visit activation_link }
-      
+
       it "redirects to signin page" do
         expect(current_path).to eq(signin_path)
       end
