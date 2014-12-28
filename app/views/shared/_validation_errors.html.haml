@@ -1,6 +1,7 @@
 - if obj.errors.any?
   %div.validation-errors
-    %p Oops! There #{ obj.errors.count == 1 ? 'is an error' : 'are ' + pluralize(obj.errors.count, 'error') }:
+    %p= t('v.shared._validation_errors.message',
+      count: obj.errors.full_messages.uniq.count)
     %ul
       - obj.errors.full_messages.uniq.each do |error|
-        %li #{error}
+        %li= error

@@ -1,15 +1,15 @@
-%h1 Settings
+%h1= t('v.users.edit.header')
 
 = render 'shared/validation_errors', obj: @user
 = form_for @user do |f|
   %div.control-group
-    = f.label :name, "Name"
+    = f.label :name, t('v.users.edit.fields.name')
     = f.text_field :name, class: "textfield"
   %div.control-group
-    = f.label :email, "Email"
+    = f.label :email, t('v.users.edit.fields.email')
     = f.text_field :email, class: "textfield"
   %div.control-group
-    = f.label :password, "Password"
+    = f.label :password, t('v.users.edit.fields.password')
     = f.password_field :password, class: "textfield"
   .center
-    = f.submit "Save", class: "btn"
+    = f.submit t('v.users.edit.submit_button'), class: "btn"

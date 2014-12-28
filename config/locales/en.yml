@@ -1,30 +1,9 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more, please read the Rails Internationalization guide
-# available at http://guides.rubyonrails.org/i18n.html.
-
 en:
   activerecord:
     attributes:
       user:
         name: "name"
-        email: "email address"
+        email: "email"
         password: "password"
         password_confirmation: "confirmation"
     errors:
@@ -59,3 +38,132 @@ en:
             password_confirmation:
               blank: "is required"
               confirmation: "does not match the %{attribute}"
+  c: # controllers
+    account_activations:
+      create:
+        flash:
+          notice: "An activation email has been sent to your email address.
+            Click the link in the message to activate your account."
+          error: "Invalid email or password."
+      edit:
+        flash:
+          error:
+            "1": "The link has expired. To request another activation email,
+              click %{link}."
+            "2": "The link is invalid. To request another activation email,
+              click %{link}."
+          success: "Thank you for confirming your email address. You can now
+            sign in."
+          link: "here"
+    application:
+      flash:
+        error: "You are not authorized to perform this action."
+    password_resets:
+      create:
+        flash:
+          notice: "Password reset instructions sent."
+      edit:
+        flash:
+          error:
+            "1": "The link has expired. If you still want to reset your
+              password, click %{link}."
+            "2": "The link is invalid."
+          link: "here"
+      update:
+        flash:
+          success: "Password successfully updated. You can now sign in."
+    sessions:
+      create:
+        flash:
+          success: "You have signed in."
+          alert: "Account not activated. Please check your email for the
+            activation link. If you haven't received it, be sure to look into
+            your spam folder, or request another activation email %{link}."
+          error: "Invalid email or password."
+          link: "here"
+      destroy:
+        flash:
+          notice: "You have signed out."
+    users:
+      create:
+        flash:
+          notice: "An activation email has been sent to your email address.
+            Click the link in the message to activate your account."
+      update:
+        flash:
+          success: "Your profile was successfully updated."
+          error: "Wrong password."
+  m: # mailers
+    user_mailer:
+      activation:
+        subject: "Account activation"
+      password_reset:
+        subject: "Password reset"
+  v: # views
+    account_activations:
+      new:
+        header: "Request activation email"
+        invitation: "Enter your email address and password below:"
+        fields:
+          email: "Email"
+          password: "Password"
+        submit_button: "Submit"
+    layouts:
+      _header:
+        nav_links:
+          sign_in: "Sign in"
+          sign_out: "Sign out"
+    password_resets:
+      edit:
+        header: "Change password"
+        invitation: "Enter your new password below:"
+        fields:
+          password: "Password"
+          password_confirmation: "Confirm password"
+        submit_button: "Save"
+      new:
+        header: "Reset password"
+        invitation: "To reset your password, enter your email address below:"
+        submit_button: "Confirm"
+    sessions:
+      new:
+        header: "Sign in"
+        fields:
+          email: "Email"
+          password: "Password"
+        forgot?: "Forgot your password?"
+        keep_signed_in: "Keep me signed in"
+        submit_button: "Sign in"
+        register?: "Don't have an account yet? %{signup_link} now."
+        signup_link: "Sign up"
+    shared:
+      _validation_errors:
+        message:
+          one: "Oops! There is an error:"
+          other: "Oops! There are %{count} errors:"
+    user_mailer:
+      activation:
+        body: "<p>To activate your account, visit the following
+          URL:</p><p>%{link}</p>"
+      password_reset:
+        body: "<p>To reset your password, visit the following
+          URL:</p><p>%{link}</p><p>If you didn't request your password to be
+          reset, ignore this email and your password will remain unchanged.</p>"
+    users:
+      edit:
+        header: "Settings"
+        fields:
+          name: "Name"
+          email: "Email"
+          password: "Password"
+        submit_button: "Save"
+      new:
+        header: "Sign up"
+        fields:
+          name: "Name"
+          email: "Email address"
+          password: "Password"
+          password_confirmation: "Confirm Password"
+        submit_button: "Create my account"
+        already_registered?: "Already have an account? Sign in %{signin_link}."
+        signin_link: "here"

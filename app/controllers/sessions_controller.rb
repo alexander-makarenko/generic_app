@@ -9,24 +9,22 @@ class SessionsController < ApplicationController
     if user && user.authenticated(:password, params[:password])
       if user.activated?
         sign_in(user, params[:keep_signed_in])
-        flash[:success] = 'You have signed in.'
+        flash[:success] = t('c.sessions.create.flash.success')
       else
-        # REFACTOR THIS
-        message  = "Account not activated. Please check your email for the "
-        message += "activation link. If you haven't received it, be sure to look "
-        message += "into your spam folder, or request another activation email "
-        message += "#{view_context.link_to('here', new_account_activation_path)}."
-        flash[:alert] = message
+        flash[:alert] = t('c.sessions.create.flash.alert',
+          link: view_context.link_to(
+            t('c.sessions.create.flash.link'),
+            new_account_activation_path))
       end
       redirect_to root_path
     else
-      flash.now[:error] = 'Invalid email or password.'
+      flash.now[:error] = t('c.sessions.create.flash.error')
       render :new
     end
   end
 
   def destroy
     sign_out
-    redirect_to root_path, notice: 'You have signed out.'
+    redirect_to root_path, notice: t('c.sessions.destroy.flash.notice')
   end
 end

@@ -1,0 +1,175 @@
+ru:
+  activerecord:
+    attributes:
+      user:
+        name: "имя"
+        email: "адрес электронной почты"
+        password: "пароль"
+        password_confirmation: "подтверждение"
+    errors:
+      models:
+        user:
+          attributes:
+            name:
+              blank: "не должен быть пустым"
+              too_long: "должно быть длиной не более %{count} символов"
+            email:
+              blank: "не должен быть пустым"
+              too_long: "должен быть длиной не более %{count} символов"
+              taken: "уже занят другим пользователем"
+              invalid: "имеет неверный формат"
+            password:
+              blank: "не должен быть пустым"
+              too_short: "должен быть длиной не менее %{count} символов"
+              too_long: "должен быть длиной не более %{count} символов"
+            password_confirmation:
+              blank: "не должен быть пустым"
+              confirmation: "не совпадает с указанным паролем"
+  activemodel:
+    attributes:
+      password_reset:
+        email: "адрес электронной почты"
+        password: "пароль"
+        password_confirmation: "подтверждение"
+    errors:
+      models:
+        password_reset:
+          attributes:
+            email:
+              blank: "не должен быть пустым"
+            password:
+              blank: "не должен быть пустым"
+              too_short: "должен быть длиной не менее %{count} символов"
+            password_confirmation:
+              blank: "не должен быть пустым"
+              confirmation: "не совпадает с указанным паролем"
+  c: # controllers
+    account_activations:
+      create:
+        flash:
+          notice: "An activation email has been sent to your email address.
+            Click the link in the message to activate your account."
+          error: "Invalid email or password."
+      edit:
+        flash:
+          error:
+            "1": "Срок действия этой ссылки истёк. To request another activation email,
+              click %{link}."
+            "2": "Эта ссылка недействительна. To request another activation email,
+              click %{link}."
+          success: "Thank you for confirming your email address. You can now
+            sign in."
+          link: "здесь"
+    application:
+      flash:
+        error: "You are not authorized to perform this action."
+    password_resets:
+      create:
+        flash:
+          notice: "Password reset instructions sent."
+      edit:
+        flash:
+          error:
+            "1": "Срок действия этой ссылки истёк. If you still want to reset your
+              password, click %{link}."
+            "2": "Эта ссылка недействительна."
+          link: "здесь"
+      update:
+        flash:
+          success: "Пароль успешно обновлен. Теперь вы можете войти в свою
+            учётную запись."
+    sessions:
+      create:
+        flash:
+          success: "You have signed in."
+          alert: "Account not activated. Please check your email for the
+            activation link. If you haven't received it, be sure to look into
+            your spam folder, or request another activation email %{link}."
+          error: "Invalid email or password."
+          link: "here"
+      destroy:
+        flash:
+          notice: "You have signed out."
+    users:
+      create:
+        flash:
+          notice: "An activation email has been sent to your email address.
+            Click the link in the message to activate your account."
+      update:
+        flash:
+          success: "Your profile was successfully updated."
+          error: "Неверный пароль."
+  m: # mailers
+    user_mailer:
+      activation:
+        subject: "Account activation"
+      password_reset:
+        subject: "Восстановление пароля"
+  v: # views
+    account_activations:
+      new:
+        header: "Request activation email"
+        invitation: "Enter your email address and password below:"
+        fields:
+          email: "Адрес электронной почты"
+          password: "Пароль"
+        submit_button: "Submit"
+    layouts:
+      _header:
+        nav_links:
+          sign_in: "Вход"
+          sign_out: "Выход"
+    password_resets:
+      edit:
+        header: "Change password"
+        invitation: "Enter your new password below:"
+        fields:
+          password: "Пароль"
+          password_confirmation: "Confirm password"
+        submit_button: "Сохранить"
+      new:
+        header: "Восстановление пароля"
+        invitation: "To reset your password, enter your email address below:"
+        submit_button: "Confirm"
+    sessions:
+      new:
+        header: "Sign in"
+        fields:
+          email: "Адрес электронной почты"
+          password: "Пароль"
+        forgot?: "Забыли пароль?"
+        keep_signed_in: "Keep me signed in"
+        submit_button: "Войти"
+        register?: "Don't have an account yet? %{signup_link} now."
+        signup_link: "Sign up"
+    shared:
+      _validation_errors:
+        message:
+          one: "Обнаружена ошибка:"
+          other: "Обнаружены следующие ошибки:"
+    user_mailer:
+      activation:
+        body: "<p>To activate your account, visit the following
+          URL:</p><p>%{link}</p>"
+      password_reset:
+        body: "<p>To reset your password, visit the following
+          URL:</p><p>%{link}</p><p>If you didn't request your password to be
+          reset, ignore this email and your password will remain unchanged.</p>"
+    users:
+      edit:
+        header: "Настройки"
+        fields:
+          name: "Имя"
+          email: "Адрес электронной почты"
+          password: "Пароль"
+        submit_button: "Сохранить"
+      new:
+        header: "Регистрация"
+        fields:
+          name: "Имя"
+          email: "Адрес электронной почты"
+          password: "Пароль"
+          password_confirmation: "Подтвердите пароль"
+        submit_button: "Create my account"
+        already_registered?: "Already have an account? Sign in %{signin_link}."
+        signin_link: "здесь"

@@ -10,7 +10,7 @@ class UsersController < ApplicationController
 
     if @user.save
       @user.send_link(:activation)
-      redirect_to root_path, notice: 'An activation email has been sent to your email address. Click the link in the message to activate your account.'
+      redirect_to root_path, notice: t('c.users.create.flash.notice')
     else
       render :new
     end
@@ -30,9 +30,9 @@ class UsersController < ApplicationController
     if @user.valid?
       if User.find(params[:id]).authenticated(:password, @user.password)
         @user.save
-        redirect_to root_path, success: 'Your profile was successfully updated.'
+        redirect_to root_path, success: t('c.users.update.flash.success')
       else
-        flash.now[:error] = 'Wrong password.'
+        flash.now[:error] = t('c.users.update.flash.error')
         render :edit
       end
     else

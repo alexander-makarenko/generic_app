@@ -5,10 +5,8 @@ feature "Signup" do
   given(:invalid_user) { FactoryGirl.build(:user, :invalid) }
   background { visit signup_path }
 
-  specify "page" do
-    expect(page).to have_selector('h1', text: 'Sign up')
-  end
-
+  include_examples "page has", h1: t('v.users.new.header')
+  
   context "with invalid data" do
     before(hook: true) { sign_up_as(invalid_user) }
 
@@ -20,13 +18,8 @@ feature "Signup" do
       expect { sign_up_as(invalid_user) }.to_not change(deliveries, :count)
     end
 
-    it "re-renders current page", hook: true do
-      expect(page).to have_selector('h1', text: 'Sign up')
-    end
-
-    it "displays validation errors", hook: true do
-      expect(page).to have_content('error')    
-    end
+    include_examples "page has", { h1: t('v.users.new.header') }, hook: true
+    include_examples "page has validation errors", hook: true
   end
 
   context "with valid data" do
@@ -43,9 +36,8 @@ feature "Signup" do
     it "redirects to home page", hook: true do
       expect(current_path).to eq(root_path)
     end
-    
-    it "displays flash message", hook: true do
-      expect(page).to have_flash(:notice, 'activation email has been sent')
-    end
+
+    include_examples "shows flash", :notice, t(
+      'c.users.create.flash.notice'), hook: true
   end
 end

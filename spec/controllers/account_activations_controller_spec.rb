@@ -1,21 +1,10 @@
 require 'rails_helper'
 
-describe AccountActivationsController, :type => :controller do
+describe AccountActivationsController do
   let(:user) { FactoryGirl.create(:user, activation_email_sent_at: 3.hours.ago) }
   let(:encoded_email) { Base64.urlsafe_encode64(user.email) }
   let(:activation_token) { user.activation_token }
   let(:params) { Hash[ token: activation_token, e: encoded_email ] }
-
-  describe "routing", type: :routing do
-    specify { expect(get  'user/activate/abc123').to route_to(
-      'account_activations#edit', token: 'abc123') }
-    
-    specify { expect(get  'user/activate').to route_to(
-      'account_activations#new') }
-    
-    specify { expect(post 'user/activate').to route_to(
-      'account_activations#create') }
-  end
 
   describe "#edit" do
     before(hook: true) { get :edit, params }
@@ -75,44 +64,45 @@ describe AccountActivationsController, :type => :controller do
     end
   end
 
-  describe "authorization:" do
-    let(:user) { FactoryGirl.create(:user, :activated) }
+  describe "authorization" do
+    let(:not_authorized_error) { I18n.t('c.application.flash.error') }
+    let(:user) { FactoryGirl.create(:user, :activated) }    
     let(:create_params) { Hash[ email: '' ] }
     let(:edit_params)   { Hash[ token: '' ] }
 
     context "when user is not signed in" do
-      specify "GET to #new is permitted" do
+      specify "permits GET to #new" do
         get :new
-        expect(flash[:error]).to_not match(/not authorized/)
+        expect(flash[:error]).to_not match(not_authorized_error)
       end
 
-      specify "POST to #create is permitted" do
+      specify "permits POST to #create" do
         post :create, create_params
-        expect(flash[:error]).to_not match(/not authorized/)
+        expect(flash[:error]).to_not match(not_authorized_error)
       end
 
-      specify "GET to #edit is permitted" do
+      specify "permits GET to #edit" do
         get :edit, edit_params
-        expect(flash[:error]).to_not match(/not authorized/)
+        expect(flash[:error]).to_not match(not_authorized_error)
       end
     end
     
     context "when user is signed in" do
       before { sign_in_as(user, no_capybara: true) }
 
-      specify "GET to #new is forbidden" do
+      specify "forbids GET to #new" do
         get :new
-        expect(flash[:error]).to match(/not authorized/)
+        expect(flash[:error]).to match(not_authorized_error)
       end
 
-      specify "POST to #create is forbidden" do
+      specify "forbids POST to #create" do
         post :create, create_params
-        expect(flash[:error]).to match(/not authorized/)
+        expect(flash[:error]).to match(not_authorized_error)
       end
 
-      specify "GET to #edit is forbidden" do
+      specify "forbids GET to #edit" do
         get :edit, edit_params
-        expect(flash[:error]).to match(/not authorized/)
+        expect(flash[:error]).to match(not_authorized_error)
       end
     end
   end

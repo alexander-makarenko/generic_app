@@ -5,11 +5,15 @@ feature "Profile" do
   background do
     visit signin_path
     sign_in_as(user)
-    visit settings_path(user)
+    #=======================================================
+    # replace with "visit settings_path(user)"
+    # after removing the "default_url_options" method from application_controller
+    visit settings_path(id: user.id)
+    #=======================================================
   end
   
-  specify "update page" do
-    expect(page).to have_selector('h1', text: 'Settings')
+  describe "update" do
+    include_examples "page has", h1: t('v.users.edit.header')
   end
 
   feature "update" do
@@ -27,9 +31,7 @@ feature "Profile" do
       given(:new_name)  { '' }
       given(:new_email) { 'invalid' }
 
-      it "re-renders current page" do
-        expect(page).to have_selector('h1', text: 'Settings')
-      end
+      include_examples "page has", h1: t('v.users.edit.header')
 
       it "displays validation errors" do
         expect(page).to have_content('error')
@@ -40,13 +42,8 @@ feature "Profile" do
       context "but incorrect password" do
         given(:current_password) { 'notright' }
 
-        it "re-renders current page" do
-          expect(page).to have_selector('h1', text: 'Settings')
-        end
-
-        it "displays flash message" do
-          expect(page).to have_flash(:error, 'Wrong password')
-        end
+        include_examples "page has", h1: t('v.users.edit.header')
+        include_examples "shows flash", :error, t('c.users.update.flash.error')
       end
 
       context "and correct password" do      
@@ -54,9 +51,8 @@ feature "Profile" do
           expect(current_path).to eq(root_path)
         end
 
-        it "displays flash message" do
-          expect(page).to have_flash(:success, 'successfully updated')
-        end
+        include_examples "shows flash", :success,
+          t('c.users.update.flash.success')
       end
     end
   end

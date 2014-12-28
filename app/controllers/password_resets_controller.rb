@@ -12,7 +12,7 @@ class PasswordResetsController < ApplicationController
     if @password_reset.valid?
       user = User.find_by(email: @password_reset.email.downcase)
       user.send_link(:password_reset) if user
-      redirect_to root_path, notice: 'Password reset instructions sent.'
+      redirect_to root_path, notice: t('c.password_resets.create.flash.notice')
     else
       render :new
     end
@@ -24,12 +24,16 @@ class PasswordResetsController < ApplicationController
 
     if user && user.authenticated(:password_reset_token, params[:token])
       if user.link_expired?(:password_reset)
-        redirect_to root_path, error: "The link has expired. If you still want to reset your password, click #{view_context.link_to('here', new_password_reset_path)}."
+        redirect_to root_path, error: t(
+          'c.password_resets.edit.flash.error.1',
+          link: view_context.link_to(
+            t('c.password_resets.edit.flash.link'),
+            new_password_reset_path))
       else
         render :edit
       end
     else
-      redirect_to root_path, error: 'The link is invalid.'
+      redirect_to root_path, error: t('c.password_resets.edit.flash.error.2')
     end
   end
 
@@ -44,7 +48,8 @@ class PasswordResetsController < ApplicationController
           password: @password_reset.password,
           password_reset_email_sent_at: nil }
         user.save(validate: false)
-        redirect_to signin_path, success: 'Password successfully updated. You can now sign in.'
+        redirect_to signin_path,
+          success: t('c.password_resets.update.flash.success')
       else
         render :edit
       end

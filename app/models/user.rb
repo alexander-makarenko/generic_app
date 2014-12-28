@@ -17,7 +17,7 @@ class User < ActiveRecord::Base
                        uniqueness: { case_sensitive: false }
   validates :email,    format: { with: EMAIL_REGEX }, unless: -> { email.blank? }
   validates :password, presence: true, allow_blank: false
-  validates :password, length: { in: 6..30 }, unless: -> { password.blank? }
+  validates :password, length: { minimum: 6 }, unless: -> { password.blank? }
 
   def authenticated(attribute, value)
     case attribute

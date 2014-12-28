@@ -9,9 +9,9 @@ class AccountActivationsController < ApplicationController
 
     if user && user.authenticated(:password, params[:password])
       user.send_link(:activation)
-      redirect_to root_path, notice: 'An activation email has been sent to your email address. Click the link in the message to activate your account.'
+      redirect_to root_path, notice: t('c.account_activations.create.flash.notice')
     else
-      flash.now[:error] = 'Invalid email or password.'
+      flash.now[:error] = t('c.account_activations.create.flash.error')
       render :new
     end
   end
@@ -21,17 +21,26 @@ class AccountActivationsController < ApplicationController
 
     if user && user.authenticated(:activation_token, params[:token])
       if user.link_expired?(:activation)
-        redirect_to root_path, error: "The link has expired. To request another activation email, click #{view_context.link_to('here', new_account_activation_path)}."
+        redirect_to root_path, error: t(
+          'c.account_activations.edit.flash.error.1',
+          link: view_context.link_to(
+            t('c.account_activations.edit.flash.link'),
+            new_account_activation_path))
       else
         user.attributes = {
           activated: true,
           activated_at: Time.zone.now,
           activation_email_sent_at: nil }
         user.save(validate: false)
-        redirect_to signin_path, success: 'Thank you for confirming your email address. You can now sign in.'
+        redirect_to signin_path, success: t(
+          'c.account_activations.edit.flash.success')
       end
     else
-      redirect_to root_path, error: "The link is invalid. To request another activation email, click #{view_context.link_to('here', new_account_activation_path)}."
+      redirect_to root_path, error: t(
+        'c.account_activations.edit.flash.error.2',
+        link: view_context.link_to(
+          t('c.account_activations.edit.flash.link'),
+          new_account_activation_path))
     end
   end
 end

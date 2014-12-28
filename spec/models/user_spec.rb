@@ -27,7 +27,9 @@ describe User do
     :password_reset_digest,
     :password_reset_email_sent_at    
   ].each do |method|
-    it { is_expected.to respond_to method }
+    it %Q|responds to "#{method}" method| do
+      expect(user).to respond_to method
+    end
   end
 
   it { is_expected.to be_valid }
@@ -36,20 +38,13 @@ describe User do
   describe "with name that" do
     context "is blank" do
       let(:name) { ' ' }
-
-      specify "is invalid and has 1 error" do
-        expect(user).to be_invalid
-        expect(user.errors.count).to eq(1)
-      end
+      include_examples "is invalid and has errors", 1
     end
 
     context "is too long" do
       let(:name) { 'a' * 51 }
 
-      specify "is invalid and has 1 error" do
-        expect(user).to be_invalid
-        expect(user.errors.count).to eq(1)
-      end
+      include_examples "is invalid and has errors", 1
     end
   end
 
@@ -57,19 +52,13 @@ describe User do
     context "is blank" do
       let(:email) { ' ' }
 
-      specify "is invalid and has 1 error" do
-        expect(user).to be_invalid
-        expect(user.errors.count).to eq(1)
-      end
+      include_examples "is invalid and has errors", 1
     end
 
     context "is too long" do
       let(:email) { "#{'a' * 39}@example.com" }
 
-      specify "is invalid and has 1 error" do
-        expect(user).to be_invalid
-        expect(user.errors.count).to eq(1)
-      end
+      include_examples "is invalid and has errors", 1
     end
 
     context "is already taken" do
@@ -79,19 +68,15 @@ describe User do
         user_with_same_email.save
       end
 
-      specify "is invalid and has 1 error" do
-        expect(user).to be_invalid
-        expect(user.errors.count).to eq(1)
-      end
+      include_examples "is invalid and has errors", 1
     end
 
     context "is of invalid format" do
-      let(:addresses) { %w[
-        .starts-with-dot@example.com double..dot@test.org
-        double.dot@test..org no_at_sign.net double@at@sign.com
-        without@dot,com ends+with@dot. ] }
+      let(:addresses) { %w[ .starts-with-dot@example.com double..dot@test.org
+        double.dot@test..org no_at_sign.net double@at@sign.com without@dot,com
+        ends+with@dot. ] }
       
-      specify "is invalid and has 1 error" do
+      specify "is invalid and has an error" do
         addresses.each do |invalid_address|
           user.email = invalid_address
           expect(user).to be_invalid
@@ -101,8 +86,7 @@ describe User do
     end
 
     context "is of valid format" do
-      let(:addresses) { %w[
-        user@example.com first.last@somewhere.COM
+      let(:addresses) { %w[ user@example.com first.last@somewhere.COM
         fir5t_la5t@somewhe.re FIRST+LAST@s.omwhe.re ] }
       
       specify "is valid" do
@@ -129,10 +113,7 @@ describe User do
       context "on create" do
         let(:password) { ' ' * 6 }
         
-        specify "is invalid and has 1 error" do
-          expect(user).to be_invalid
-          expect(user.errors.count).to eq(1)
-        end
+        include_examples "is invalid and has errors", 1
       end
 
       context "on update" do
@@ -142,38 +123,26 @@ describe User do
           persisted_user.password = ' ' * 6
         end        
 
-        specify "is invalid and has 1 error" do
-          expect(persisted_user).to be_invalid
-          expect(persisted_user.errors.count).to eq(1)
-        end
+        include_examples "is invalid and has errors", 1
       end
     end
 
     context "is too short" do
       let(:password) { 'a' * 5 }
 
-      specify "is invalid and has 1 error" do
-        expect(user).to be_invalid
-        expect(user.errors.count).to eq(1)
-      end
+      include_examples "is invalid and has errors", 1
     end
 
     context "is too long" do
-      let(:password) { 'a' * 31 }
+      let(:password) { 'a' * 73 }
 
-      specify "is invalid and has 1 error" do
-        expect(user).to be_invalid
-        expect(user.errors.count).to eq(1)
-      end
+      include_examples "is invalid and has errors", 1
     end
 
     context "does not match confirmation" do
       before { user.password = 'mismatch' }
 
-      specify "is invalid and has 1 error" do
-        expect(user).to be_invalid
-        expect(user.errors.count).to eq(1)
-      end
+      include_examples "is invalid and has errors", 1
     end
   end
 

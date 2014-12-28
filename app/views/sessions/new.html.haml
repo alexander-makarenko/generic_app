@@ -1,16 +1,17 @@
-%h1 Sign in
+%h1= t('v.sessions.new.header')
 
 = form_tag :sessions do
   %div.control-group
-    = label_tag :email
+    = label_tag :email, t('v.sessions.new.fields.email')
     = text_field_tag :email, nil, class: "textfield"
   %div.control-group
-    = label_tag :password
-    %span= link_to('Forgot?', new_password_reset_path)
+    = label_tag :password, t('v.sessions.new.fields.password')
+    %span= link_to(t('v.sessions.new.forgot?'), new_password_reset_path)
     = password_field_tag :password, nil, class: "textfield"
     %p.right
-      = label_tag :keep_signed_in, "Keep me signed in"
+      = label_tag :keep_signed_in, t('v.sessions.new.keep_signed_in')
       = check_box_tag :keep_signed_in, "yes", false
   .center
-    = submit_tag "Sign in", class: "btn"
-%p.center Don't have an account? #{link_to('Sign up', signup_path)} now
+    = submit_tag t('v.sessions.new.submit_button'), class: "btn"
+%p.center= raw t('v.sessions.new.register?',
+  signup_link: link_to(t('v.sessions.new.signup_link'), signup_path))

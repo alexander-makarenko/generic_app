@@ -15,27 +15,27 @@ feature "Account activation" do
     end
 
     context "with invalid token" do
-      background { visit activation_link(with: :invalid_token) }
+      background { visit link(:activation, token: 'invalid') }
 
       it "redirects to home page" do
         expect(current_path).to eq(root_path)
       end
 
-      it "displays flash message" do
-        expect(page).to have_flash(:error, 'is invalid')
-      end
+      include_examples "shows flash", :error, t(
+        'c.account_activations.edit.flash.error.2', link: t(
+          'c.account_activations.edit.flash.link'))
     end
 
     context "with missing encoded email" do
-      background { visit activation_link(with: :no_encoded_email) }
+      background { visit link(:activation, encoded_email: :missing) }
       
       it "redirects to home page" do
         expect(current_path).to eq(root_path)
       end
-      
-      it "displays flash message" do
-        expect(page).to have_flash(:error, 'is invalid')
-      end
+
+      include_examples "shows flash", :error, t(
+        'c.account_activations.edit.flash.error.2', link: t(
+          'c.account_activations.edit.flash.link'))
     end
 
     context "with invalid encoded email" do
@@ -47,40 +47,42 @@ feature "Account activation" do
       background do
         persisted_user = User.find_by(email: user.email)
         persisted_user.update_attribute(:activation_email_sent_at, 1.week.ago)
-        visit activation_link
+        visit link(:activation)
       end
 
       it "redirects to home page" do
         expect(current_path).to eq(root_path)
       end
     
-      it "displays flash message" do
-        expect(page).to have_flash(:error, 'has expired')
-      end
+      include_examples "shows flash", :error, t(
+        'c.account_activations.edit.flash.error.1', link: t(
+          'c.account_activations.edit.flash.link'))
     end
 
     context "that is valid" do
-      background { visit activation_link }
+      background { visit link(:activation) }
 
       it "redirects to signin page" do
-        expect(current_path).to eq(signin_path)
-      end
+        #=======================================================
+        # replace with "expect(current_path).to eq(signin_path)" after
+        # removing the "default_url_options" method from application_controller
+        expect(current_path).to eq(signin_path(locale: 'en'))
+        #=======================================================
+      end        
 
-      it "displays flash message" do
-        expect(page).to have_flash(:success, 'Thank you for confirming')
-      end
+      include_examples "shows flash", :success, t(
+        'c.account_activations.edit.flash.success')
     end
   end
 
   feature "re-request" do
     background  do
-      visit activation_link(with: :invalid_token)
-      within('.flash') { click_link('here') }
+      visit link(:activation, token: 'invalid')
+      within('.flash') { click_link(t(
+        'c.account_activations.edit.flash.link')) }
     end
-  
-    specify "page" do
-      expect(page).to have_selector('h1', text: 'Request activation email')
-    end
+
+    include_examples "page has", h1: t('v.account_activations.new.header')
 
     context "with invalid data" do
       background { rerequest_activation_email_as(nonexistent_user) }
@@ -89,13 +91,10 @@ feature "Account activation" do
         expect(deliveries.count).to eq(1)
       end
 
-      it "re-renders current page" do
-        expect(page).to have_selector('h1', text: 'Request activation email')
-      end
+      include_examples "page has", h1: t('v.account_activations.new.header')
 
-      it "displays flash message" do
-        expect(page).to have_flash(:error, 'Invalid')
-      end      
+      include_examples "shows flash", :error, t(
+        'c.account_activations.create.flash.error')
     end
 
     context "with valid data" do
@@ -109,9 +108,8 @@ feature "Account activation" do
         expect(current_path).to eq(root_path)
       end
 
-      it "displays flash message" do
-        expect(page).to have_flash(:notice, 'activation email has been sent')
-      end
+      include_examples "shows flash", :notice, t(
+        'c.account_activations.create.flash.notice')
     end
   end
 end

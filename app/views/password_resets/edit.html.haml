@@ -1,16 +1,17 @@
-%h1 Change password
+%h1= t('v.password_resets.edit.header')
 
 = render 'shared/validation_errors', obj: @password_reset
-%p.center Enter your new password below:
+%p.center= t('v.password_resets.edit.invitation')
 
 = form_for @password_reset, method: :patch do |f|
   = hidden_field_tag 'token', params[:token]
   = hidden_field_tag 'e', params[:e]
   %div.control-group
-    = f.label :password, "Password"
+    = f.label :password, t('v.password_resets.edit.fields.password')
     = f.password_field :password, class: "textfield"
   %div.control-group
-    = f.label :password_confirmation, "Confirm password"
+    = f.label :password_confirmation,
+      t('v.password_resets.edit.password_confirmation')
     = f.password_field :password_confirmation, class: "textfield"
   .center
-    = f.submit "Save", class: "btn"
+    = f.submit t('v.password_resets.edit.submit_button'), class: "btn"

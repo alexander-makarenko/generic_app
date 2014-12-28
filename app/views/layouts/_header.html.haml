@@ -2,6 +2,7 @@
   %nav.right
     %ul
       - if policy(:session).new?
-        %li #{link_to('Sign in', signin_path)}
+        %li= link_to(t('v.layouts._header.nav_links.sign_in'), signin_path)
       - else
-        %li= link_to('Sign out', signout_path, method: :delete)
+        %li= link_to(t('v.layouts._header.nav_links.sign_out'),
+          signout_path, method: :delete)

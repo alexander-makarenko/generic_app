@@ -3,12 +3,26 @@ class ApplicationController < ActionController::Base
   include Pundit
 
   add_flash_types :success, :error
+
+  before_action :set_locale
   
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
+
+  #=======================================================
+  # https://github.com/rails/rails/issues/12178 - this bug
+  # in rspec caused the tests to fail. remove when fixed
+  def default_url_options(options = {})
+    { locale: I18n.locale }.merge options
+  end
+  #=======================================================
+
+  def set_locale
+    I18n.locale = params[:locale] || I18n.default_locale
+  end
 
   def decode(encoded_param)
     begin
@@ -21,7 +35,7 @@ class ApplicationController < ActionController::Base
   private
   
     def user_not_authorized
-      flash[:error] = "You are not authorized to perform this action."
+      flash[:error] = t('c.application.flash.error')
       redirect_to(request.referrer || root_path)
     end
 end
