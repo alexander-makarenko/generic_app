@@ -1,5 +1,5 @@
 - if obj.errors.any?
-  %div.validation-errors
+  .validation-errors
     %p= t('v.shared._validation_errors.message',
       count: obj.errors.full_messages.uniq.count)
     %ul

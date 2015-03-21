@@ -1,31 +1,34 @@
 require 'rails_helper'
 
 describe User do
-  let(:name)     { 'First Last' }
-  let(:email)    { 'first.last@example.com' }
-  let(:password) { 'qwerty123' }
+  let(:first_name) { 'First' }
+  let(:last_name)  { 'Last' }
+  let(:email)      { 'first.last@example.com' }
+  let(:password)   { 'qwerty123' }
 
   subject(:user) { User.new(
-    name: name,
+    first_name: first_name,
+    last_name: last_name,
     email: email,
     password: password,
     password_confirmation: password) }
 
-  [ :name,
+  [ :first_name,
+    :last_name,
+    :name,
     :email,
     :password_digest,
     :password,
     :password_confirmation,
     :authenticated,
-    :auth_digest,
-    :activation_token,
+    :auth_digest,    
+    :activation_sent_at,
     :activation_digest,
-    :activation_email_sent_at,
     :activated,
     :activated_at,
     :password_reset_token,
     :password_reset_digest,
-    :password_reset_email_sent_at    
+    :password_reset_sent_at    
   ].each do |method|
     it %Q|responds to "#{method}" method| do
       expect(user).to respond_to method
@@ -35,14 +38,27 @@ describe User do
   it { is_expected.to be_valid }
   it { is_expected.to_not be_activated }
 
-  describe "with name that" do
+  describe "with first name that" do
     context "is blank" do
-      let(:name) { ' ' }
+      let(:first_name) { ' ' }
       include_examples "is invalid and has errors", 1
     end
 
     context "is too long" do
-      let(:name) { 'a' * 51 }
+      let(:first_name) { 'a' * 31 }
+
+      include_examples "is invalid and has errors", 1
+    end
+  end
+
+  describe "with last name that" do
+    context "is blank" do
+      let(:last_name) { ' ' }
+      include_examples "is invalid and has errors", 1
+    end
+
+    context "is too long" do
+      let(:last_name) { 'a' * 31 }
 
       include_examples "is invalid and has errors", 1
     end
@@ -178,51 +194,88 @@ describe User do
     end
   end
 
+  describe "#name" do
+    it "returns first and last name separated by space" do
+      expect(user.name).to match(
+        /#{Regexp.quote(first_name)}\s{1}#{Regexp.quote(last_name)}/ )
+    end
+  end
+
   describe "#authenticated" do
     let(:found_user) { User.find_by(email: user.email) }
     before { user.save }
 
-    accepted_attributes = [:password, :activation_token, :password_reset_token]
+    accepted_attributes = [:password, :activation_token,
+      :password_reset_token]
     accepted_attributes.each do |attribute|
-      context "with #{attribute}" do
-        context "that is incorrect" do
-          it "returns false" do
-            expect(found_user.authenticated(
-              attribute, 'incorrect')).to eq(false)
-          end
+      context "with correct #{attribute}" do        
+        it "returns false" do
+          expect(found_user.authenticated(attribute, 'incorrect')).to eq(false)
         end
+      end        
 
-        context "that is correct" do
-          it "returns user" do
-            expect(found_user.authenticated(
-              attribute, user.send(attribute))).to eq(user)
-          end
-        end
+      context "with incorrect #{attribute}" do
+        it "returns user" do
+          expect(found_user.authenticated(
+            attribute, user.send(attribute))).to eq(user)
+        end        
       end
     end
   end
 
-  describe "#send_link" do
-    [:activation, :password_reset].each do |link_type|
-      it "sets email_sent_at time" do
-        expect { user.send_link(link_type) }.to change {
-          user.send("#{link_type}_email_sent_at")
+  describe "#assign_and_validate_attributes" do
+    let(:user) { User.new }
+
+    context "when attribute(s) is invalid" do      
+      let(:invalid_attrs) { Hash[email: 'not_an@email', password: ' '] }
+
+      it "returns false" do
+        expect(user.assign_and_validate_attributes(invalid_attrs)).to eq(false)
+      end
+
+      it "deletes irrelevant keys from errors hash" do
+        user.assign_and_validate_attributes(invalid_attrs)
+        expect(user.errors.keys).to match_array(invalid_attrs.keys)
+      end
+    end
+
+    context "when attribute(s) is valid" do
+      let(:valid_attrs) { Hash[email: 'valid@email.net', password: 'password'] }    
+
+      it "returns true" do
+        expect(user.assign_and_validate_attributes(valid_attrs)).to eq(true)
+      end
+
+      it "leaves errors hash empty" do
+        user.assign_and_validate_attributes(valid_attrs)
+        expect(user.errors).to be_empty
+      end
+    end
+  end
+
+  describe "#send_email" do
+    before { user.save }
+    
+    [:activation, :password_reset].each do |email_type|
+      it "sets send time" do
+        expect { user.send_email(email_type) }.to change {
+          user.send("#{email_type}_sent_at")
         }.from(nil).to(ActiveSupport::TimeWithZone)
       end
 
-      context "when #{link_type}_token is blank" do
+      context "when #{email_type}_token is blank" do
         let(:found_user) { User.find_by(email: user.email) }
         before { user.save }
 
-        it "generates new token" do
-          expect { found_user.send_link(link_type) }.to change {
-            found_user.send("#{link_type}_token")
+        it "generates new token" do          
+          expect { found_user.send_email(email_type) }.to change {
+            found_user.send("#{email_type}_token")
           }.from(nil).to(String)
         end
 
-        it "updates #{link_type}_digest" do
-          expect { found_user.send_link(link_type) }.to change(
-            found_user.reload, "#{link_type}_digest")
+        it "updates #{email_type}_digest" do
+          expect { found_user.send_email(email_type) }.to change(
+            found_user.reload, "#{email_type}_digest")
         end
       end
     end

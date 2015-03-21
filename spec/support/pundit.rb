@@ -1,6 +1,10 @@
 RSpec::Matchers.define :permit do |action|
   match do |policy|
-    policy.public_send("#{action}?")
+    begin
+      policy.public_send("#{action}?")
+    rescue
+      false
+    end
   end
 
   failure_message do |policy|

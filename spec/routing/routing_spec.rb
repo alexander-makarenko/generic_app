@@ -3,10 +3,11 @@ require 'rails_helper'
 describe "Routing" do
   locales = [ nil, '/en', '/ru' ]
   locales.each do |locale|
-    describe "in AccountActivations controller" do    
+    describe "in AccountActivations controller" do
       specify do
-        expect(get "#{locale}/user/activate/abc123").to route_to(
-          'account_activations#edit', { token: 'abc123' }.merge(param_from_url(locale)))
+        expect(get "#{locale}/user/activate/hashed_email/token").to route_to(
+          'account_activations#edit', { hashed_email: 'hashed_email',
+            token: 'token' }.merge(param_from_url(locale)))
       end
       
       specify do
@@ -32,8 +33,9 @@ describe "Routing" do
       end
 
       specify do
-        expect(get "#{locale}/user/recover/abc123").to route_to(
-          'password_resets#edit', { token: 'abc123' }.merge(param_from_url(locale)))
+        expect(get "#{locale}/user/recover/hashed_email/token").to route_to(
+          'password_resets#edit', { hashed_email: 'hashed_email',
+            token: 'token' }.merge(param_from_url(locale)))
       end
 
       specify do
@@ -96,6 +98,11 @@ describe "Routing" do
       specify do
         expect(patch "#{locale}/users/42").to route_to(
           'users#update', { id: '42' }.merge(param_from_url(locale)))
+      end
+
+      specify do
+        expect(post "#{locale}/users/validate").to route_to(
+          'users#validate', param_from_url(locale))
       end
     end
   end

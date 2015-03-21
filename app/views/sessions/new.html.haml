@@ -1,17 +1,18 @@
-%h1= t('v.sessions.new.header')
-
-= form_tag :sessions do
-  %div.control-group
-    = label_tag :email, t('v.sessions.new.fields.email')
-    = text_field_tag :email, nil, class: "textfield"
-  %div.control-group
-    = label_tag :password, t('v.sessions.new.fields.password')
-    %span= link_to(t('v.sessions.new.forgot?'), new_password_reset_path)
-    = password_field_tag :password, nil, class: "textfield"
-    %p.right
-      = label_tag :keep_signed_in, t('v.sessions.new.keep_signed_in')
-      = check_box_tag :keep_signed_in, "yes", false
-  .center
-    = submit_tag t('v.sessions.new.submit_button'), class: "btn"
-%p.center= raw t('v.sessions.new.register?',
-  signup_link: link_to(t('v.sessions.new.signup_link'), signup_path))
+.form.signin
+  .header= t('v.sessions.new.header')
+  = form_tag :sessions do
+    .contents
+      .fields
+        .col.col-100
+          = text_field_tag :email, nil, class: "textfield",
+            placeholder: t('v.sessions.new.fields.email')
+        .col.col-100
+          = password_field_tag :password, nil, class: "textfield",
+            placeholder: t('v.sessions.new.fields.password')
+          = label_tag :keep_signed_in, t('v.sessions.new.keep_signed_in')
+          = check_box_tag :keep_signed_in, "yes", false
+          %span.float-right= link_to(t('v.sessions.new.forgot?'), new_password_reset_path)
+    .footer
+      = submit_tag t('v.sessions.new.submit_button'), class: "button"
+      %p= t('v.sessions.new.or')
+      %span= link_to(t('v.sessions.new.signup_link'), signup_path)

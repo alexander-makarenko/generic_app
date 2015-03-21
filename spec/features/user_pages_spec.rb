@@ -43,16 +43,20 @@ feature "Profile" do
         given(:current_password) { 'notright' }
 
         include_examples "page has", h1: t('v.users.edit.header')
-        include_examples "shows flash", :error, t('c.users.update.flash.error')
+
+        it "displays flash" do
+          expect(page).to have_flash :error, t('c.users.update.flash.error')
+        end
       end
 
-      context "and correct password" do      
+      context "and correct password" do
         it "redirects to home page" do
           expect(current_path).to eq(root_path)
         end
-
-        include_examples "shows flash", :success,
-          t('c.users.update.flash.success')
+        
+        it "displays flash" do
+          expect(page).to have_flash :success, t('c.users.update.flash.success')
+        end        
       end
     end
   end

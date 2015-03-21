@@ -3,17 +3,17 @@ require "rails_helper"
 describe UserMailer, :type => :mailer do
   let(:user) { FactoryGirl.create(:user) }
 
-  describe "#account_activation" do
+  describe "#activation" do
     let(:mail) { UserMailer.activation(user) }
 
     it "renders the headers" do
-      expect(mail.subject).to eq('Account activation')
+      expect(mail.subject).to eq(t('m.user_mailer.activation.subject'))
       expect(mail.to).to eq([user.email])
       expect(mail.from).to eq(['noreply@example.com'])
     end
 
     it "renders the body" do
-      expect(mail.body.encoded).to match(/activate\/(.+)\?e=(.+)/i)
+      expect(mail.body.encoded).to match(/activate\/(.+)/i)
     end
   end
 
@@ -21,13 +21,13 @@ describe UserMailer, :type => :mailer do
     let(:mail) { UserMailer.password_reset(user) }
 
     it "renders the headers" do
-      expect(mail.subject).to eq('Password reset')
+      expect(mail.subject).to eq(t('m.user_mailer.password_reset.subject'))
       expect(mail.to).to eq([user.email])
       expect(mail.from).to eq(['noreply@example.com'])
     end
 
     it "renders the body" do
-      expect(mail.body.encoded).to match(/recover\/(.+)\?e=(.+)/i)
+      expect(mail.body.encoded).to match(/recover\/(.+)/i)
     end
   end
 end

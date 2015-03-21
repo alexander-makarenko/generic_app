@@ -24,6 +24,8 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
+  Capybara.javascript_driver = :webkit
+  
   config.before { ActionMailer::Base.deliveries.clear }
   
   # If you're not using ActiveRecord, or you'd prefer not to run each of your

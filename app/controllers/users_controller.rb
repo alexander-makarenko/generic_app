@@ -1,4 +1,13 @@
 class UsersController < ApplicationController
+  def validate    
+    @user = User.new
+    @user.assign_and_validate_attributes(user_params)
+
+    respond_to do |format|
+      format.json { render :validate }
+    end
+  end
+
   def new
     @user = User.new
     authorize @user
@@ -9,8 +18,10 @@ class UsersController < ApplicationController
     authorize @user
 
     if @user.save
-      @user.send_link(:activation)
-      redirect_to root_path, notice: t('c.users.create.flash.notice')
+      @user.send_email(:activation)
+      sign_in(@user)
+      redirect_to root_path,
+        notice: t('c.users.create.flash.notice', email: @user.email)
     else
       render :new
     end
@@ -42,6 +53,7 @@ class UsersController < ApplicationController
 
   private
     def user_params
-      params.require(:user).permit(:name, :email, :password, :password_confirmation)
+      params.require(:user).permit(:first_name, :last_name, :email, :password,
+        :password_confirmation)
     end
 end

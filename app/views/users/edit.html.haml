@@ -3,8 +3,11 @@
 = render 'shared/validation_errors', obj: @user
 = form_for @user do |f|
   %div.control-group
-    = f.label :name, t('v.users.edit.fields.name')
-    = f.text_field :name, class: "textfield"
+    = f.label :first_name, t('v.users.edit.fields.first_name')
+    = f.text_field :first_name, class: "textfield"
+  %div.control-group
+    = f.label :last_name, t('v.users.edit.fields.last_name')
+    = f.text_field :last_name, class: "textfield"
   %div.control-group
     = f.label :email, t('v.users.edit.fields.email')
     = f.text_field :email, class: "textfield"

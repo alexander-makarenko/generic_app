@@ -9,25 +9,30 @@ gem 'bcrypt'
 gem 'haml-rails'
 gem 'sass-rails'
 gem 'faker'
-gem 'uglifier', '>= 1.3.0'
+gem 'uglifier'
 gem 'jquery-rails'
 gem 'turbolinks'
-gem 'jbuilder', '~> 2.0'
-# gem 'coffee-rails', '~> 4.0.0'
+gem 'jbuilder'
+# gem 'coffee-rails'
 gem 'pundit', github: 'elabs/pundit'
+# gem 'lodash-rails'
 
 group :development, :test do
   gem 'rspec-rails'
+  gem 'jasmine-rails'
   gem 'guard-rspec'
+  gem 'guard-jasmine'
   gem 'spring-commands-rspec'
   gem 'show_me_the_cookies'
 end
 
 group :test do
   gem 'capybara'
+  gem 'capybara-webkit'
   gem 'selenium-webdriver'
   gem 'libnotify'
   gem 'factory_girl_rails'
+  gem 'launchy'
 end
 
 group :production do

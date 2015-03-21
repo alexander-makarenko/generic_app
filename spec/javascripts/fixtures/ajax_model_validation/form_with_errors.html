@@ -1,0 +1,21 @@
+<form id="new_foo">
+  <div class="contents">
+    <div class="validation-errors">
+      <p>Model has 2 errors:</p>
+      <ul>
+        <li>first error</li>
+        <li>second error</li>
+      </ul>
+    </div>
+  </div>
+  <input type="hidden" name="bar" value="bar" />
+  <input type="text" id="foo_first_attr" name="foo[first_attr]" />
+  <div class="field_with_errors">
+    <input type="text" id="foo_second_attr" name="foo[second_attr]" />
+  </div>  
+  <input type="text" id="foo_third_attr" name="foo[third_attr]" />
+  <div class="field_with_errors">
+    <input type="password" id="foo_fourth_attr" name="foo[fourth_attr]" />
+  </div>
+  <input type="submit" name="commit" value="Confirm" />  
+</form>

@@ -7,10 +7,10 @@ class PasswordResetPolicy < ApplicationPolicy
   end
 
   def create?
-    !signed_in?
+    true
   end
 
   def update?
-    !signed_in?    
+    true
   end
 end

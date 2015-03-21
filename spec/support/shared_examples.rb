@@ -1,3 +1,39 @@
+module Capybara
+  class Session
+    def has_flash?(type, contents)
+      has_selector?("div.flash-#{type.to_s}", text: contents)
+    end
+  end
+end
+
+# add convenience method for I18n.t
+def t(string, options={})
+  I18n.t(string, options)
+end
+
+signin_link = t('v.layouts._header.nav_links.sign_in')
+signout_link = t('v.layouts._header.nav_links.sign_out')
+
+shared_examples "user is not signed in" do |conditions={}|
+  it "has signin link", conditions do
+    within('header nav') { expect(page).to have_link(signin_link) }
+  end
+  
+  it "does not have signout link", conditions do
+    within('header nav') { expect(page).to_not have_link(signout_link) }
+  end
+end
+
+shared_examples "user is signed in" do |conditions={}|
+  it "has signout link", conditions do
+    within('header nav') { expect(page).to have_link(signout_link) }
+  end
+
+  it "does not have signin link", conditions do
+    within('header nav') { expect(page).to_not have_link(signin_link) }
+  end
+end
+
 shared_examples "is invalid and has errors" do |count, conditions={}|
   count_message = count == 1 ? 'an error' : "#{count} errors"
   specify %Q|is invalid and has #{count_message}|, conditions do
@@ -13,15 +49,9 @@ shared_examples "page has validation errors" do |conditions={}|
 end
 
 shared_examples "page has" do |options, conditions={}|
-  if options[:h1]
-    specify %Q|page has css "h1" with "#{options[:h1]}"|, conditions do
-      expect(page).to have_selector('h1', text: options[:h1])
+  options.each do |key, value|
+    specify %Q|page has css "#{key}" with "#{value}"|, conditions do
+      expect(page).to have_selector(key.to_s, text: value)
     end
-  end
-end
-
-shared_examples "shows flash" do |type, contents, conditions={}|
-  specify %Q|shows #{type} flash with "#{contents}"|, conditions do
-    expect(page).to have_selector("div.flash-#{type}", text: contents)
   end
 end

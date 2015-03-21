@@ -1,53 +1,59 @@
 class PasswordResetsController < ApplicationController
-  before_action { authorize PasswordReset.new }
+  before_action { authorize :password_reset }
 
   def new
-    @password_reset = PasswordReset.new
+    @mock_user = User.new
   end
 
   def create
-    @password_reset = PasswordReset.new(params[:password_reset])
-    @password_reset.skip_password_validation = true
+    @mock_user = User.new
+    @mock_user.assign_and_validate_attributes(create_params)
 
-    if @password_reset.valid?
-      user = User.find_by(email: @password_reset.email.downcase)
-      user.send_link(:password_reset) if user
+    if @mock_user.errors.added?(:email, :taken)
+      User.find_by_email(@mock_user.email.downcase).send_email(:password_reset)
       redirect_to root_path, notice: t('c.password_resets.create.flash.notice')
     else
+      flash.now[:error] = t('c.password_resets.create.flash.error') if @mock_user.errors.empty?
       render :new
     end
   end
 
   def edit
-    @password_reset = PasswordReset.new
-    user = User.find_by(email: decode(params[:e]))
+    if params[:token] && params[:hashed_email]
+      session[:token], session[:hashed_email] = params[:token], params[:hashed_email]      
+    end
 
-    if user && user.authenticated(:password_reset_token, params[:token])
-      if user.link_expired?(:password_reset)
-        redirect_to root_path, error: t(
-          'c.password_resets.edit.flash.error.1',
-          link: view_context.link_to(
-            t('c.password_resets.edit.flash.link'),
-            new_password_reset_path))
-      else
+    user = User.find_by(password_reset_digest: User.digest(params[:token]))    
+    if user && User.digest(user.email) == params[:hashed_email]
+      unless user.link_expired?(:password_reset)
+        @mock_user = User.new
         render :edit
+      else
+        redirect_to root_path,
+          error: t('c.password_resets.edit.flash.error.expired',
+            link: view_context.link_to(t('c.password_resets.edit.flash.link'),
+              new_password_reset_path))
       end
     else
-      redirect_to root_path, error: t('c.password_resets.edit.flash.error.2')
+      redirect_to root_path,
+        error: t('c.password_resets.edit.flash.error.invalid',
+          link: view_context.link_to(t('c.password_resets.edit.flash.link'),
+            new_password_reset_path))
     end
   end
 
   def update
-    @password_reset = PasswordReset.new(params[:password_reset])
-    @password_reset.email = decode(params[:e])
-    user = User.find_by(email: @password_reset.email)
-
-    if user && user.authenticated(:password_reset_token, params[:token])
-      if @password_reset.valid?
+    user = User.find_by(password_reset_digest: User.digest(session[:token]))
+    if user && User.digest(user.email) == session[:hashed_email]
+      @mock_user = User.new      
+      @mock_user.assign_and_validate_attributes(update_params.slice(
+        :password, :password_confirmation))
+      if @mock_user.errors.empty?
         user.attributes = {
-          password: @password_reset.password,
-          password_reset_email_sent_at: nil }
+          password: @mock_user.password,
+          password_reset_sent_at: nil }
         user.save(validate: false)
+        session[:token], session[:hashed_email] = nil, nil
         redirect_to signin_path,
           success: t('c.password_resets.update.flash.success')
       else
@@ -57,4 +63,13 @@ class PasswordResetsController < ApplicationController
       redirect_to root_path
     end
   end
+
+  private
+    def create_params
+      params.require(:password_reset).permit(:email)
+    end
+
+    def update_params
+      params.require(:password_reset).permit(:password, :password_confirmation)
+    end
 end

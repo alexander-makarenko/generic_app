@@ -1,5 +1,5 @@
 class ApplicationPolicy
-  attr_reader :user, :record
+  attr_reader :current_user, :record
 
   def initialize(current_user, record)
     @current_user = current_user
@@ -35,14 +35,14 @@ class ApplicationPolicy
   end
 
   def scope
-    Pundit.policy_scope!(user, record.class)
+    Pundit.policy_scope!(current_user, record.class)
   end
 
   class Scope
-    attr_reader :user, :scope
+    attr_reader :current_user, :scope
 
-    def initialize(user, scope)
-      @user = user
+    def initialize(current_user, scope)
+      @current_user = current_user
       @scope = scope
     end
 
@@ -52,20 +52,15 @@ class ApplicationPolicy
   end
 
   private
-
     def signed_in?
       !current_user.nil?
     end
 
+    # def activated?
+    #   current_user && current_user.activated?
+    # end
+    
     def current_user?(user)
       user == current_user
-    end
-
-    def requested?(link_type)
-      !current_user.send("#{link_type}_email_sent_at").nil?
-    end
-
-    def link_expired?(link_type)
-      current_user.link_expired?(link_type)
     end
 end

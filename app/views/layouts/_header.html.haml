@@ -4,5 +4,7 @@
       - if policy(:session).new?
         %li= link_to(t('v.layouts._header.nav_links.sign_in'), signin_path)
       - else
+        %li.username= current_user.name
+        %li= '|'
         %li= link_to(t('v.layouts._header.nav_links.sign_out'),
           signout_path, method: :delete)

@@ -7,10 +7,10 @@ class AccountActivationPolicy < ApplicationPolicy
   end
 
   def create?
-    !signed_in?
+    signed_in?
   end
 
   def edit?
-    !signed_in?
+    true
   end
 end

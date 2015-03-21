@@ -15,17 +15,20 @@
 //= require turbolinks
 //= require_tree .
 
-$(document).ready(function() {
+var callDelayed = (function() {
+  var timeoutId;
+  return function(callback, ms) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(callback, ms);
+  };
+}());
 
-  function makeClosable() {
-    $('.closable').append('<div class="close-button">&times</div>');
-    $('.close-button').click(function() {
-      $(this).parent('.closable').fadeTo(200, .1).slideUp(200, function() {
-        $(this).hide();
-      });
-    });
-  } // end makeClosable
+function makeClosable() {
+  $('<div>&times</div>').addClass('close-button').appendTo($('.closable')).click(function() {
+    $(this).parent().fadeTo(200, .1).slideUp(200);
+  });
+}
 
+$(document).on('page:change', function() {
   makeClosable();
-
-}); // end ready
+});

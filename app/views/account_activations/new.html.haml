@@ -1,13 +1,15 @@
 %h1= t('v.account_activations.new.header')
 
-%p.center= t('v.account_activations.new.invitation')
-
-= form_tag :account_activations do
-  %div.control-group
-    = label_tag :email, t('v.account_activations.new.fields.email')
-    = text_field_tag :email, nil, class: "textfield"
-  %div.control-group
-    = label_tag :password, t('v.account_activations.new.fields.password')
-    = password_field_tag :password, nil, class: "textfield"
-  .center
-    = submit_tag t('v.account_activations.new.submit_button'), class: "btn"
+.form.generic
+  %p.center= t('v.account_activations.new.invitation')
+  = render 'shared/validation_errors', obj: current_user
+  .fields
+    = form_tag :account_activations do
+      .col.col-75
+        = label_tag :email, t('v.account_activations.new.fields.email')
+        = text_field_tag :email, current_user.email, class: "textfield"          
+      .col.col-75
+        = label_tag :password, t('v.account_activations.new.fields.password')
+        = password_field_tag :password, nil, class: "textfield"
+      .center
+        = submit_tag t('v.account_activations.new.submit_button'), class: "button"

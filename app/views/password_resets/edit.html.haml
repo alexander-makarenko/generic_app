@@ -1,17 +1,15 @@
 %h1= t('v.password_resets.edit.header')
 
-= render 'shared/validation_errors', obj: @password_reset
 %p.center= t('v.password_resets.edit.invitation')
-
-= form_for @password_reset, method: :patch do |f|
-  = hidden_field_tag 'token', params[:token]
-  = hidden_field_tag 'e', params[:e]
-  %div.control-group
-    = f.label :password, t('v.password_resets.edit.fields.password')
-    = f.password_field :password, class: "textfield"
-  %div.control-group
-    = f.label :password_confirmation,
-      t('v.password_resets.edit.password_confirmation')
-    = f.password_field :password_confirmation, class: "textfield"
-  .center
-    = f.submit t('v.password_resets.edit.submit_button'), class: "btn"
+.form.generic
+  = render 'shared/validation_errors', obj: @mock_user
+  .fields  
+    = form_for @mock_user, as: :password_reset, url: password_resets_path, method: :patch do |f|
+      .col.col-75
+        = f.password_field :password,
+          placeholder: t('v.password_resets.edit.fields.password')
+      .col.col-75                  
+        = f.password_field :password_confirmation,
+          placeholder: t('v.password_resets.edit.fields.password_confirmation')
+      .center
+        = f.submit t('v.password_resets.edit.submit_button'), class: "button"

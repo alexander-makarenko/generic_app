@@ -1,10 +1,11 @@
 include SessionsHelper
 
 def sign_up_as(user)
-  fill_in 'user[name]',                  with: user.name
-  fill_in 'user[email]',                 with: user.email.upcase
-  fill_in 'user[password]',              with: user.password
-  fill_in 'user[password_confirmation]', with: user.password_confirmation
+  fill_in 'user_first_name',            with: user.first_name
+  fill_in 'user_last_name',             with: user.last_name
+  fill_in 'user_email',                 with: user.email.upcase
+  fill_in 'user_password',              with: user.password
+  fill_in 'user_password_confirmation', with: user.password_confirmation
   click_button I18n.t('v.users.new.submit_button')
 end
 
@@ -19,33 +20,38 @@ def sign_in_as(user, options={})
   end
 end
 
-def update_profile_of(user, options={})
-  original_values = Hash[
-    name: user.name,
+def update_profile_of(user, custom_values={})
+  values = {
+    first_name: user.first_name,
+    last_name: user.last_name,
     email: user.email.upcase,
-    password: user.password ]
-  
-  new_values = original_values.merge(options)
+    password: user.password
+  }
+  values.merge!(custom_values) if custom_values
 
-  fill_in 'user[name]',     with: new_values[:name]
-  fill_in 'user[email]',    with: new_values[:email]
-  fill_in 'user[password]', with: new_values[:password]
+  fill_in 'user_first_name', with: values[:first_name]
+  fill_in 'user_last_name',  with: values[:last_name]
+  fill_in 'user_email',      with: values[:email]
+  fill_in 'user_password',   with: values[:password]
   click_button I18n.t('v.users.edit.submit_button')
 end
 
-def update_password_with(options={})  
-  fill_in 'password_reset[password]',              with: options[:password]
-  fill_in 'password_reset[password_confirmation]', with: options[:confirmation]
+def update_password_with(values={})  
+  fill_in 'password_reset_password',              with: values[:password]
+  fill_in 'password_reset_password_confirmation', with: values[:confirmation]
   click_button I18n.t('v.password_resets.edit.submit_button')
 end
 
-def rerequest_activation_email_as(user)
-  fill_in 'email',    with: user.email.upcase
-  fill_in 'password', with: user.password
+def rerequest_account_activation_as(user, custom_values={})
+  values = { email: user.email.upcase, password: user.password }
+  values.merge!(custom_values) if custom_values
+
+  fill_in 'email',    with: values[:email]
+  fill_in 'password', with: values[:password]
   click_button I18n.t('v.account_activations.new.submit_button')
 end
 
 def request_password_reset(email)
-  fill_in 'password_reset[email]', with: email.upcase
+  fill_in 'password_reset_email', with: email.upcase
   click_button I18n.t('v.password_resets.new.submit_button')
 end

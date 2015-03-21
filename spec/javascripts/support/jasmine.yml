@@ -1,0 +1,4 @@
+use_phantom_gem: false
+
+spec_files:
+  - "**/*[Ss]pec.{js.coffee,js,coffee}"

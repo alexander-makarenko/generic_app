@@ -17,26 +17,31 @@
 
 /* color variables */
 
-$white: #fff;
-$off-white: #eee;
+$black: #000;
+$white: #FFF;
+$off-white: #F5F5F5;
 
-$gray-light: #ddd;
-$gray: #aaa;
-$gray-dark: #444;
+$gray-light: #DDD;
+$gray-lighter: #BBB;
+$gray: #999;
+$gray-dark: #555;
 
-$red-light: #fff1f1;
-$red: #ffb2b2;
-$red-dark: #f66;
+$red-light: #FFDBDB;
+$red-lighter: #FF9E9E;
+$red: #FF5959;
+$red-darker: #FF2424;
+$red-dark: #CC3F3F;
 
-$yellow: #fff1b8;
-$yellow-dark: #ffad33;
+$yellow: #FFFFB3;
+$yellow-dark: #CCCC8F;
 
-$green-light: #ccf5cc;
-$green: #33ad33;
-$green-dark: #0c0;
+$green-light: #7DE3B8;
+$green: #82B59E;
+$green-darker: #61B08F;
+$green-dark: #608273;
 
-$blue: #ceefff;
-$blue-dark: #33adff;
+$blue: #A6E0FF;
+$blue-dark: #85B3CC;
 
 /* universal */
 
@@ -56,6 +61,7 @@ html {
 }
 
 header {
+  overflow: hidden;
   margin-bottom: 10px;
   padding: 20px 40px;
   background-color: $white;
@@ -64,20 +70,40 @@ header {
 }
 
 h1 {
-  font-size: 2.2em;
-  margin: 25px 0 40px;
+  font-size: 2.0em;
+  font-weight: bold;
+  padding: 15px 0 25px;
   text-align: center;
 }
 
 p {
   margin: 5px 0;
-  label {
-    font-weight: normal;
-  }
 }
 
 a {
-  text-decoration: none;
+  color: #0078F0;
+}
+
+nav {  
+  ul {
+    float: right;
+    list-style: none;    
+  }
+  li {
+    float: left;    
+    margin-right: 10px;
+    color: $gray-lighter;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  a {
+    text-decoration: none;
+  }
+  .username {
+    color: $gray-dark;
+    font-weight: bold;
+  }
 }
 
 .center {
@@ -88,8 +114,16 @@ a {
   text-align: right;
 }
 
-nav ul {
-  list-style: none;
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
+.shadowed {
+  box-shadow: 0 5px 20px 0px rgba(0,0,0,.5);
 }
 
 .debug_dump {
@@ -103,44 +137,137 @@ nav ul {
 
 /* forms */
 
-form {
-  width: 250px;
+.col {
   margin: 0 auto;
+  padding: 0 5px;  
+}
+
+.col-50 {
+  width: 50%;
+}
+
+.col-75 {
+  width: 75%;
+}
+
+.col-100 {
+  width: 100%;  
 }
 
 label {
-  font-weight: bold;
+  color: $gray-dark;
 }
 
-.field_with_errors .textfield {
-  border-color: $red-dark;
+.fields {
+  overflow: hidden;
+  margin: 0 25px;
 }
 
-.control-group {
-  margin-bottom: 15px;
-  span {
-    float: right;
-  }
+.field_with_errors input[type=text], .field_with_errors input[type=password] {
+  border-color: $red;
 }
 
-.textfield {
-  display: block;
-  width: 250px;  
-  padding: 6px;
-  margin: 5px 0 8px;
-  border: 2px solid $gray-light;
-  border-radius: 3px;
-  transition: border-color 0.2s;
-  &:hover, &:focus {
-    border-color: $blue-dark;
-  }
-}
-
-.btn {
-  font-weight: bold;
+input[type=text], input[type=password] {
   font-size: 1em;
-  margin: 15px 0;
-  padding: 10px;
+  width: 100%;
+  margin: 10px auto;
+  padding: 5px;
+  border: 1px solid $gray-lighter;
+  border-radius: 3px;
+  transition: border-color 0.3s;
+  &:hover, &:focus {
+    border-color: $green-dark;
+  }
+}
+
+.form {
+  border-radius: 5px;
+  margin: 0 auto;  
+  .header {
+    font-size: 1.7em;
+    text-align: right;
+    padding: 10px 30px;
+    text-shadow: 0px -1px 0px $green-dark;
+    color: #fff;
+    background-color: $green;
+    border: 1px solid $green-dark;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }  
+  .contents {    
+    padding: 20px 0 15px;
+    border: 1px solid $gray;
+    border-top: none; border-bottom: none;
+  }
+  .footer {
+    padding: 15px 30px 0;
+    background-color: $off-white;
+    border: 1px solid $gray;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    p {
+      display: inline-block;
+      margin: 0 3px;
+      color: $gray;
+    }
+  }
+}
+
+.signup {
+  width: 450px;
+}
+
+.signin {
+  width: 400px;
+}
+
+.generic {
+  width: 450px;
+}
+
+.validation-errors {  
+  margin: 5px 0;
+  p {
+    font-weight: bold;
+    line-height: 2em;
+    text-align: center;
+    margin: 0;
+    color: $white;
+    background-color: $red;
+    text-shadow: 0px -1px 0px $red-dark;
+    border: 1px solid $red-dark;
+    border-right: none; border-left: none;
+  }
+  ul {
+    background-color: $red-light;
+    padding: 5px 25px 5px 45px;    
+    list-style-type: circle;
+    border-bottom: 1px solid $gray;
+  }
+  li {
+    color: $red-darker;
+    padding: 3px 0;
+  }
+}
+
+.button {
+  cursor: pointer;
+  font-size: 1.1em;
+  text-align: center;
+  margin: 0 0 15px;
+  padding: 0.4em 2em;
+  color: #fff;
+  text-shadow: 0 -1px 0 #4278B3;
+  background-color: #58A0ED;
+  border: solid 1px #4278B3;
+  border-radius: 5px;
+  transition: background-color 0.15s;
+  &:hover {
+    background-color: #5D8BB3;
+  }
+  &:active {
+    box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.4) inset;
+  }
 }
 
 /* flash messages */
@@ -156,7 +283,7 @@ label {
 
 .flash-success {
   background-color: $green-light;
-  border: 1px solid $green-dark;  
+  border: 1px solid $green-darker;
 }
 
 .flash-notice {
@@ -169,52 +296,26 @@ label {
   border: 1px solid $yellow-dark;
 }
 
-.flash-error {
-  background-color: $red;
-  border: 1px solid $red-dark;  
+.flash-error {  
+  background-color: $red-lighter;
+  border: 1px solid $red;
 }
 
 .close-button {
-  font-size: 1.45em;
-  line-height: 18px;
-  text-align: center;
+  cursor: pointer;
   position: absolute;
+  text-align: center;
+  font-size: 1.45em;
+  font-weight: bold;
+  text-shadow: 0 -1px 0 $white;
+  line-height: 18px;
   width: 18px;
   height: 18px;  
   top: 2px;
   right: 2px;
-  cursor: default;
-  color: black;
-  opacity: .4;  
+  color: $black;
+  opacity: .3;
   &:hover {
-    opacity: .6;
-  }
-}
-
-/* validation errors */
-
-.validation-errors {
-  width: 450px;
-  margin: 0 auto 25px;
-  padding-bottom: 5px;
-  background-color: $red-light;
-  border: 1px solid $red-dark;
-  border-radius: 5px;  
-  p {
-    text-align: center;
-    font-weight: bold;
-    line-height: 2em;
-    margin: 0 0 5px;
-    background-color: $red;
-    border-bottom: 1px solid $red-dark;
-    border-top-left-radius:5px;
-    border-top-right-radius:5px;  
-  }
-  ul {
-    padding-left: 100px;
-    list-style-type: circle;
-  }
-  li {
-    padding: 3px 0;
+    opacity: .4;
   }
 }

@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  mount JasmineRails::Engine => '/specs' if defined?(JasmineRails)
+  
   get ':locale' => 'static_pages#home', locale: /en|ru/
   root 'static_pages#home'
 
@@ -7,8 +9,9 @@ Rails.application.routes.draw do
     resources :users, only: [:create, :update]
 
     scope controller: :users do
-      get 'signup'             => :new
-      get 'users/:id/settings' => :edit, as: 'settings'
+      get  'signup'             => :new
+      get  'users/:id/settings' => :edit, as: 'settings'
+      post 'users/validate'     => :validate, as: 'users_validation'
     end
 
     scope controller: :sessions do
@@ -17,18 +20,18 @@ Rails.application.routes.draw do
       delete 'signout'  => :destroy
     end
   
-    scope path: 'user' do
+    scope path: 'user' do      
       scope controller: :account_activations do
-        get  'activate'        => :new,    as: 'new_account_activation'
-        post 'activate'        => :create, as: 'account_activations'
-        get  'activate/:token' => :edit,   as: 'edit_account_activation'
+        get  'activate'                      => :new,    as: 'new_account_activation'
+        post 'activate'                      => :create, as: 'account_activations'
+        get  'activate/:hashed_email/:token' => :edit,   as: 'edit_account_activation'
       end
 
       scope controller: :password_resets do
-        get   'recover'        => :new,    as: 'new_password_reset'
-        post  'recover'        => :create, as: 'password_resets'
-        get   'recover/:token' => :edit,   as: 'edit_password'
-        patch 'recover'        => :update
+        get   'recover'                      => :new,    as: 'new_password_reset'
+        post  'recover'                      => :create, as: 'password_resets'
+        get   'recover/:hashed_email/:token' => :edit,   as: 'edit_password'
+        patch 'recover'                      => :update
       end
     end
   end
