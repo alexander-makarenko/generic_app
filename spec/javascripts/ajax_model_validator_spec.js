@@ -16,7 +16,7 @@ describe("ModelValidator", function() {
     expect(validator.constructor).toBe(ModelValidator);
   });
 
-  it("throws exception if instantiated without model name", function() {
+  it("throws exception if instantiated without model name parameter", function() {
     expect(function(){ new ModelValidator() }).toThrow();
     expect(function(){ new ModelValidator('foo') }).not.toThrow();
   });
@@ -33,23 +33,38 @@ describe("ModelValidator", function() {
     expect(validator.url).toEqual('/foos/validate');
   });
 
-  it("$form method returns form associated with new instance of given ActiveRecord model", function() {
-    loadFixtures('ajax_model_validation/multiple_forms.html');
-    var forms = validator.$form();
+  describe("$form method returns form to validate", function() {
+    beforeEach(function() {
+      loadFixtures('ajax_model_validation/multiple_forms.html');
+    });
 
-    expect(forms).toHaveLength(1);
-    expect(forms.first().attr('id')).toBe('new_foo');
+    it("based on conventional form id for new ActiveRecord model instances", function() {
+      var forms = validator.$form();
+
+      expect(forms).toHaveLength(1);
+      expect(forms.first().attr('id')).toBe('new_foo');
+    });
+
+    it("based on given selector, when one is provided as second parameter to constructor", function() {
+      validator = new ModelValidator('foo', '#baz');
+      var forms = validator.$form();
+
+      expect(forms).toHaveLength(1);
+      expect(forms.first().attr('id')).toBe('baz');
+    });
   });
 
-  it("$fields method returns all inputs of $form except submit", function() {
+  it("$fields method returns all inputs of $form except those of type 'submit' and 'hidden'", function() {
     loadFixtures('ajax_model_validation/form_without_errors.html');
+    var $fields = validator.$fields();
 
-    expect(validator.$fields()).toEqual('#new_foo input:not([type="submit"])');
+    expect(validator.$fields()).toHaveLength(4);
+    expect(validator.$fields()).toEqual($('#new_foo').find('input:not([type="submit"], [type="hidden"])'));
   });
 
   it("$invalidFields method returns fields whose parent has class set in invalidFieldClass property", function() {
     loadFixtures('ajax_model_validation/form_with_errors.html');
-    expect(validator.$invalidFields()).toEqual($('.' + validator.invalidFieldClass).children());
+    expect(validator.$invalidFields()).toEqual($('.' + validator.invalidFieldClass).children('input'));
   });
 
   describe("$editedFields property", function() {
@@ -214,7 +229,7 @@ describe("ModelValidator", function() {
 
       beforeEach(function() {
         loadFixtures('ajax_model_validation/form_with_errors.html');
-        $errorDiv = $('.contents div.' + validator.errorDivClass);
+        $errorDiv = $('h2 + div.' + validator.errorDivClass);
       });
 
       describe("and newly received errors", function() {
@@ -271,12 +286,12 @@ describe("ModelValidator", function() {
           validator.response = testResponses.formValidation.withErrors.responseText;
         });
 
-        it("prepends <div> with new errors to element with class 'contents'", function() {
-          expect($('.contents div.' + validator.errorDivClass)).not.toExist();
+        it("inserts <div> with new errors after h2 element in form being validated", function() {
+          expect($('h2 + div.' + validator.errorDivClass)).not.toExist();
 
           validator.updateErrors();
 
-          expect($('.contents div.' + validator.errorDivClass)).toBeVisible();
+          expect($('h2 + div.' + validator.errorDivClass)).toBeVisible();
         });
       });
 
@@ -285,23 +300,20 @@ describe("ModelValidator", function() {
           validator.response = {};
         });
 
-        it("does not prepend any <div> to element with class 'contents'", function() {
-          expect($('.contents div.' + validator.errorDivClass)).not.toExist();
+        it("does not insert any <div> after h2 element in form being validated", function() {
+          expect($('h2 + div.' + validator.errorDivClass)).not.toExist();
 
           validator.updateErrors();
 
-          expect($('.contents div.' + validator.errorDivClass)).not.toExist();
+          expect($('h2 + div.' + validator.errorDivClass)).not.toExist();
         });
       });
     });
   });
 
   describe("markInvalidFields method", function() {
-    beforeEach(function() {
+    it("removes class set in invalidFieldClass property from all elements that have it", function() {
       loadFixtures('ajax_model_validation/form_with_errors.html');
-    });
-
-    it("unwraps all elements whose parent has class set in invalidFieldClass property", function() {
       validator.response = {};
       
       expect($('.' + validator.invalidFieldClass)).toHaveLength(validator.$invalidFields().length);
@@ -311,15 +323,20 @@ describe("ModelValidator", function() {
       expect($('.' + validator.invalidFieldClass)).toHaveLength(0);
     });
 
-    it("rewraps fields that are invalid as per server's response into divs with class set in invalidFieldsClass property", function() {
+    it("adds class set in invalidFieldsClass property to parent of each field that is invalid as per server's response", function() {
+      var $invalidField;
+      loadFixtures('ajax_model_validation/form_without_errors.html');
       validator.response = testResponses.formValidation.withErrors.responseText;
-      var errorsCount = Object.keys(validator.response.errors).length;
 
-      expect($('.' + validator.invalidFieldClass)).toHaveLength(2);
+      expect($('.' + validator.invalidFieldClass)).toHaveLength(0);
 
       validator.markInvalidFields();
 
-      expect($('.' + validator.invalidFieldClass)).toHaveLength(errorsCount);
+      $.each(validator.response.errors, function(attr, messages) {
+        $invalidField = $('#' + validator.model + '_' + attr);
+
+        expect($invalidField.parent()).toHaveClass(validator.invalidFieldClass);
+      });      
     });
   });
 
@@ -356,15 +373,12 @@ describe("ModelValidator", function() {
       describe("focus event", function() {
         it("stores this field in $lastFocused property", function() {
           validator.enable();
-          expect(validator.$lastFocused).toBeUndefined();
+
+          expect(validator.$lastFocused).not.toEqual('#foo_third_attr');
 
           $('#foo_third_attr').focus();
 
           expect(validator.$lastFocused).toEqual('#foo_third_attr');
-
-          $('#foo_fourth_attr').focus();
-
-          expect(validator.$lastFocused).toEqual('#foo_fourth_attr');
         });
       });
 

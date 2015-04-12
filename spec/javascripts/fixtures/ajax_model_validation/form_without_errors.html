@@ -1,8 +1,29 @@
 <form id="new_foo">  
-  <div class="contents"></div>
-  <input type="text" id="foo_first_attr" name="foo[first_attr]" />
-  <input type="text" id="foo_second_attr" name="foo[second_attr]" />
-  <input type="text" id="foo_third_attr" name="foo[third_attr]" />
-  <input type="password" id="foo_fourth_attr" name="foo[fourth_attr]" />
-  <input type="submit" name="commit" value="Confirm" />
+  <h2>Form name</h2>
+
+  <input type="hidden" name="bar" value="bar" />
+
+  <div>
+    <label for="foo_first_attr">First attr</label>
+    <input type="text" id="foo_first_attr" name="foo[first_attr]" />
+  </div>
+
+  <div>
+    <label for="foo_second_attr">Second attr</label>
+    <input type="text" id="foo_second_attr" name="foo[second_attr]" />
+  </div>
+
+  <div>
+    <label for="foo_third_attr">Third attr</label>
+    <input type="text" id="foo_third_attr" name="foo[third_attr]" />
+  </div>
+
+  <div>
+    <label for="foo_fourth_attr">Fourth attr</label>
+    <input type="password" id="foo_fourth_attr" name="foo[fourth_attr]" />
+  </div>
+
+  <div>
+    <input type="submit" name="commit" value="Confirm" />
+  </div>
 </form>

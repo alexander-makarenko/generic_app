@@ -19,21 +19,22 @@ en:
               blank: "is required"
             password:
               blank: "is required"
+              invalid: "is incorrect"
               too_short: "must be at least %{count} characters long"
             password_confirmation:
               blank: "is required"
-              confirmation: "does not match the %{attribute}"
+              confirmation: "does not match the %{attribute}"              
   c: # controllers
     account_activations:
       already_activated: "You have already activated your account."
       create:
         flash:
-          notice: "An activation email has been sent to your email address.
+          info: "An activation email has been sent to your email address.
             Click the link in the message to activate your account."
-          error: "Wrong password."
+          danger: "Wrong password."
       edit:        
         flash:
-          error:            
+          danger:            
             expired: "The link has expired. To request another activation email,
               click %{link}."
             invalid: "Activation link is invalid. To request a new one, please
@@ -43,13 +44,13 @@ en:
     password_resets:
       create:
         flash:
-          notice: "Email with instructions for resetting your password has been
+          info: "Email with instructions for resetting your password has been
             sent to your address. If you don't receive it within a few minutes,
             be sure to check your junk email/spam filter folder."
-          error: "No user found with the specified email."
+          danger: "No user found with specified email."
       edit:
         flash:
-          error:
+          danger:
             expired: "The link has expired. If you still want to reset your
               password, please click %{link}."
             invalid: "The link is invalid. If you still want to reset your
@@ -61,17 +62,16 @@ en:
     sessions:
       create:
         flash:
-          error: "Invalid email or password."      
+          danger: "Invalid email or password."      
     users:
       create:
         flash:
-          notice: "Thank you for signing up! We have sent a confirmation email
+          info: "Thank you for signing up! We have sent a confirmation email
             to your address (%{email}). Please click the link it contains to
             activate your account."
       update:
         flash:
           success: "Changes saved."
-          error: "Wrong password."
   m: # mailers
     user_mailer:
       greeting: "Hi %{first_name},"
@@ -105,6 +105,7 @@ en:
         nav_links:
           sign_in: "Sign in"
           sign_out: "Sign out"
+          settings: "Settings"
     password_resets:
       edit:
         header: "Set password"
@@ -117,6 +118,8 @@ en:
         header: "Reset password"
         invitation: "Send instructions to reset my password to this email
           address:"
+        fields:
+          email: "Email"
         submit_button: "Submit"
     sessions:
       new:

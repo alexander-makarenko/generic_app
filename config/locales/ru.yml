@@ -24,6 +24,7 @@ ru:
               invalid: "имеет неверный формат"
             password:
               blank: "не должен быть пустым"
+              invalid: "неверный"
               too_short: "должен быть длиной не менее %{count} символов"
               too_long: "должен быть длиной не более %{count} символов"
             password_confirmation:
@@ -34,12 +35,12 @@ ru:
       already_activated: "You have already activated your account."
       create:
         flash:
-          notice: "An activation email has been sent to your email address.
+          info: "An activation email has been sent to your email address.
             Click the link in the message to activate your account."
-          error: "Wrong password."
+          danger: "Wrong password."
       edit:
         flash:
-          error:            
+          danger:
             expired: "The link has expired. To request another activation email,
               click %{link}."
             invalid: "Activation link is invalid. To request a new one, please
@@ -49,18 +50,18 @@ ru:
     password_resets:
       create:
         flash:
-          notice: "Email with instructions for resetting your password has been
+          info: "Email with instructions for resetting your password has been
             sent to your address. If you don't receive it within a few minutes,
             be sure to check your junk email/spam filter folder."
-          error: "No user found with the specified email."
+          danger: "Пользователь с таким адресом электронной почты не найден."
       edit:
         flash:
-          error:
+          danger:
             expired: "The link has expired. If you still want to reset your
               password, please click %{link}."
-            invalid: "The link is invalid. If you still want to reset your
-              password, please click %{link}."
-          link: "here"
+            invalid: "The link is invalid. Если вы все ещё хотите сбросить ваш
+              пароль, пожалуйста, нажмите %{link}."
+          link: "здесь"
       update:
         flash:
           success: "Пароль успешно обновлен. Теперь вы можете войти в свою
@@ -68,20 +69,16 @@ ru:
     sessions:
       create:
         flash:
-          error: "Invalid email or password."          
-      destroy:
-        flash:
-          notice: "You have signed out."
+          danger: "Неверный пароль или адрес электронной почты."
     users:
       create:
         flash:
-          notice: "Thank you for signing up! We have sent a confirmation email
+          info: "Thank you for signing up! We have sent a confirmation email
             to your address (%{email}). Please click the link it contains to
             activate your account."
       update:
         flash:
           success: "Изменения сохранены."
-          error: "Неверный пароль."
   m: # mailers
     user_mailer:
       greeting: "Здравствуйте, %{first_name}!"
@@ -115,18 +112,21 @@ ru:
         nav_links:
           sign_in: "Вход"
           sign_out: "Выход"
+          settings: "Настройки"
     password_resets:
       edit:
         header: "Set password"
         invitation: "Please enter your new password below:"
         fields:
           password: "Пароль"
-          password_confirmation: "Retype password"
+          password_confirmation: "Подтвердите пароль"
         submit_button: "Сохранить"
       new:
         header: "Password reset"
         invitation: "Send instructions to reset my password to this email
           address:"
+        fields:
+          email: "Email"
         submit_button: "Submit"
     sessions:
       new:

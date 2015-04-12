@@ -9,14 +9,22 @@ feature "Password" do
   end
 
   feature "reset" do
-    include_examples "page has", h1: t('v.password_resets.new.header')
+    it "form has correct header" do
+      expect(page).to have_selector 'h2', text: t('v.password_resets.new.header')
+    end
     
     feature "request" do
       context "with email of invalid format" do
         background { request_password_reset('not.an@email') }
 
-        include_examples "page has", h1: t('v.password_resets.new.header')
-        include_examples "page has validation errors"
+        it "re-renders page" do
+          expect(page).to have_selector('h2',
+            text: t('v.password_resets.new.header'))
+        end
+
+        it "shows validation errors" do
+          expect(page).to have_selector('.validation-errors')
+        end
       end
 
       context "with email that does not exist" do
@@ -26,11 +34,14 @@ feature "Password" do
           expect(deliveries).to be_empty
         end
 
-        include_examples "page has", h1: t('v.password_resets.new.header')
+        it "re-renders page" do
+          expect(page).to have_selector('h2',
+            text: t('v.password_resets.new.header'))
+        end        
 
         it "displays flash" do
-          expect(page).to have_flash :error,
-            t('c.password_resets.create.flash.error')
+          expect(page).to have_flash :danger,
+            t('c.password_resets.create.flash.danger')
         end
       end
 
@@ -46,8 +57,8 @@ feature "Password" do
         end
 
         it "displays flash" do
-          expect(page).to have_flash :notice,
-            t('c.password_resets.create.flash.notice')
+          expect(page).to have_flash :info,
+            t('c.password_resets.create.flash.info')
         end
       end
     end
@@ -65,8 +76,8 @@ feature "Password" do
         end
 
         it "displays flash" do
-          expect(page).to have_flash :error,
-            t('c.password_resets.edit.flash.error.invalid',
+          expect(page).to have_flash :danger,
+            t('c.password_resets.edit.flash.danger.invalid',
               link: t('c.password_resets.edit.flash.link'))
         end
       end
@@ -83,8 +94,8 @@ feature "Password" do
         end
 
         it "displays flash" do
-          expect(page).to have_flash :error,
-            t('c.password_resets.edit.flash.error.expired',
+          expect(page).to have_flash :danger,
+            t('c.password_resets.edit.flash.danger.expired',
               link: t('c.password_resets.edit.flash.link'))
         end
       end
@@ -98,6 +109,25 @@ feature "Password" do
           expect(current_path).to eq(
             edit_password_path(hashed_email: hashed_email, token: token))
         end
+
+        context "when visited again after password was successfully reset" do
+          background do            
+            update_password_with(
+              password: 'new_password',
+              confirmation: 'new_password')
+            visit link(:password_reset)    
+          end
+
+          it "redirects to home page" do
+            expect(current_path).to eq(root_path)
+          end
+
+          it "displays flash" do
+            expect(page).to have_flash :danger,
+              t('c.password_resets.edit.flash.danger.expired',
+                link: t('c.password_resets.edit.flash.link'))
+          end
+        end
       end
     end
   end
@@ -108,7 +138,10 @@ feature "Password" do
       visit link(:password_reset)
     end
 
-    include_examples "page has", h1: t('v.password_resets.edit.header')
+    it "has proper header" do
+      expect(page).to have_selector 'h2',
+        text: t('v.password_resets.edit.header')
+    end    
 
     context "with invalid data" do
       background do
@@ -125,8 +158,14 @@ feature "Password" do
         expect(user.reload.password_reset_sent_at).to_not be_nil
       end
 
-      include_examples "page has", h1: t('v.password_resets.edit.header')
-      include_examples "page has validation errors"
+      it "re-renders page" do
+        expect(page).to have_selector 'h2',
+          text: t('v.password_resets.edit.header')
+      end
+      
+      it "shows validation errors" do
+        expect(page).to have_selector('.validation-errors')
+      end
     end
 
     context "with valid data" do

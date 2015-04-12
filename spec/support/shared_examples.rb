@@ -1,7 +1,7 @@
 module Capybara
   class Session
     def has_flash?(type, contents)
-      has_selector?("div.flash-#{type.to_s}", text: contents)
+      has_selector?("div.alert-#{type.to_s}", text: contents)
     end
   end
 end
@@ -13,6 +13,7 @@ end
 
 signin_link = t('v.layouts._header.nav_links.sign_in')
 signout_link = t('v.layouts._header.nav_links.sign_out')
+settings_link = t('v.layouts._header.nav_links.settings')
 
 shared_examples "user is not signed in" do |conditions={}|
   it "has signin link", conditions do
@@ -20,13 +21,19 @@ shared_examples "user is not signed in" do |conditions={}|
   end
   
   it "does not have signout link", conditions do
-    within('header nav') { expect(page).to_not have_link(signout_link) }
+    within('header nav') do
+      expect(page).to_not have_link(signout_link)
+      expect(page).to_not have_link(settings_link)
+    end
   end
 end
 
 shared_examples "user is signed in" do |conditions={}|
   it "has signout link", conditions do
-    within('header nav') { expect(page).to have_link(signout_link) }
+    within('header nav') do
+      expect(page).to have_link(settings_link)
+      expect(page).to have_link(signout_link)
+    end
   end
 
   it "does not have signin link", conditions do

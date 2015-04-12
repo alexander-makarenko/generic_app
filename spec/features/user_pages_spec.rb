@@ -12,51 +12,57 @@ feature "Profile" do
     #=======================================================
   end
   
-  describe "update" do
-    include_examples "page has", h1: t('v.users.edit.header')
+  specify "update page has proper header" do
+    expect(page).to have_selector 'h2', text: t('v.users.edit.header')    
   end
 
   feature "update" do
-    given(:new_name)  { 'New Name'}
-    given(:new_email) { 'new_email@example.com' }
-    given(:current_password) { user.password }
-    background do
-      update_profile_of(user,
-        name: new_name,
-        email: new_email,
-        password: current_password)
-    end
+    context "with incorrect password" do
+      background do
+        update_profile_of(user, current_password: 'incorrect')
+      end
 
-    context "with invalid data" do
-      given(:new_name)  { '' }
-      given(:new_email) { 'invalid' }
+      it "re-renders page" do
+        expect(page).to have_selector 'h2', text: t('v.users.edit.header')
+      end
 
-      include_examples "page has", h1: t('v.users.edit.header')
-
-      it "displays validation errors" do
-        expect(page).to have_content('error')
+      it "shows validation errors" do
+        expect(page).to have_selector('.validation-errors')
       end
     end
 
-    context "with valid data" do
-      context "but incorrect password" do
-        given(:current_password) { 'notright' }
+    context "with correct password" do
+      context "and invalid data" do
+        background do
+          update_profile_of(user,            
+            email: 'invalid',
+            current_password: user.password)
+        end
 
-        include_examples "page has", h1: t('v.users.edit.header')
+        it "re-renders page" do
+          expect(page).to have_selector 'h2', text: t('v.users.edit.header')
+        end
 
-        it "displays flash" do
-          expect(page).to have_flash :error, t('c.users.update.flash.error')
+        it "shows validation errors" do
+          expect(page).to have_selector('.validation-errors')
         end
       end
 
-      context "and correct password" do
+      context "and valid data" do
+        background do
+          update_profile_of(user,
+            last_name: 'Foo',
+            email: 'foo@bar.com',
+            current_password: user.password)
+        end
+
         it "redirects to home page" do
           expect(current_path).to eq(root_path)
         end
         
         it "displays flash" do
           expect(page).to have_flash :success, t('c.users.update.flash.success')
-        end        
+        end
       end
     end
   end

@@ -25,14 +25,14 @@ def update_profile_of(user, custom_values={})
     first_name: user.first_name,
     last_name: user.last_name,
     email: user.email.upcase,
-    password: user.password
+    current_password: user.password
   }
   values.merge!(custom_values) if custom_values
 
   fill_in 'user_first_name', with: values[:first_name]
   fill_in 'user_last_name',  with: values[:last_name]
   fill_in 'user_email',      with: values[:email]
-  fill_in 'user_password',   with: values[:password]
+  fill_in 'user_password',   with: values[:current_password]
   click_button I18n.t('v.users.edit.submit_button')
 end
 

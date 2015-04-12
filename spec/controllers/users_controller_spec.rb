@@ -13,22 +13,22 @@ describe UsersController do
     context "when user is not signed in" do
       specify "permits GET to #new" do
         get :new
-        expect(flash[:error]).to_not match(already_registered_error)
+        expect(flash[:danger]).to_not match(already_registered_error)
       end
 
       specify "permits POST to #create" do
         post :create, create_params
-        expect(flash[:error]).to_not match(already_registered_error)
+        expect(flash[:danger]).to_not match(already_registered_error)
       end
 
       specify "forbids GET to #edit" do
         get :edit, edit_params
-        expect(flash[:error]).to match(not_authorized_error)
+        expect(flash[:danger]).to match(not_authorized_error)
       end
 
       specify "forbids PATCH to #update" do
         patch :update, update_params
-        expect(flash[:error]).to match(not_authorized_error)
+        expect(flash[:danger]).to match(not_authorized_error)
       end
     end
 
@@ -37,12 +37,12 @@ describe UsersController do
 
       specify "forbids GET to #new" do
         get :new
-        expect(flash[:error]).to match(already_registered_error)
+        expect(flash[:danger]).to match(already_registered_error)
       end
 
       specify "forbids POST to #create" do
         post :create, create_params
-        expect(flash[:error]).to match(already_registered_error)
+        expect(flash[:danger]).to match(already_registered_error)
       end
 
       context "as another user" do
@@ -51,24 +51,24 @@ describe UsersController do
 
         specify "forbids GET to #edit" do
           get :edit, edit_params
-          expect(flash[:error]).to match(not_authorized_error)
+          expect(flash[:danger]).to match(not_authorized_error)
         end
 
         specify "forbids PATCH to #update" do
           patch :update, update_params
-          expect(flash[:error]).to match(not_authorized_error)
+          expect(flash[:danger]).to match(not_authorized_error)
         end
       end
 
       context "as target user" do
         specify "permits GET to #edit" do
           get :edit, edit_params
-          expect(flash[:error]).to_not match(not_authorized_error)
+          expect(flash[:danger]).to_not match(not_authorized_error)
         end
 
         specify "permits PATCH to #update" do
           patch :update, update_params
-          expect(flash[:error]).to_not match(not_authorized_error)
+          expect(flash[:danger]).to_not match(not_authorized_error)
         end
       end
     end

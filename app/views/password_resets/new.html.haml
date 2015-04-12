@@ -1,11 +1,10 @@
-%h1= t('v.password_resets.new.header')
-
-%p.center= t('v.password_resets.new.invitation')
-.form.generic
-  = render 'shared/validation_errors', obj: @mock_user
-  .fields
-    = form_for @mock_user, as: :password_reset, url: password_resets_path do |f|
-      .col.col-75
-        = f.text_field :email
-      .center
-        = f.submit t('v.password_resets.new.submit_button'), class: "button"
+= render 'shared/validation_errors_simple', obj: @mock_user
+%h2.text-center= t('v.password_resets.new.header')
+%p.text-center= t('v.password_resets.new.invitation')
+= bootstrap_form_for @mock_user, as: :password_reset, url: password_resets_path,
+  inline_errors: false, html: { id: 'password-reset-new', class: 'center-block' } do |f|
+  = f.text_field :email, label: t('v.password_resets.new.fields.email'),
+    hide_label: true
+  .text-center
+    = f.form_group do
+      = f.submit t('v.password_resets.new.submit_button'), class: 'btn btn-primary'

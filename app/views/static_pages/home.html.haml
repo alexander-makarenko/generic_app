@@ -1,2 +1,25 @@
-%h1 Home page
-%p.center Nothing's here yet
+%h1.text-center Home page
+
+#feature-list
+  %h2 Feature list
+
+  %h3 Authorization
+
+  %p Users controller:
+  %ul
+    %li signed in users cannot sign up (#new, #create);
+    %li users can edit only their own account and only when signed in (#edit, #update);
+
+  %p Sessions controller:
+  %ul
+    %li signed in users cannot sign in another time (#new, #create);
+    %li visitors cannot sign out (#destroy);
+
+  %p AccountActivations controller:
+  %ul
+    %li only signed in and not activated users can re-request activation links (#new, #create);
+    %li activation links can be accessed by anyone except users who are signed in and already activated (#edit).
+
+  %p PasswordResets controller:
+  %ul
+    %li anyone can request and access password reset links (#new, #create, #edit, #update);

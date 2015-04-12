@@ -32,8 +32,8 @@ feature "Activation" do
       end
 
       it "displays flash" do
-        expect(page).to have_flash :error,
-          t('c.account_activations.edit.flash.error.invalid',
+        expect(page).to have_flash :danger,
+          t('c.account_activations.edit.flash.danger.invalid',
             link: t('c.account_activations.edit.flash.link'))
       end
     end
@@ -61,8 +61,8 @@ feature "Activation" do
       end
 
       it "displays flash" do
-        expect(page).to have_flash :error,
-          t('c.account_activations.edit.flash.error.expired',
+        expect(page).to have_flash :danger,
+          t('c.account_activations.edit.flash.danger.expired',
             link: t('c.account_activations.edit.flash.link'))
       end
     end
@@ -101,7 +101,7 @@ feature "Activation" do
         end
 
         it "displays flash" do
-          expect(page).to have_flash :error,            
+          expect(page).to have_flash :danger,
             t('c.account_activations.already_activated')
         end
       end
@@ -113,12 +113,12 @@ feature "Activation" do
 
     background do
       visit link(:activation, hashed_email: 'invalid', token: 'invalid')      
-      within('.flash') { click_link t('c.account_activations.edit.flash.link') }
+      within('.alert') { click_link t('c.account_activations.edit.flash.link') }
     end
 
     describe "page" do
-      it "has correct header" do
-        expect(page).to have_selector 'h1',
+      it "has proper header" do
+        expect(page).to have_selector 'h2',
           text: t('v.account_activations.new.header')
       end
 
@@ -134,14 +134,14 @@ feature "Activation" do
         expect(deliveries.count).to eq(1)
       end
 
-      it "re-renders the page" do
-        expect(page).to have_selector 'h1',
+      it "re-renders page" do
+        expect(page).to have_selector 'h2',
           text: t('v.account_activations.new.header')
       end
 
       it "displays flash" do
-        expect(page).to have_flash :error,
-          t('c.account_activations.create.flash.error')
+        expect(page).to have_flash :danger,
+          t('c.account_activations.create.flash.danger')
       end
     end
 
@@ -156,15 +156,15 @@ feature "Activation" do
         expect(deliveries.count).to eq(1)
       end
 
-      it "re-renders the page" do
-        expect(page).to have_selector 'h1',
+      it "re-renders page" do
+        expect(page).to have_selector 'h2',
           text: t('v.account_activations.new.header')
       end
 
       it "displays email validation errors" do
-        within('div.validation-errors') do
-          expect(page).to have_content('email')        # to do: use I18n translation
-          expect(page).to_not have_content('password') # to do: use I18n translation
+        within('.validation-errors') do
+          expect(page).to have_content(/#{t('activerecord.attributes.user.email')}/i)
+          expect(page).to_not have_content(/#{t('activerecord.attributes.user.password')}/i)
         end        
       end      
     end
@@ -188,8 +188,8 @@ feature "Activation" do
       end
 
       it "displays flash" do
-        expect(page).to have_flash :notice,
-          t('c.account_activations.create.flash.notice')
+        expect(page).to have_flash :info,
+          t('c.account_activations.create.flash.info')
       end
     end
   end

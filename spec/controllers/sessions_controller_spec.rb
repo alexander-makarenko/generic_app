@@ -11,17 +11,17 @@ describe SessionsController do
     context "when user is not signed in" do
       specify "permits GET to #new" do
         get :new
-        expect(flash[:error]).to_not match(already_signed_in_error)
+        expect(flash[:danger]).to_not match(already_signed_in_error)
       end
 
       specify "permits POST to #create" do
         post :create, create_params
-        expect(flash[:error]).to_not match(already_signed_in_error)
+        expect(flash[:danger]).to_not match(already_signed_in_error)
       end
 
       specify "forbids DELETE to #destroy" do
         delete :destroy
-        expect(flash[:error]).to match(not_authorized_error)
+        expect(flash[:danger]).to match(not_authorized_error)
       end
     end
 
@@ -30,17 +30,17 @@ describe SessionsController do
 
       specify "forbids GET to #new" do
         get :new
-        expect(flash[:error]).to match(already_signed_in_error)
+        expect(flash[:danger]).to match(already_signed_in_error)
       end
 
       specify "forbids POST to #create" do
         post :create, create_params
-        expect(flash[:error]).to match(already_signed_in_error)
+        expect(flash[:danger]).to match(already_signed_in_error)
       end
 
       specify "permits DELETE to #destroy" do
         delete :destroy
-        expect(flash[:error]).to_not match(not_authorized_error)
+        expect(flash[:danger]).to_not match(not_authorized_error)
       end
     end
   end

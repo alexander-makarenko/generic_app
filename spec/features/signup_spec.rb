@@ -6,7 +6,7 @@ feature "Signup form" do
   background { visit signup_path }
 
   specify "has proper header" do
-    expect(page).to have_selector('.form .header', text: t('v.users.new.header'))
+    expect(page).to have_selector('form h2', text: t('v.users.new.header'))
   end
   
   context "on typing invalid data", js: true do
@@ -32,7 +32,7 @@ feature "Signup form" do
       end
 
       it "re-renders page", submit_before: true do
-        expect(page).to have_selector('.form .header', text: t('v.users.new.header'))
+        expect(page).to have_selector('form h2', text: t('v.users.new.header'))
       end
 
       it "shows validation errors", submit_before: true do
@@ -58,8 +58,8 @@ feature "Signup form" do
       end
 
       it "shows flash", submit_before: true do
-        expect(page).to have_flash :notice,
-          t('c.users.create.flash.notice', email: user.email)
+        expect(page).to have_flash :info,
+          t('c.users.create.flash.info', email: user.email)
       end
     end
   end

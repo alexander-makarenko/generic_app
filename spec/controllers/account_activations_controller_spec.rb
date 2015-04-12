@@ -11,17 +11,17 @@ describe AccountActivationsController do
     context "when user is not signed in" do
       specify "forbids GET to #new" do
         get :new
-        expect(flash[:error]).to match(not_signed_in_error)
+        expect(flash[:danger]).to match(not_signed_in_error)
       end
 
       specify "forbids POST to #create" do
         post :create, create_params
-        expect(flash[:error]).to match(not_signed_in_error)
+        expect(flash[:danger]).to match(not_signed_in_error)
       end
 
       specify "permits GET to #edit" do
         get :edit, edit_params
-        expect(flash[:error]).to_not match(not_signed_in_error)
+        expect(flash[:danger]).to_not match(not_signed_in_error)
       end
     end
     
@@ -33,17 +33,17 @@ describe AccountActivationsController do
 
         specify "permits GET to #new" do
           get :new
-          expect(flash[:error]).to_not match(not_signed_in_error)
+          expect(flash[:danger]).to_not match(not_signed_in_error)
         end
 
         specify "permits POST to #create" do
           post :create, create_params
-          expect(flash[:error]).to_not match(not_signed_in_error)
+          expect(flash[:danger]).to_not match(not_signed_in_error)
         end
 
         specify "permits GET to #edit" do
           get :edit, edit_params
-          expect(flash[:error]).to_not match(not_signed_in_error)
+          expect(flash[:danger]).to_not match(not_signed_in_error)
         end
       end
 
@@ -52,12 +52,12 @@ describe AccountActivationsController do
 
         specify "forbids GET to #new" do
           get :new
-          expect(flash[:error]).to match(already_activated_error)
+          expect(flash[:danger]).to match(already_activated_error)
         end
 
         specify "forbids POST to #create" do
           post :create, create_params
-          expect(flash[:error]).to match(already_activated_error)
+          expect(flash[:danger]).to match(already_activated_error)
         end
       end
     end

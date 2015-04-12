@@ -3,7 +3,7 @@ module SessionsHelper
   def sign_in(user, keep_signed_in = nil)
     auth_token = User.new_token
     user.update_attribute(:auth_digest, User.digest(auth_token))
-    if keep_signed_in
+    if keep_signed_in == '1'
       cookies.permanent[:auth_token] = auth_token
     else
       cookies[:auth_token] = auth_token

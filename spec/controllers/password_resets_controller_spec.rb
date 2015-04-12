@@ -10,22 +10,22 @@ describe PasswordResetsController do
     
     specify "permits GET to #new" do
       get :new
-      expect(flash[:error]).to_not match(not_authorized_error)
+      expect(flash[:danger]).to_not match(not_authorized_error)
     end
 
     specify "permits POST to #create" do
       post :create, create_params
-      expect(flash[:error]).to_not match(not_authorized_error)
+      expect(flash[:danger]).to_not match(not_authorized_error)
     end
 
     specify "permits GET to #edit" do
       get :edit, edit_params
-      expect(flash[:error]).to_not match(not_authorized_error)
+      expect(flash[:danger]).to_not match(not_authorized_error)
     end
 
     specify "permits PATCH to #update" do
       patch :update, update_params
-      expect(flash[:error]).to_not match(not_authorized_error)
+      expect(flash[:danger]).to_not match(not_authorized_error)
     end
   end
 end

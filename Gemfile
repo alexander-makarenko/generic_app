@@ -6,6 +6,8 @@ ruby '2.1.2'
 gem 'rails'
 gem 'pg'
 gem 'bcrypt'
+gem 'bootstrap-sass'
+gem 'bootstrap_form'
 gem 'haml-rails'
 gem 'sass-rails'
 gem 'faker'
@@ -35,7 +37,7 @@ group :test do
   gem 'launchy'
 end
 
-group :production do
+group :production do  
   gem 'rails_12factor'
 end
 

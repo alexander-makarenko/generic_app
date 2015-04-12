@@ -42,13 +42,14 @@ class User < ActiveRecord::Base
   end
   
   def link_expired?(link_type)
-    time_to_expire = case link_type
+    not_valid_after = case link_type
     when :activation
       3.days.ago
     when :password_reset
       2.hours.ago
     end
-    send("#{link_type}_sent_at") < time_to_expire
+    link_sent_at = send("#{link_type}_sent_at")
+    link_sent_at.nil? ? true : link_sent_at < not_valid_after
   end
 
   def assign_and_validate_attributes(attrs)

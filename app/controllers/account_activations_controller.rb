@@ -15,12 +15,12 @@ class AccountActivationsController < ApplicationController
         user.save(validate: false)
         user.send_email(:activation)
         redirect_to root_path,
-          notice: t('c.account_activations.create.flash.notice')
+          info: t('c.account_activations.create.flash.info')
       else        
         render :new
       end      
     else
-      flash.now[:error] = t('c.account_activations.create.flash.error')
+      flash.now[:danger] = t('c.account_activations.create.flash.danger')
       render :new
     end
   end
@@ -40,14 +40,14 @@ class AccountActivationsController < ApplicationController
           success: t('c.account_activations.edit.flash.success')
       else        
         redirect_to root_path,
-          error: t('c.account_activations.edit.flash.error.expired',
+          danger: t('c.account_activations.edit.flash.danger.expired',
             link: view_context.link_to(
               t('c.account_activations.edit.flash.link'),
               new_account_activation_path))
       end
     else
       redirect_to root_path,
-        error: t('c.account_activations.edit.flash.error.invalid',
+        danger: t('c.account_activations.edit.flash.danger.invalid',
           link: view_context.link_to(
             t('c.account_activations.edit.flash.link'),
             new_account_activation_path))
@@ -56,6 +56,6 @@ class AccountActivationsController < ApplicationController
 
   private
     def user_already_activated
-      redirect_to root_path, error: t('c.account_activations.already_activated')
+      redirect_to root_path, danger: t('c.account_activations.already_activated')
     end  
 end

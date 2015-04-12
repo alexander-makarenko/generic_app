@@ -1,12 +1,14 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
-function ModelValidator(model) {  
+function ModelValidator(model, formSelector) {  
   if (typeof model === 'undefined') {
     throw new Error(this.constructor.name + ' cannot be instantiated without model name!');
   }
 
   this.model = model;
+
+  this.formSelector = formSelector;
 
   this.url = '/' + model + 's/validate';
 
@@ -34,17 +36,22 @@ ModelValidator.prototype = {
 
   errorDivClass: 'validation-errors',
 
-  invalidFieldClass: 'field_with_errors',
+  invalidFieldClass: 'has-error',
 
   $form: function() {
-    var model = this.model;
-    return $('form').filter(function() {
-      return (new RegExp('^new_' + model, 'i')).test($(this).attr('id')); // later modify to '^(new|edit)_'
-    });
+    var model = this.model,
+        formSelector = this.formSelector;
+    if (typeof formSelector !== 'undefined') {
+      return $(formSelector);
+    } else {
+      return $('form').filter(function() {
+        return (new RegExp('^new_' + model, 'i')).test($(this).attr('id')); // later modify to '^(new|edit)_'
+      });
+    }
   },
 
   $fields: function() {
-    return this.$form().find('input:not([type="submit"])');
+    return this.$form().find('input:not([type="submit"], [type="hidden"])');    
   },
 
   $invalidFields: function() {
@@ -81,11 +88,11 @@ ModelValidator.prototype = {
 
   markInvalidFields: function() {
     var self = this, $invalidField;
-    $('.' + self.invalidFieldClass).children().unwrap();
+    $('.' + self.invalidFieldClass).removeClass(self.invalidFieldClass);
     if (!$.isEmptyObject(self.response)) {
       $.each(self.response.errors, function(attr, messages) {
         $invalidField = $('#' + self.model + '_' + attr);
-        $invalidField.wrap('<div/>').parent().addClass(self.invalidFieldClass);
+        $invalidField.parent().addClass(self.invalidFieldClass);
       });
     }
   },
@@ -112,16 +119,12 @@ ModelValidator.prototype = {
         });
       }
     } else {
-      $newErrorDiv.prependTo($('.contents')).hide().slideDown(200);
+      $newErrorDiv.insertAfter(this.$form().find('h2')).hide().slideDown(200);
     }
   },
 
   enable: function() {
     var self = this;
-    self.$invalidFields().length ? self.$invalidFields().first().focus() : self.$fields().first().focus();
-    self.$invalidFields().each(function() {
-      self.considerEdited(this);
-    });
     self.$fields()
       .on('focus', function() {
         self.$lastFocused = $(document.activeElement);
@@ -135,9 +138,13 @@ ModelValidator.prototype = {
       .on('blur', function() {
         self.validate(self.dataToValidate());
       });
+    self.$invalidFields().length ? self.$invalidFields().first().focus() : self.$fields().first().focus();
+    self.$invalidFields().each(function() {
+      self.considerEdited(this);
+    });
   }
 };
 
 $(document).on('page:change', function() {
-  (new ModelValidator('user')).enable();
+  (new ModelValidator('user', '#signup')).enable();
 });

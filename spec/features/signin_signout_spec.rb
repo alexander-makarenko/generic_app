@@ -5,7 +5,9 @@ feature "Signin" do
   given(:nonexistent_user) { FactoryGirl.build(:user) }
   background { visit signin_path }
   
-  include_examples "page has", "div.header" => t('v.sessions.new.header')
+  specify "form has proper header" do
+    expect(page).to have_selector('form h2', text: t('v.sessions.new.header'))
+  end  
   
   context "with invalid data" do
     background { sign_in_as(nonexistent_user) }
@@ -16,10 +18,12 @@ feature "Signin" do
       expect(page).to_not have_selector('header nav li', text: user.name)
     end
 
-    include_examples "page has", "div.header" => t('v.sessions.new.header')
+    it "re-renders page" do
+      expect(page).to have_selector('form h2', text: t('v.sessions.new.header'))
+    end
 
     it "displays flash" do
-      expect(page).to have_flash :error, t('c.sessions.create.flash.error')
+      expect(page).to have_flash :danger, t('c.sessions.create.flash.danger')
     end
   end
 

@@ -9,313 +9,177 @@
  * compiled file so the styles you add here take precedence over styles defined in any styles
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
- *
- *= require_tree .
- *= require_self
  */
 
+@import "bootstrap-sprockets";
+@import "bootstrap";
+@import "rails_bootstrap_forms";
 
-/* color variables */
+// nav {  
+//   ul {
+//     float: right;
+//     list-style: none;
+//   }
+//   li {
+//     float: left;    
+//     margin-right: 10px;
+//     color: $gray-lighter;
+//     &:last-child {
+//       margin-right: 0;
+//     }
+//   }
+//   a {
+//     text-decoration: none;
+//   }
+//   .username {
+//     color: $gray-dark;
+//     font-weight: bold;
+//   }
+// }
 
-$black: #000;
-$white: #FFF;
-$off-white: #F5F5F5;
+// .shadowed {
+//   box-shadow: 0 5px 20px 0px rgba(0,0,0,.5);
+// }
 
-$gray-light: #DDD;
-$gray-lighter: #BBB;
-$gray: #999;
-$gray-dark: #555;
-
-$red-light: #FFDBDB;
-$red-lighter: #FF9E9E;
-$red: #FF5959;
-$red-darker: #FF2424;
-$red-dark: #CC3F3F;
-
-$yellow: #FFFFB3;
-$yellow-dark: #CCCC8F;
-
-$green-light: #7DE3B8;
-$green: #82B59E;
-$green-darker: #61B08F;
-$green-dark: #608273;
-
-$blue: #A6E0FF;
-$blue-dark: #85B3CC;
-
-/* universal */
-
-html {
-  font-family: Arial, Helvetica, sans-serif;
-  width: 960px;
-  margin: 0 auto;
-  margin-top: 50px;
-  background-color: $off-white;
+div {
+  // outline: 1px solid #eee;
 }
 
-.main {
-  padding: 20px 40px;
-  background-color: $white;
-  border: 1px solid $gray-light;
-  border-radius: 5px;
+.gutter-half > [class*='col-'] {
+  padding-right: 7.5px;
+  padding-left: 7.5px;
 }
 
-header {
-  overflow: hidden;
-  margin-bottom: 10px;
-  padding: 20px 40px;
-  background-color: $white;
-  border: 1px solid $gray-light;
-  border-radius: 5px;
+.checkbox {
+  padding-top: 0 !important;
 }
 
-h1 {
-  font-size: 2.0em;
-  font-weight: bold;
-  padding: 15px 0 25px;
-  text-align: center;
-}
-
-p {
-  margin: 5px 0;
-}
-
-a {
-  color: #0078F0;
-}
-
-nav {  
-  ul {
-    float: right;
-    list-style: none;    
+#signup, #login {
+  max-width: 400px;
+  padding: 0 30px;
+  border: 1px solid #aaa;
+  border-radius: 10px;
+  background-color: #fff;  
+  h2 {
+    color: #444;
+    margin: 20px 0 15px;
   }
-  li {
-    float: left;    
-    margin-right: 10px;
-    color: $gray-lighter;
-    &:last-child {
-      margin-right: 0;
+  .form-group:last-child {
+    padding-top: 5px;
+  }
+  span {
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+}
+
+#signup {  
+  .row {
+    margin: 0;
+    [class*='col-'] {
+      padding: 0;
     }
-  }
-  a {
-    text-decoration: none;
-  }
-  .username {
-    color: $gray-dark;
-    font-weight: bold;
-  }
-}
-
-.center {
-  text-align: center;
-}
-
-.right {
-  text-align: right;
-}
-
-.float-left {
-  float: left;
-}
-
-.float-right {
-  float: right;
-}
-
-.shadowed {
-  box-shadow: 0 5px 20px 0px rgba(0,0,0,.5);
-}
-
-.debug_dump {
-  margin-top: 10px;
-  padding: 20px 40px;
-  color: $gray-dark;
-  background-color: $white;
-  border: 1px solid $gray-light;
-  border-radius: 5px;
-}
-
-/* forms */
-
-.col {
-  margin: 0 auto;
-  padding: 0 5px;  
-}
-
-.col-50 {
-  width: 50%;
-}
-
-.col-75 {
-  width: 75%;
-}
-
-.col-100 {
-  width: 100%;  
-}
-
-label {
-  color: $gray-dark;
-}
-
-.fields {
-  overflow: hidden;
-  margin: 0 25px;
-}
-
-.field_with_errors input[type=text], .field_with_errors input[type=password] {
-  border-color: $red;
-}
-
-input[type=text], input[type=password] {
-  font-size: 1em;
-  width: 100%;
-  margin: 10px auto;
-  padding: 5px;
-  border: 1px solid $gray-lighter;
-  border-radius: 3px;
-  transition: border-color 0.3s;
-  &:hover, &:focus {
-    border-color: $green-dark;
-  }
-}
-
-.form {
-  border-radius: 5px;
-  margin: 0 auto;  
-  .header {
-    font-size: 1.7em;
-    text-align: right;
-    padding: 10px 30px;
-    text-shadow: 0px -1px 0px $green-dark;
-    color: #fff;
-    background-color: $green;
-    border: 1px solid $green-dark;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-  }  
-  .contents {    
-    padding: 20px 0 15px;
-    border: 1px solid $gray;
-    border-top: none; border-bottom: none;
-  }
-  .footer {
-    padding: 15px 30px 0;
-    background-color: $off-white;
-    border: 1px solid $gray;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-    p {
-      display: inline-block;
-      margin: 0 3px;
-      color: $gray;
+    > .col-xs-6 {
+      &:nth-of-type(2n-1) {
+        padding-right: 7.5px;
+      }
+      &:nth-of-type(2n) {
+        padding-left: 7.5px;
+      }
     }
   }
 }
 
-.signup {
-  width: 450px;
+#password-reset-new {
+  max-width: 300px;
 }
 
-.signin {
-  width: 400px;
+#password-reset-edit {
+  max-width: 200px;
 }
 
-.generic {
-  width: 450px;
+#account-activation-new, #user-settings {
+  max-width: 300px;
+  @media (min-width: 768px) {
+    max-width: 400px;
+  }
 }
 
-.validation-errors {  
-  margin: 5px 0;
+.validation-errors {
+  margin-bottom: 15px;
   p {
-    font-weight: bold;
+    margin: 0;
     line-height: 2em;
     text-align: center;
-    margin: 0;
-    color: $white;
-    background-color: $red;
-    text-shadow: 0px -1px 0px $red-dark;
-    border: 1px solid $red-dark;
-    border-right: none; border-left: none;
+    font-weight: bold;
+    color: #fff;
+    background-color: #ff5959;
+    border: 1px solid #cc3f3f;
+    border-radius: 5px 5px 0 0;
   }
   ul {
-    background-color: $red-light;
-    padding: 5px 25px 5px 45px;    
-    list-style-type: circle;
-    border-bottom: 1px solid $gray;
+    margin: 0;
+    padding: 5px;
+    padding-left: 12px;
+    background-color: #ffdbdb;
+    text-align: left;
+    list-style-type: none;
+    border: 1px solid #cc3f3f;
+    border-radius: 0 0 5px 5px;
+    border-top: none;
   }
   li {
-    color: $red-darker;
-    padding: 3px 0;
+    color: red;
+    line-height: 1.6em;
   }
 }
 
-.button {
-  cursor: pointer;
-  font-size: 1.1em;
-  text-align: center;
-  margin: 0 0 15px;
-  padding: 0.4em 2em;
-  color: #fff;
-  text-shadow: 0 -1px 0 #4278B3;
-  background-color: #58A0ED;
-  border: solid 1px #4278B3;
-  border-radius: 5px;
-  transition: background-color 0.15s;
-  &:hover {
-    background-color: #5D8BB3;
-  }
-  &:active {
-    box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.4) inset;
-  }
-}
+// /* flash messages */
 
-/* flash messages */
+// .flash {
+//   position: relative;
+//   line-height: 1.4em;
+//   margin-bottom: 10px;
+//   padding: 10px 20px;
+//   color: $gray-dark;  
+//   border-radius: 5px;
+// }
 
-.flash {
-  position: relative;
-  line-height: 1.4em;
-  margin-bottom: 10px;
-  padding: 10px 20px;
-  color: $gray-dark;  
-  border-radius: 5px;
-}
+// .flash-success {
+//   background-color: $green-light;
+//   border: 1px solid $green-darker;
+// }
 
-.flash-success {
-  background-color: $green-light;
-  border: 1px solid $green-darker;
-}
+// .flash-notice {
+//   background-color: $blue;
+//   border: 1px solid $blue-dark;
+// }
 
-.flash-notice {
-  background-color: $blue;
-  border: 1px solid $blue-dark;
-}
+// .flash-alert {
+//   background-color: $yellow;
+//   border: 1px solid $yellow-dark;
+// }
 
-.flash-alert {
-  background-color: $yellow;
-  border: 1px solid $yellow-dark;
-}
+// .flash-error {  
+//   background-color: $red-lighter;
+//   border: 1px solid $red;
+// }
 
-.flash-error {  
-  background-color: $red-lighter;
-  border: 1px solid $red;
-}
-
-.close-button {
-  cursor: pointer;
-  position: absolute;
-  text-align: center;
-  font-size: 1.45em;
-  font-weight: bold;
-  text-shadow: 0 -1px 0 $white;
-  line-height: 18px;
-  width: 18px;
-  height: 18px;  
-  top: 2px;
-  right: 2px;
-  color: $black;
-  opacity: .3;
-  &:hover {
-    opacity: .4;
-  }
-}
+// .close-button {
+//   cursor: pointer;
+//   position: absolute;
+//   text-align: center;
+//   font-size: 1.45em;
+//   font-weight: bold;
+//   text-shadow: 0 -1px 0 $white;
+//   line-height: 18px;
+//   width: 18px;
+//   height: 18px;  
+//   top: 2px;
+//   right: 2px;
+//   color: $black;
+//   opacity: .3;
+//   &:hover {
+//     opacity: .4;
+//   }
+// }

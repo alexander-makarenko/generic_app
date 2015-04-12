@@ -21,7 +21,7 @@ class UsersController < ApplicationController
       @user.send_email(:activation)
       sign_in(@user)
       redirect_to root_path,
-        notice: t('c.users.create.flash.notice', email: @user.email)
+        info: t('c.users.create.flash.info', email: @user.email)
     else
       render :new
     end
@@ -35,18 +35,17 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     authorize @user
-
     @user.assign_attributes(user_params)
 
-    if @user.valid?
-      if User.find(params[:id]).authenticated(:password, @user.password)
+    if User.find(params[:id]).authenticated(:password, @user.password)
+      if @user.valid?
         @user.save
         redirect_to root_path, success: t('c.users.update.flash.success')
       else
-        flash.now[:error] = t('c.users.update.flash.error')
         render :edit
       end
     else
+      @user.errors.add(:password)      
       render :edit
     end
   end

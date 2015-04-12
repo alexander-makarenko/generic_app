@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   include SessionsHelper
   include Pundit
 
-  add_flash_types :success, :error
+  add_flash_types :success, :info, :danger
 
   before_action :set_locale
 
@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
   private
     def user_not_authorized(exception)
       policy_name = exception.policy.class.to_s.underscore
-      flash[:error] = t "#{policy_name}.#{exception.query}", scope: "p", default: :default
+      flash[:danger] = t "#{policy_name}.#{exception.query}", scope: "p", default: :default
       redirect_to(request.referrer || root_path)
     end 
 end

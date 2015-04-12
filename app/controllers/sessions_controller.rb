@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
       sign_in(user, params[:keep_signed_in])      
       redirect_to root_path
     else
-      flash.now[:error] = t('c.sessions.create.flash.error')
+      flash.now[:danger] = t('c.sessions.create.flash.danger')
       render :new
     end
   end
