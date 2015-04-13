@@ -1,4 +1,22 @@
 ru:
+  activemodel:
+    attributes:
+      password_change:
+        current_password: "неверный"
+        new_password: "новый пароль"
+        new_password_confirmation: "подтверждение"
+    errors:
+      models:
+        password_change:
+          attributes:
+            current_password:
+              invalid: "текущий пароль"
+            new_password:
+              blank: "не должен быть пустым"
+              too_short: "должен быть длиной не менее %{count} символов"
+              too_long: "должен быть длиной не более %{count} символов"
+            new_password_confirmation:              
+              confirmation: "не совпадает с новым паролем"
   activerecord:
     attributes:
       user:
@@ -6,7 +24,7 @@ ru:
         last_name: "фамилия"
         email: "адрес электронной почты"
         password: "пароль"
-        password_confirmation: "подтверждение"
+        password_confirmation: "подтверждение"        
     errors:
       models:
         user:
@@ -46,7 +64,11 @@ ru:
             invalid: "Activation link is invalid. To request a new one, please
               click %{link}."
           success: "Thank you for activating your account."
-          link: "here"    
+          link: "here"
+    password_changes:
+      create:
+        flash:
+          success: "Пароль успешно изменен."
     password_resets:
       create:
         flash:
@@ -113,6 +135,15 @@ ru:
           sign_in: "Вход"
           sign_out: "Выход"
           settings: "Настройки"
+    password_changes:
+      new:
+        header: "Изменение пароля"
+        fields:
+          current_password: "Текущий пароль:"
+          new_password: "Новый пароль:"
+          new_password_confirmation: "Подтверждение:"
+        submit: "Сохранить"
+        cancel: "Отменить"
     password_resets:
       edit:
         header: "Set password"
@@ -164,6 +195,7 @@ ru:
           last_name: "Фамилия"
           email: "Адрес электронной почты"
           password: "Пароль"
+        change_password: "Изменить пароль"
         submit_button: "Сохранить"
       new:
         header: "Регистрация"

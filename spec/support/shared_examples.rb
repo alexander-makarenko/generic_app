@@ -42,7 +42,7 @@ shared_examples "user is signed in" do |conditions={}|
 end
 
 shared_examples "is invalid and has errors" do |count, conditions={}|
-  count_message = count == 1 ? 'an error' : "#{count} errors"
+  count_message = count == 1 ? 'an error' : "#{count} errors"  
   specify %Q|is invalid and has #{count_message}|, conditions do
     expect(subject).to be_invalid
     expect(subject.errors.count).to eq(count)

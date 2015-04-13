@@ -1,4 +1,21 @@
 en:
+  activemodel:
+    attributes:
+      password_change:
+        current_password: "current password"
+        new_password: "new password"
+        new_password_confirmation: "confirmation"
+    errors:
+      models:
+        password_change:
+          attributes:
+            current_password:
+              invalid: "is incorrect"
+            new_password:
+              blank: "is required"
+              too_short: "must be at least %{count} characters long"
+            new_password_confirmation:
+              confirmation: "does not match the %{attribute}"
   activerecord:
     attributes:
       user:
@@ -6,7 +23,7 @@ en:
         last_name: "last name"
         email: "email"
         password: "password"
-        password_confirmation: "confirmation"
+        password_confirmation: "confirmation"        
     errors:
       models:
         user:
@@ -23,7 +40,7 @@ en:
               too_short: "must be at least %{count} characters long"
             password_confirmation:
               blank: "is required"
-              confirmation: "does not match the %{attribute}"              
+              confirmation: "does not match the %{attribute}"            
   c: # controllers
     account_activations:
       already_activated: "You have already activated your account."
@@ -41,6 +58,10 @@ en:
               click %{link}."
           success: "Thank you for activating your account."
           link: "here"
+    password_changes:
+      create:
+        flash:
+          success: "Password successfully changed."          
     password_resets:
       create:
         flash:
@@ -106,6 +127,15 @@ en:
           sign_in: "Sign in"
           sign_out: "Sign out"
           settings: "Settings"
+    password_changes:
+      new:
+        header: "Change password"
+        fields:
+          current_password: "Current password:"
+          new_password: "New password:"
+          new_password_confirmation: "Confirmation:"
+        submit: "Save changes"
+        cancel: "Cancel"
     password_resets:
       edit:
         header: "Set password"
@@ -158,6 +188,7 @@ en:
           last_name: "Last name"
           email: "Email"
           password: "Password"
+        change_password: "Change password"
         submit_button: "Save"
       new:
         header: "Sign up"

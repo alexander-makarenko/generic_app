@@ -10,7 +10,7 @@ class AccountActivationsController < ApplicationController
     user = current_user
     raise User::AlreadyActivated if user.activated?
     if user.authenticated(:password, params[:password])
-      user.assign_and_validate_attributes(email: params[:email])      
+      user.assign_and_validate_attributes(email: params[:email])
       if user.errors.empty?
         user.save(validate: false)
         user.send_email(:activation)

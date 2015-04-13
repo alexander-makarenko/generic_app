@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature "Activation" do
-  given(:user) { FactoryGirl.build(:user) }  
+  given(:user) { FactoryGirl.build(:user) }
   background do
     visit signup_path
     sign_up_as(user)
@@ -10,7 +10,7 @@ feature "Activation" do
   feature "link" do
     given(:persisted_user) { User.find_by(email: user.email) }
 
-    context "that is invalid" do      
+    context "that is invalid" do
       background do
         visit link(:activation, hashed_email: 'invalid', token: 'invalid')
       end
@@ -112,7 +112,7 @@ feature "Activation" do
     given(:persisted_user) { User.find_by(email: user.email) }
 
     background do
-      visit link(:activation, hashed_email: 'invalid', token: 'invalid')      
+      visit link(:activation, hashed_email: 'invalid', token: 'invalid')
       within('.alert') { click_link t('c.account_activations.edit.flash.link') }
     end
 
@@ -165,8 +165,8 @@ feature "Activation" do
         within('.validation-errors') do
           expect(page).to have_content(/#{t('activerecord.attributes.user.email')}/i)
           expect(page).to_not have_content(/#{t('activerecord.attributes.user.password')}/i)
-        end        
-      end      
+        end
+      end
     end
 
     context "with valid data" do

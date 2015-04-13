@@ -17,8 +17,8 @@ class User < ActiveRecord::Base
   validates :email,      presence: true, length: { maximum: 50 },
                          uniqueness: { case_sensitive: false }
   validates :email,      format: { with: EMAIL_REGEX }, unless: -> { email.blank? }
-  validates :password,   presence: true, allow_blank: false
-  validates :password,   length: { minimum: 6 }, unless: -> { password.blank? }
+  validates :password,   presence: true
+  validates :password,   length: { in: 6..30 }, unless: -> { password.blank? }
 
   def name
     "#{first_name} #{last_name}"

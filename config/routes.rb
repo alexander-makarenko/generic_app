@@ -6,18 +6,19 @@ Rails.application.routes.draw do
   root 'static_pages#home'
 
   scope '(:locale)', locale: /en|ru/ do
-    resources :users, only: [:create, :update]
+    resources :users, only: [:update]
 
     scope controller: :users do
       get  'signup'             => :new
+      post 'signup'             => :create
       get  'users/:id/settings' => :edit, as: 'settings'
       post 'users/validate'     => :validate, as: 'users_validation'
     end
 
     scope controller: :sessions do
-      get    'signin'   => :new
-      post   'sessions' => :create
-      delete 'signout'  => :destroy
+      get    'signin'  => :new
+      post   'signin'  => :create
+      delete 'signout' => :destroy
     end
   
     scope path: 'user' do      
@@ -32,6 +33,11 @@ Rails.application.routes.draw do
         post  'recover'                      => :create, as: 'password_resets'
         get   'recover/:hashed_email/:token' => :edit,   as: 'edit_password'
         patch 'recover'                      => :update
+      end
+
+      scope controller: :password_changes do
+        get  'change-password' => :new,    as: 'new_password_change'
+        post 'change-password' => :create, as: 'password_changes'
       end
     end
   end

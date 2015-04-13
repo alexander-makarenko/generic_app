@@ -13,7 +13,7 @@ feature "Profile" do
   end
   
   specify "update page has proper header" do
-    expect(page).to have_selector 'h2', text: t('v.users.edit.header')    
+    expect(page).to have_selector 'h2', text: t('v.users.edit.header')
   end
 
   feature "update" do

@@ -1,4 +1,4 @@
-= bootstrap_form_tag url: '/sessions', html: { id: 'login',
+= bootstrap_form_tag url: signin_path, html: { id: 'login',
   class: 'center-block' } do |f|
   %h2.text-right= t('v.sessions.new.header')
   = f.text_field :email, label: t('v.sessions.new.fields.email'),

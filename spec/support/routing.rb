@@ -1,3 +1,3 @@
-def param_from_url(locale)
+def locale_param(locale)
   locale.nil? ? {} : { locale: locale.gsub('/', '') }
 end

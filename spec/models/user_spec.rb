@@ -13,25 +13,30 @@ describe User do
     password: password,
     password_confirmation: password) }
 
-  [ :first_name,
-    :last_name,
-    :name,
-    :email,
-    :password_digest,
-    :password,
-    :password_confirmation,
-    :authenticated,
-    :auth_digest,    
-    :activation_sent_at,
-    :activation_digest,
-    :activated,
-    :activated_at,
-    :password_reset_token,
-    :password_reset_digest,
-    :password_reset_sent_at    
-  ].each do |method|
-    it %Q|responds to "#{method}" method| do
-      expect(user).to respond_to method
+  describe "responds to" do
+    known_methods = [
+      :first_name,
+      :last_name,
+      :name,
+      :email,
+      :password_digest,
+      :password,
+      :password_confirmation,
+      :authenticated,
+      :auth_digest,    
+      :activation_sent_at,
+      :activation_digest,
+      :activated,
+      :activated_at,
+      :password_reset_token,
+      :password_reset_digest,
+      :password_reset_sent_at
+    ]
+
+    known_methods.each do |method|
+      it %Q|"#{method}" method| do
+        expect(subject).to respond_to method
+      end
     end
   end
 
@@ -46,7 +51,6 @@ describe User do
 
     context "is too long" do
       let(:first_name) { 'a' * 31 }
-
       include_examples "is invalid and has errors", 1
     end
   end
@@ -59,7 +63,6 @@ describe User do
 
     context "is too long" do
       let(:last_name) { 'a' * 31 }
-
       include_examples "is invalid and has errors", 1
     end
   end
@@ -67,13 +70,11 @@ describe User do
   describe "with email that" do
     context "is blank" do
       let(:email) { ' ' }
-
       include_examples "is invalid and has errors", 1
     end
 
     context "is too long" do
       let(:email) { "#{'a' * 39}@example.com" }
-
       include_examples "is invalid and has errors", 1
     end
 
@@ -127,8 +128,7 @@ describe User do
   describe "with password that" do
     context "is blank" do
       context "on create" do
-        let(:password) { ' ' * 6 }
-        
+        let(:password) { ' ' * 6 }        
         include_examples "is invalid and has errors", 1
       end
 
@@ -145,19 +145,16 @@ describe User do
 
     context "is too short" do
       let(:password) { 'a' * 5 }
-
       include_examples "is invalid and has errors", 1
     end
 
     context "is too long" do
-      let(:password) { 'a' * 73 }
-
+      let(:password) { 'a' * 31 }
       include_examples "is invalid and has errors", 1
     end
 
     context "does not match confirmation" do
       before { user.password = 'mismatch' }
-
       include_examples "is invalid and has errors", 1
     end
   end
@@ -208,17 +205,17 @@ describe User do
     accepted_attributes = [:password, :activation_token,
       :password_reset_token]
     accepted_attributes.each do |attribute|
-      context "with correct #{attribute}" do        
+      context "with correct #{attribute}" do
         it "returns false" do
           expect(found_user.authenticated(attribute, 'incorrect')).to eq(false)
         end
-      end        
+      end
 
       context "with incorrect #{attribute}" do
         it "returns user" do
           expect(found_user.authenticated(
             attribute, user.send(attribute))).to eq(user)
-        end        
+        end
       end
     end
   end
@@ -226,7 +223,7 @@ describe User do
   describe "#assign_and_validate_attributes" do
     let(:user) { User.new }
 
-    context "when attribute(s) is invalid" do      
+    context "when attribute(s) is invalid" do
       let(:invalid_attrs) { Hash[email: 'not_an@email', password: ' '] }
 
       it "returns false" do
@@ -240,7 +237,7 @@ describe User do
     end
 
     context "when attribute(s) is valid" do
-      let(:valid_attrs) { Hash[email: 'valid@email.net', password: 'password'] }    
+      let(:valid_attrs) { Hash[email: 'valid@email.net', password: 'password'] }
 
       it "returns true" do
         expect(user.assign_and_validate_attributes(valid_attrs)).to eq(true)
@@ -267,7 +264,7 @@ describe User do
         let(:found_user) { User.find_by(email: user.email) }
         before { user.save }
 
-        it "generates new token" do          
+        it "generates new token" do
           expect { found_user.send_email(email_type) }.to change {
             found_user.send("#{email_type}_token")
           }.from(nil).to(String)

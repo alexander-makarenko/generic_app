@@ -1,0 +1,16 @@
+= render 'shared/validation_errors_simple', obj: @password_change
+%h2.text-center= t('v.password_changes.new.header')
+= bootstrap_form_for @password_change, layout: :horizontal, inline_errors: false,
+  label_col: 'col-sm-5', control_col: 'col-sm-7', html: { id: 'change-password',
+  class: 'center-block' } do |f|
+  / later replace h2 with page title ?
+  = f.password_field :current_password,
+    label: t('v.password_changes.new.fields.current_password')
+  = f.password_field :new_password,
+    label: t('v.password_changes.new.fields.new_password')
+  = f.password_field :new_password_confirmation,
+    label: t('v.password_changes.new.fields.new_password_confirmation')
+  = f.form_group do
+    = f.submit t('v.password_changes.new.submit'), class: 'btn btn-primary'
+    = link_to t('v.password_changes.new.cancel'), settings_path(current_user),
+      class: 'btn btn-primary'

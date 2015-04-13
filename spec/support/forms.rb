@@ -36,6 +36,20 @@ def update_profile_of(user, custom_values={})
   click_button I18n.t('v.users.edit.submit_button')
 end
 
+def change_password_of(user, custom_values={})
+  values = {
+    current_password: user.password,
+    new_password:     user.password,
+    confirmation:     user.password
+  }
+  values.merge!(custom_values) if custom_values
+
+  fill_in 'password_change_current_password',          with: values[:current_password]
+  fill_in 'password_change_new_password',              with: values[:new_password]
+  fill_in 'password_change_new_password_confirmation', with: values[:confirmation]
+  click_button I18n.t('v.password_changes.new.submit')
+end
+
 def update_password_with(values={})  
   fill_in 'password_reset_password',              with: values[:password]
   fill_in 'password_reset_password_confirmation', with: values[:confirmation]
