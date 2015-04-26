@@ -1,16 +1,32 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
-function ModelValidator(model, formSelector) {  
-  if (typeof model === 'undefined') {
-    throw new Error(this.constructor.name + ' cannot be instantiated without model name!');
+function Validator(settings) {
+
+  var self = this;
+
+  $.each(['model', 'form'], function(index, value) {
+    if (typeof settings[value] === 'undefined') {
+      throw new Error(self.constructor.name + " cannot be instantiated without '"
+        + value + "' parameter");
+    }
+  });
+
+  this.model = settings.model;
+
+  this.url = '/' + this.model + 's/validate';
+
+  this.$form = function() {
+    return $(settings.form);
+  };
+
+  if (typeof settings.errorPlacement !== 'undefined') {
+    this.placeErrors = settings.errorPlacement;
+  } else {
+    this.placeErrors = function(errors) {
+      self.$form().prepend(errors);
+    };
   }
-
-  this.model = model;
-
-  this.formSelector = formSelector;
-
-  this.url = '/' + model + 's/validate';
 
   this.$editedFields = $();
 
@@ -31,27 +47,15 @@ function ModelValidator(model, formSelector) {
   }();
 }
 
-ModelValidator.prototype = {
-  constructor: ModelValidator,
+Validator.prototype = {
+  constructor: Validator,
 
   errorDivClass: 'validation-errors',
 
   invalidFieldClass: 'has-error',
 
-  $form: function() {
-    var model = this.model,
-        formSelector = this.formSelector;
-    if (typeof formSelector !== 'undefined') {
-      return $(formSelector);
-    } else {
-      return $('form').filter(function() {
-        return (new RegExp('^new_' + model, 'i')).test($(this).attr('id')); // later modify to '^(new|edit)_'
-      });
-    }
-  },
-
   $fields: function() {
-    return this.$form().find('input:not([type="submit"], [type="hidden"])');    
+    return this.$form().find('input:not([type="submit"], [type="hidden"])');
   },
 
   $invalidFields: function() {
@@ -119,7 +123,8 @@ ModelValidator.prototype = {
         });
       }
     } else {
-      $newErrorDiv.insertAfter(this.$form().find('h2')).hide().slideDown(200);
+      this.placeErrors($newErrorDiv);
+      $newErrorDiv.hide().slideDown(200);
     }
   },
 
@@ -146,5 +151,11 @@ ModelValidator.prototype = {
 };
 
 $(document).on('page:change', function() {
-  (new ModelValidator('user', '#signup')).enable();
+  new Validator({
+    model: 'user',
+    form: '#signup',
+    errorPlacement: function(errors) {
+      $('#signup .panel-body').prepend(errors);
+    }
+  }).enable();
 });

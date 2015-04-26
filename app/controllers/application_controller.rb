@@ -17,6 +17,7 @@ class ApplicationController < ActionController::Base
   # in rspec caused the tests to fail. remove when fixed
   def default_url_options(options = {})
     { locale: I18n.locale }.merge options
+    # I18n.locale == :en ? {} : { locale: I18n.locale }
   end
   #=======================================================
 
@@ -36,6 +37,6 @@ class ApplicationController < ActionController::Base
     def user_not_authorized(exception)
       policy_name = exception.policy.class.to_s.underscore
       flash[:danger] = t "#{policy_name}.#{exception.query}", scope: 'p', default: :default
-      redirect_to(request.referrer || root_path)
+      redirect_to(request.referrer || localized_root_path(locale: I18n.locale))
     end
 end

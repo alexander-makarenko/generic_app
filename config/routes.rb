@@ -2,8 +2,10 @@ Rails.application.routes.draw do
 
   mount JasmineRails::Engine => '/specs' if defined?(JasmineRails)
   
-  get ':locale' => 'static_pages#home', locale: /en|ru/
-  root 'static_pages#home'
+  get '/', to: redirect("/#{I18n.default_locale}"), as: 'root'
+  get ':locale' => 'static_pages#home', locale: /en|ru/, as: 'localized_root'
+
+  # get '*path', to: redirect("/#{I18n.default_locale}/%{path}")
 
   scope '(:locale)', locale: /en|ru/ do
     resources :users, only: [:update]

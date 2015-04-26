@@ -18,4 +18,7 @@
           = yield
       .row
         .col-xs-12
+          = render 'layouts/footer'
+      .row
+        .col-xs-12
           = debug(params) if Rails.env.development?

@@ -11,7 +11,7 @@ class PasswordResetsController < ApplicationController
 
     if @mock_user.errors.added?(:email, :taken)
       User.find_by_email(@mock_user.email.downcase).send_email(:password_reset)
-      redirect_to root_path, info: t('c.password_resets.create.flash.info')
+      redirect_to localized_root_path(locale: I18n.locale), info: t('c.password_resets.create.flash.info')
     else
       flash.now[:danger] = t('c.password_resets.create.flash.danger') if @mock_user.errors.empty?
       render :new
@@ -29,13 +29,13 @@ class PasswordResetsController < ApplicationController
         @mock_user = User.new
         render :edit
       else
-        redirect_to root_path,
+        redirect_to localized_root_path(locale: I18n.locale),
           danger: t('c.password_resets.edit.flash.danger.expired',
             link: view_context.link_to(t('c.password_resets.edit.flash.link'),
               new_password_reset_path))
       end
     else
-      redirect_to root_path,
+      redirect_to localized_root_path(locale: I18n.locale),
         danger: t('c.password_resets.edit.flash.danger.invalid',
           link: view_context.link_to(t('c.password_resets.edit.flash.link'),
             new_password_reset_path))
@@ -60,7 +60,7 @@ class PasswordResetsController < ApplicationController
         render :edit
       end
     else
-      redirect_to root_path
+      redirect_to localized_root_path(locale: I18n.locale)
     end
   end
 

@@ -2,120 +2,267 @@ require 'rails_helper'
 
 describe "Routing" do
   locales = [ nil, '/en', '/ru' ]
-  locales.each do |locale|
-    describe "in AccountActivations controller" do
-      specify do
-        expect(get "#{locale}/user/activate/hashed_email/token").to route_to(
-          'account_activations#edit', { hashed_email: 'hashed_email',
-            token: 'token' }.merge(locale_param(locale)))
-      end
-      
-      specify do
-        expect(get "#{locale}/user/activate").to route_to(
-          'account_activations#new', locale_param(locale))
-      end
-      
-      specify do
-        expect(post "#{locale}/user/activate").to route_to(
-          'account_activations#create', locale_param(locale))
-      end
-    end
 
-    describe "in PasswordChanges controller" do
-      specify do
-        expect(get "#{locale}/user/change-password").to route_to(
-          'password_changes#new', locale_param(locale))
-      end
-
-      specify do
-        expect(post "#{locale}/user/change-password").to route_to(
-          'password_changes#create', locale_param(locale))
-      end
-    end
-
-    describe "in PasswordResets controller" do
-      specify do
-        expect(get "#{locale}/user/recover").to route_to(
-          'password_resets#new', locale_param(locale))
-      end
-
-      specify do
-        expect(post "#{locale}/user/recover").to route_to(
-          'password_resets#create', locale_param(locale))
-      end
-
-      specify do
-        expect(get "#{locale}/user/recover/hashed_email/token").to route_to(
-          'password_resets#edit', { hashed_email: 'hashed_email',
-            token: 'token' }.merge(locale_param(locale)))
-      end
-
-      specify do
-        expect(patch "#{locale}/user/recover").to route_to(
-          'password_resets#update', locale_param(locale))
-      end
-    end
+  locale_params = locales.map do |locale|
+    locale.nil? ? {} : { locale: locale.gsub('/', '') }
+  end
   
-    describe "in Sessions controller" do
-      specify do
-        expect(get "#{locale}/signin").to route_to(
-          'sessions#new', locale_param(locale))
+  describe "in AccountActivations controller routes" do
+    locales.each_with_index do |locale, i|
+      describe "GET to" do
+        url = "#{locale}/user/activate/hashed_email/token"
+        params = { hashed_email: 'hashed_email', token: 'token' }.merge locale_params[i]
+        target = 'account_activations#edit'
+        
+        it "#{url} to #{target} | params = #{params}" do
+          expect(get url).to route_to(target, params)
+        end
       end
 
-      specify do
-        expect(post "#{locale}/signin").to route_to(
-          'sessions#create', locale_param(locale))
-      end
+      describe "GET to" do
+        url = "#{locale}/user/activate"
+        params = locale_params[i]
+        target = 'account_activations#new'
 
-      specify do
-        expect(delete "#{locale}/signout").to route_to(
-          'sessions#destroy', locale_param(locale))
-      end
-    end
+        it "#{url} to #{target} | params = #{params}" do
+          expect(get url).to route_to(target, params)
+        end
+      end      
 
-    describe "in StaticPages controller" do
-      specify do
-        expect(get "#{locale}/").to route_to(
-          'static_pages#home', locale_param(locale))
-      end
-    end
+      describe "POST to" do
+        url = "#{locale}/user/activate"
+        params = locale_params[i]
+        target = 'account_activations#create'
 
-    describe "in Users controller" do
-      specify { expect(get "#{locale}/users").to_not be_routable }
-      specify { expect(get "#{locale}/users/42/edit").to_not be_routable }
-      specify { expect(get "#{locale}/users/new").to_not be_routable }
-      specify { expect(get "#{locale}/users/42").to_not be_routable }
-      specify { expect(delete "#{locale}/users/42").to_not be_routable }
-      
-      specify do
-        expect(post "#{locale}/signup").to route_to(
-          'users#create', locale_param(locale))
-      end
-
-      specify do
-        expect(get "#{locale}/signup").to route_to(
-          'users#new', locale_param(locale))
-      end
-
-      specify do
-        expect(get "#{locale}/users/42/settings").to route_to(
-          'users#edit', { id: '42' }.merge(locale_param(locale)))
-      end
-
-      specify do
-        expect(put "#{locale}/users/42").to route_to(
-          'users#update', { id: '42' }.merge(locale_param(locale)))
-      end
-
-      specify do
-        expect(patch "#{locale}/users/42").to route_to(
-          'users#update', { id: '42' }.merge(locale_param(locale)))
-      end
-
-      specify do
-        expect(post "#{locale}/users/validate").to route_to(
-          'users#validate', locale_param(locale))
+        it "#{url} to #{target} | params = #{params}" do
+          expect(post url).to route_to(target, params)
+        end
       end
     end
   end
+
+  describe "in PasswordChanges controller routes" do
+    locales.each_with_index do |locale, i|
+
+      describe "GET to" do
+        url = "#{locale}/user/change-password"
+        params = locale_params[i]
+        target = 'password_changes#new'
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(get url).to route_to(target, params)
+        end
+      end
+
+      describe "POST to" do
+        url = "#{locale}/user/change-password"
+        params = locale_params[i]
+        target = 'password_changes#create'
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(post url).to route_to(target, params)
+        end
+      end
+    end
+  end
+
+  describe "in PasswordResets controller routes" do
+    locales.each_with_index do |locale, i|
+
+      describe "GET to" do
+        url = "#{locale}/user/recover"
+        target = 'password_resets#new'
+        params = locale_params[i]
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(get url).to route_to(target, params)
+        end
+      end
+
+      describe "POST to" do
+        url = "#{locale}/user/recover"
+        params = locale_params[i]
+        target = 'password_resets#create'
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(post url).to route_to(target, params)
+        end
+      end
+
+      describe "GET to" do
+        url = "#{locale}/user/recover/hashed_email/token"
+        params = { hashed_email: 'hashed_email', token: 'token' }.merge locale_params[i]
+        target = 'password_resets#edit'
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(get url).to route_to(target, params)
+        end
+      end
+
+      describe "PATCH to" do
+        url = "#{locale}/user/recover"
+        params = locale_params[i]
+        target = 'password_resets#update'
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(patch url).to route_to(target, params)
+        end
+      end
+    end
+  end
+
+  describe "in Sessions controller routes" do
+    locales.each_with_index do |locale, i|
+
+      describe "GET to" do
+        url = "#{locale}/signin"
+        params = locale_params[i]
+        target = 'sessions#new'
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(get url).to route_to(target, params)
+        end
+      end
+
+      describe "POST to" do
+        url = "#{locale}/signin"
+        params = locale_params[i]
+        target = 'sessions#create'
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(post url).to route_to(target, params)
+        end
+      end
+
+      describe "DELETE to" do
+        url = "#{locale}/signout"
+        params = locale_params[i]
+        target = 'sessions#destroy'
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(delete url).to route_to(target, params)
+        end
+      end
+    end
+  end
+
+  describe "in StaticPages controller routes" do
+    locales[1..-1].each_with_index do |locale, i|
+
+      describe "GET to" do
+        url = "#{locale}/"
+        params = locale_params[i + 1]
+        target = 'static_pages#home'
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(get url).to route_to(target, params)
+        end
+      end
+    end    
+  end
+
+  describe "in Users controller" do
+    locales.each_with_index do |locale, i|
+
+      describe "GET to" do
+        url = "#{locale}/users"
+        
+        it "#{url} is not routable" do
+          expect(get url).to_not be_routable
+        end
+      end
+
+      describe "GET to" do
+        url = "#{locale}/users/42/edit"
+        
+        it "#{url} is not routable" do
+          expect(get url).to_not be_routable
+        end
+      end
+
+      describe " to" do
+        url = "#{locale}/users/new"
+        
+        it "#{url} is not routable" do
+          expect(get url).to_not be_routable
+        end
+      end
+
+      describe "GET to" do
+        url = "#{locale}/users/42"
+        
+        it "#{url} is not routable" do
+          expect(get url).to_not be_routable
+        end
+      end      
+
+      describe "DELETE to" do
+        url = "#{locale}/users/42"
+        
+        it "#{url} is not routable" do
+          expect(delete url).to_not be_routable
+        end
+      end
+
+      describe "POST to" do
+        url = "#{locale}/signup"
+        params = locale_params[i]
+        target = 'users#create'
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(post url).to route_to(target, params)
+        end
+      end
+
+      describe "GET to" do
+        url = "#{locale}/signup"
+        params = locale_params[i]
+        target = 'users#new'
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(get url).to route_to(target, params)
+        end
+      end
+
+      describe "GET to" do
+        url = "#{locale}/users/42/settings"
+        params = { id: '42' }.merge locale_params[i]
+        target = 'users#edit'
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(get url).to route_to(target, params)
+        end
+      end      
+
+      describe "PUT to" do
+        url = "#{locale}/users/42"
+        params = { id: '42' }.merge locale_params[i]
+        target = 'users#update'
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(put url).to route_to(target, params)
+        end
+      end
+
+      describe "PATCH to" do
+        url = "#{locale}/users/42"
+        params = { id: '42' }.merge locale_params[i]
+        target = 'users#update'
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(patch url).to route_to(target, params)
+        end
+      end
+
+      describe "POST to" do
+        url = "#{locale}/users/validate"
+        params = locale_params[i]
+        target = 'users#validate'
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(post url).to route_to(target, params)
+        end
+      end
+    end
+  end  
 end

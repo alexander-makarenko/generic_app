@@ -8,7 +8,7 @@ feature "Profile" do
     #=======================================================
     # replace with "visit settings_path(user)"
     # after removing the "default_url_options" method from application_controller
-    visit settings_path(id: user.id)
+    visit settings_path(id: user.id, locale: :ru)
     #=======================================================
   end
   
@@ -57,7 +57,7 @@ feature "Profile" do
         end
 
         it "redirects to home page" do
-          expect(current_path).to eq(root_path)
+          expect(current_path).to eq(localized_root_path(locale: :ru))
         end
         
         it "displays flash" do

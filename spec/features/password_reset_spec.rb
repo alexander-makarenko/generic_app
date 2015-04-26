@@ -4,7 +4,7 @@ feature "Password" do
   given(:user)             { FactoryGirl.create(:user) }
   given(:nonexistent_user) { FactoryGirl.build(:user) }
   background do
-    visit signin_path
+    visit signin_path(locale: :ru)
     click_link t('v.sessions.new.forgot?')
   end
 
@@ -53,7 +53,7 @@ feature "Password" do
         end
 
         it "redirects to home page" do
-          expect(current_path).to eq(root_path)
+          expect(current_path).to eq(localized_root_path({ locale: :ru }))
         end
 
         it "displays flash" do
@@ -72,7 +72,7 @@ feature "Password" do
         end
 
         it "redirects to home page" do
-          expect(current_path).to eq(root_path)
+          expect(current_path).to eq(localized_root_path({ locale: :ru }))
         end
 
         it "displays flash" do
@@ -90,7 +90,7 @@ feature "Password" do
         end
 
         it "redirects to home page" do
-          expect(current_path).to eq(root_path)
+          expect(current_path).to eq(localized_root_path({ locale: :ru }))
         end
 
         it "displays flash" do
@@ -107,7 +107,7 @@ feature "Password" do
 
         it "redirects to password update page" do
           expect(current_path).to eq(
-            edit_password_path(hashed_email: hashed_email, token: token))
+            edit_password_path(locale: :ru, hashed_email: hashed_email, token: token))
         end
 
         context "when visited again after password was successfully reset" do
@@ -119,7 +119,7 @@ feature "Password" do
           end
 
           it "redirects to home page" do
-            expect(current_path).to eq(root_path)
+            expect(current_path).to eq(localized_root_path({ locale: :ru }))
           end
 
           it "displays flash" do
@@ -188,7 +188,7 @@ feature "Password" do
         # replace with "expect(current_path).to eq(signin_path)" after
         # removing the "default_url_options" method from application_controller
         #=======================================================
-        expect(current_path).to eq(signin_path(locale: 'en'))
+        expect(current_path).to eq(signin_path(locale: :ru))
       end
 
       it "displays flash" do

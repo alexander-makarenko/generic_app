@@ -135,6 +135,10 @@ ru:
           sign_in: "Вход"
           sign_out: "Выход"
           settings: "Настройки"
+      _footer:
+        locale:
+          en: "English"
+          ru: "Русский"
     password_changes:
       new:
         header: "Изменение пароля"

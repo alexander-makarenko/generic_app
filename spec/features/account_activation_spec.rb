@@ -3,7 +3,7 @@ require 'rails_helper'
 feature "Activation" do
   given(:user) { FactoryGirl.build(:user) }
   background do
-    visit signup_path
+    visit signup_path(locale: :ru)
     sign_up_as(user)
   end
 
@@ -28,7 +28,7 @@ feature "Activation" do
       end
       
       it "redirects to home page" do
-        expect(current_path).to eq(root_path)
+        expect(current_path).to eq(localized_root_path({ locale: :ru }))
       end
 
       it "displays flash" do
@@ -57,7 +57,7 @@ feature "Activation" do
       end
 
       it "redirects to home page" do
-        expect(current_path).to eq(root_path)
+        expect(current_path).to eq(localized_root_path({ locale: :ru }))
       end
 
       it "displays flash" do
@@ -84,7 +84,7 @@ feature "Activation" do
         end
 
         it "redirects to home page" do
-         expect(current_path).to eq(root_path)
+         expect(current_path).to eq(localized_root_path({ locale: :ru }))
         end
 
         it "displays flash" do
@@ -97,7 +97,7 @@ feature "Activation" do
         background { visit link(:activation) }
 
         it "redirects to home page" do
-          expect(current_path).to eq(root_path)
+          expect(current_path).to eq(localized_root_path({ locale: :ru }))
         end
 
         it "displays flash" do
@@ -184,7 +184,7 @@ feature "Activation" do
       end
 
       it "redirects to home page" do
-        expect(current_path).to eq(root_path)
+        expect(current_path).to eq(localized_root_path({ locale: :ru }))
       end
 
       it "displays flash" do

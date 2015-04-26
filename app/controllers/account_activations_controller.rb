@@ -14,7 +14,7 @@ class AccountActivationsController < ApplicationController
       if user.errors.empty?
         user.save(validate: false)
         user.send_email(:activation)
-        redirect_to root_path,
+        redirect_to localized_root_path(locale: I18n.locale),
           info: t('c.account_activations.create.flash.info')
       else        
         render :new
@@ -36,17 +36,17 @@ class AccountActivationsController < ApplicationController
           activation_sent_at: nil
         }
         user.save(validate: false)
-        redirect_to root_path,
+        redirect_to localized_root_path(locale: I18n.locale),
           success: t('c.account_activations.edit.flash.success')
       else        
-        redirect_to root_path,
+        redirect_to localized_root_path(locale: I18n.locale),
           danger: t('c.account_activations.edit.flash.danger.expired',
             link: view_context.link_to(
               t('c.account_activations.edit.flash.link'),
               new_account_activation_path))
       end
     else
-      redirect_to root_path,
+      redirect_to localized_root_path(locale: I18n.locale),
         danger: t('c.account_activations.edit.flash.danger.invalid',
           link: view_context.link_to(
             t('c.account_activations.edit.flash.link'),
@@ -56,6 +56,6 @@ class AccountActivationsController < ApplicationController
 
   private
     def user_already_activated
-      redirect_to root_path, danger: t('c.account_activations.already_activated')
+      redirect_to localized_root_path(locale: I18n.locale), danger: t('c.account_activations.already_activated')
     end  
 end

@@ -3,10 +3,10 @@ require 'rails_helper'
 feature "Signup form" do
   given(:user)         { FactoryGirl.build(:user) }
   given(:invalid_user) { FactoryGirl.build(:user, :invalid) }
-  background { visit signup_path }
+  background { visit signup_path(locale: :ru) }
 
   specify "has proper header" do
-    expect(page).to have_selector('form h2', text: t('v.users.new.header'))
+    expect(page).to have_selector('form h3', text: t('v.users.new.header'))
   end
   
   context "on typing invalid data", js: true do
@@ -32,7 +32,7 @@ feature "Signup form" do
       end
 
       it "re-renders page", submit_before: true do
-        expect(page).to have_selector('form h2', text: t('v.users.new.header'))
+        expect(page).to have_selector('form h3', text: t('v.users.new.header'))
       end
 
       it "shows validation errors", submit_before: true do
@@ -54,7 +54,7 @@ feature "Signup form" do
       end
 
       it "redirects to home page", submit_before: true do
-        expect(current_path).to eq(root_path)
+        expect(current_path).to eq(localized_root_path({ locale: :ru }))
       end
 
       it "shows flash", submit_before: true do

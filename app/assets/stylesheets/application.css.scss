@@ -45,6 +45,10 @@ div {
   // outline: 1px solid #eee;
 }
 
+footer {  
+  margin: 25px 0;  
+}
+
 .gutter-half > [class*='col-'] {
   padding-right: 7.5px;
   padding-left: 7.5px;
@@ -54,26 +58,19 @@ div {
   padding-top: 0 !important;
 }
 
-#signup, #login {
-  max-width: 400px;
-  padding: 0 30px;
-  border: 1px solid #aaa;
-  border-radius: 10px;
-  background-color: #fff;  
-  h2 {
-    color: #444;
-    margin: 20px 0 15px;
-  }
-  .form-group:last-child {
-    padding-top: 5px;
-  }
+#signup, #login {  
   span {
     padding-right: 5px;
     padding-left: 5px;
   }
 }
 
-#signup {  
+#login {
+  max-width: 350px;
+}
+
+#signup {
+  max-width: 400px;
   .row {
     margin: 0;
     [class*='col-'] {
@@ -103,6 +100,14 @@ div {
   @media (min-width: 768px) {
     max-width: 400px;
   }
+}
+
+.panel-body div:last-child .form-group {
+  margin-bottom: 0;
+}
+
+.panel-heading h3 {
+  margin: 0;
 }
 
 .validation-errors {

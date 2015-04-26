@@ -20,7 +20,7 @@ class UsersController < ApplicationController
     if @user.save
       @user.send_email(:activation)
       sign_in(@user)
-      redirect_to root_path,
+      redirect_to localized_root_path(locale: I18n.locale),
         info: t('c.users.create.flash.info', email: @user.email)
     else
       render :new
@@ -40,7 +40,8 @@ class UsersController < ApplicationController
     if User.find(params[:id]).authenticated(:password, @user.password)
       if @user.valid?
         @user.save
-        redirect_to root_path, success: t('c.users.update.flash.success')
+        redirect_to localized_root_path(locale: I18n.locale),
+          success: t('c.users.update.flash.success')
       else
         render :edit
       end

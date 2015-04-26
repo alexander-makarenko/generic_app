@@ -127,6 +127,10 @@ en:
           sign_in: "Sign in"
           sign_out: "Sign out"
           settings: "Settings"
+      _footer:
+        locale:
+          en: "English"
+          ru: "Русский"
     password_changes:
       new:
         header: "Change password"

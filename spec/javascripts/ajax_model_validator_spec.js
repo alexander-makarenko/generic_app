@@ -4,21 +4,25 @@
 //= require helpers/test_responses/signup_validation.js
 //= require users
 
-describe("ModelValidator", function() {
+describe("Validator", function() {
   var validator;
   
   beforeEach(function() {
-    validator = new ModelValidator('foo');
+    validator = new Validator({
+      model: 'foo',
+      form: '#new_foo'
+    });
     $.fx.off = true;
   });
 
-  it("prototype's constructor property references ModelValidator", function() {
-    expect(validator.constructor).toBe(ModelValidator);
+  it("throws exception if instantiated without 'model' or 'form' option", function() {
+    expect(function(){ new Validator({ model: 'foo' }) }).toThrow();
+    expect(function(){ new Validator({ form: '#bar ' }) }).toThrow();
+    expect(function(){ new Validator({ model: 'foo', form: '#bar ' }) }).not.toThrow();
   });
 
-  it("throws exception if instantiated without model name parameter", function() {
-    expect(function(){ new ModelValidator() }).toThrow();
-    expect(function(){ new ModelValidator('foo') }).not.toThrow();
+  it("has prototype's constructor property referencing Validator", function() {
+    expect(validator.constructor).toBe(Validator);
   });
 
   it("has errorDivClass property defined", function() {
@@ -33,28 +37,59 @@ describe("ModelValidator", function() {
     expect(validator.url).toEqual('/foos/validate');
   });
 
-  describe("$form method returns form to validate", function() {
+  describe("placeErrors method takes errors content and", function() {
+    var errors;
+
+    beforeEach(function() {
+      errors = $('<div>').addClass(validator.errorDivClass);
+      loadFixtures('ajax_model_validation/form_without_errors.html');
+    });
+
+    describe("by default", function() {
+      it("prepends it to form", function() {
+        expect($('.' + validator.errorDivClass)).not.toExist();
+
+        validator.placeErrors(errors);
+
+        expect($('.' + validator.errorDivClass)).toEqual($('#new_foo').children(':first'));
+      });
+    });
+
+    describe("when errorPlacement function was provided as option to constructor", function() {
+      beforeEach(function() {
+        validator = new Validator({
+          model: 'foo',
+          form: '#new_foo',
+          errorPlacement: function(errors) {
+            $('#new_foo').append(errors);
+          }
+        });
+      });
+
+      it("uses that function to detemine where to place errors", function() {
+        expect($('.' + validator.errorDivClass)).not.toExist();
+
+        validator.placeErrors(errors);
+
+        expect($('.' + validator.errorDivClass)).toEqual($('#new_foo').children(':last'));
+      });
+    });
+  });
+
+  describe("$form method", function() {
     beforeEach(function() {
       loadFixtures('ajax_model_validation/multiple_forms.html');
     });
 
-    it("based on conventional form id for new ActiveRecord model instances", function() {
-      var forms = validator.$form();
+    it("returns form element based on provided selector", function() {
+      validator = new Validator({ model: 'foo', form: '#baz' });
 
-      expect(forms).toHaveLength(1);
-      expect(forms.first().attr('id')).toBe('new_foo');
-    });
-
-    it("based on given selector, when one is provided as second parameter to constructor", function() {
-      validator = new ModelValidator('foo', '#baz');
-      var forms = validator.$form();
-
-      expect(forms).toHaveLength(1);
-      expect(forms.first().attr('id')).toBe('baz');
+      expect(validator.$form()).toHaveLength(1);
+      expect(validator.$form().first().attr('id')).toBe('baz');
     });
   });
 
-  it("$fields method returns all inputs of $form except those of type 'submit' and 'hidden'", function() {
+  it("$fields method returns all form inputs except those of type 'submit' and 'hidden'", function() {
     loadFixtures('ajax_model_validation/form_without_errors.html');
     var $fields = validator.$fields();
 
@@ -175,42 +210,48 @@ describe("ModelValidator", function() {
   describe("buildErrorDiv method", function() {
     var $errorDiv, errorMessages;
 
-    it("returns empty object when server's response is empty", function() {
-      validator.response = {};
-      $errorDiv = validator.buildErrorDiv();
+    describe("when server's response is empty", function() {
+      beforeEach(function() {
+        validator.response = {};
+        $errorDiv = validator.buildErrorDiv();
+      });
 
-      expect($errorDiv).toHaveLength(0);
+      it("returns empty object", function() {
+        expect($errorDiv).toHaveLength(0);
+      });
     });
 
-    describe("returns object with HTML structure built from server's response that includes", function() {
+    describe("when server's response is not empty", function() {
       beforeEach(function() {
         validator.response = testResponses.formValidation.withErrors.responseText;
         $errorDiv = validator.buildErrorDiv();
       });
 
-      it("<div> element with class set in errorDivClass property", function() {
-        expect($errorDiv).toEqual('div');
-        expect($errorDiv).toHaveClass(validator.errorDivClass);
-      });
-
-      it("<p> element with errors description", function() {
-        expect($errorDiv).toContainElement('p');
-        expect($errorDiv.find('p').text()).toEqual(validator.response.description);
-      });
-
-      it("<ul> element with <li> for each error message", function() {
-        errorMessages = [];
-        $.each(validator.response.errors, function(attr, messages) {
-          $.each(messages, function(index, message) {
-            errorMessages.push(message);
-          });
+      describe("returns object with HTML structure built from it that includes:", function() {
+        it("<div> element with class set in errorDivClass property", function() {
+          expect($errorDiv).toEqual('div');
+          expect($errorDiv).toHaveClass(validator.errorDivClass);
         });
 
-        expect($errorDiv).toContainElement('ul li');
+        it("<p> element with errors description", function() {
+          expect($errorDiv).toContainElement('p');
+          expect($errorDiv.find('p').text()).toEqual(validator.response.description);
+        });
 
-        $errorDiv.find('li').each(function() {
+        it("<ul> element with <li> for each error message", function() {
+          errorMessages = [];
+          $.each(validator.response.errors, function(attr, messages) {
+            $.each(messages, function(index, message) {
+              errorMessages.push(message);
+            });
+          });
 
-          expect(errorMessages).toContain($(this).text());
+          expect($errorDiv).toContainElement('ul li');
+
+          $errorDiv.find('li').each(function() {
+
+            expect(errorMessages).toContain($(this).text());
+          });
         });
       });
     });
@@ -229,7 +270,7 @@ describe("ModelValidator", function() {
 
       beforeEach(function() {
         loadFixtures('ajax_model_validation/form_with_errors.html');
-        $errorDiv = $('h2 + div.' + validator.errorDivClass);
+        $errorDiv = $('.' + validator.errorDivClass);
       });
 
       describe("and newly received errors", function() {
@@ -239,7 +280,7 @@ describe("ModelValidator", function() {
             validator.response = testResponses.formValidation.withErrors.responseText;
           });
 
-          it("updates current errors", function() {
+          it("updates existing errors", function() {
             var errorTextBefore = $errorDiv.text();
             validator.updateErrors();
             var errorTextAfter = $errorDiv.text();
@@ -249,7 +290,7 @@ describe("ModelValidator", function() {
         });
 
         describe("are the same", function() {
-          it("does not change current errors", function() {
+          it("does not change existing errors", function() {
             var errorTextBefore = $errorDiv.text();
             validator.updateErrors();
             var errorTextAfter = $errorDiv.text();
@@ -264,7 +305,7 @@ describe("ModelValidator", function() {
           validator.response = {};
         });
 
-        it("removes <div> with current errors", function() {
+        it("removes existing errors from DOM", function() {
           expect($errorDiv).toBeInDOM();
 
           validator.updateErrors();
@@ -275,10 +316,16 @@ describe("ModelValidator", function() {
     });
 
     describe("when no errors are currently listed", function() {
-      var $errorDiv;
 
       beforeEach(function() {
         loadFixtures('ajax_model_validation/form_without_errors.html');
+      });
+
+      it("calls placeErrors method", function() {
+        spyOn(validator, 'placeErrors');
+        validator.updateErrors();
+
+        expect(validator.placeErrors).toHaveBeenCalled();
       });
 
       describe("and some new are received", function() {
@@ -286,12 +333,12 @@ describe("ModelValidator", function() {
           validator.response = testResponses.formValidation.withErrors.responseText;
         });
 
-        it("inserts <div> with new errors after h2 element in form being validated", function() {
-          expect($('h2 + div.' + validator.errorDivClass)).not.toExist();
+        it("adds new errors to DOM", function() {
+          expect($('.' + validator.errorDivClass)).not.toExist();
 
           validator.updateErrors();
 
-          expect($('h2 + div.' + validator.errorDivClass)).toBeVisible();
+          expect($('.' + validator.errorDivClass)).toBeVisible();
         });
       });
 
@@ -300,12 +347,12 @@ describe("ModelValidator", function() {
           validator.response = {};
         });
 
-        it("does not insert any <div> after h2 element in form being validated", function() {
-          expect($('h2 + div.' + validator.errorDivClass)).not.toExist();
+        it("does not add anything to DOM", function() {
+          expect($('.' + validator.errorDivClass)).not.toExist();
 
           validator.updateErrors();
 
-          expect($('h2 + div.' + validator.errorDivClass)).not.toExist();
+          expect($('.' + validator.errorDivClass)).not.toExist();
         });
       });
     });

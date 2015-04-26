@@ -6,7 +6,7 @@ feature "Signin" do
   background { visit signin_path }
   
   specify "form has proper header" do
-    expect(page).to have_selector('form h2', text: t('v.sessions.new.header'))
+    expect(page).to have_selector('form h3', text: t('v.sessions.new.header'))
   end  
   
   context "with invalid data" do
@@ -19,7 +19,7 @@ feature "Signin" do
     end
 
     it "re-renders page" do
-      expect(page).to have_selector('form h2', text: t('v.sessions.new.header'))
+      expect(page).to have_selector('form h3', text: t('v.sessions.new.header'))
     end
 
     it "displays flash" do
@@ -59,14 +59,14 @@ end
 feature "Signout" do
   given(:user) { FactoryGirl.create(:user) }
   background do
-    visit signin_path
-    sign_in_as(user)
+    visit signin_path(locale: :ru)
+    sign_in_as(user)    
     click_link t('v.layouts._header.nav_links.sign_out')
   end
 
   include_examples "user is not signed in"  
 
   it "redirects to home page" do
-    expect(current_path).to eq(root_path)
-  end  
+    expect(current_path).to eq(localized_root_path(locale: :ru))
+  end
 end
