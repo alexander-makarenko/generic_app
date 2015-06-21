@@ -6,54 +6,37 @@ describe PasswordChange do
   let(:new_password) { 'qwerty123' }
   let(:new_password_confirmation) { new_password }
 
-  subject(:password_change) { PasswordChange.new(
-    current_password: current_password,
-    new_password: new_password,
-    new_password_confirmation: new_password_confirmation
-  ) }
+  subject(:password_change) {
+    PasswordChange.new(
+      current_password: current_password,
+      new_password: new_password,
+      new_password_confirmation: new_password_confirmation
+    )
+  }
 
   before { password_change.user = user }
 
   it { is_expected.to be_valid }
 
-  describe "responds to" do
-    known_methods = [
-      :current_password,
-      :new_password,
-      :new_password_confirmation
-    ]
-
-    known_methods.each do |method|
-      it %Q|"#{method}" method| do
-        expect(subject).to respond_to method
-      end
-    end
-  end
-
-  describe "with incorrect current password" do
+  describe "with incorrect current password", expect_errors: 1 do
     let(:current_password) { 'incorrect' }
-    include_examples "is invalid and has errors", 1
   end
 
   describe "with new password that" do
-    context "is blank" do
+    context "is blank", expect_errors: 1 do
       let(:new_password) { ' ' }
-      include_examples "is invalid and has errors", 1
     end
 
-    context "is too short" do
+    context "is too short", expect_errors: 1 do
       let(:new_password) { 'a' * 5 }
-      include_examples "is invalid and has errors", 1
     end
 
-    context "is too long" do
+    context "is too long", expect_errors: 1 do
       let(:new_password) { 'a' * 31 }
-      include_examples "is invalid and has errors", 1
     end
   end
 
-  describe "with incorrect confirmation of new password" do
+  describe "with incorrect confirmation of new password", expect_errors: 1 do
     let(:new_password_confirmation) { 'mismatch' }
-    include_examples "is invalid and has errors", 1
   end
 end

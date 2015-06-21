@@ -16,7 +16,7 @@ class UserPolicy < ApplicationPolicy
     !signed_in?
   end
 
-  def update?
+  def show?
     current_user?(user)
   end
 end

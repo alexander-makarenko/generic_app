@@ -2,45 +2,38 @@ require 'rails_helper'
 
 describe SessionsController do
 
-  describe "authorization" do
-    let(:already_signed_in_error) { t('p.session_policy.new?') }
-    let(:not_authorized_error) { t('p.default') }
-    let(:user) { FactoryGirl.create(:user, :activated) }
+  describe "authorization" do    
+    let(:user) { FactoryGirl.create(:user, :email_confirmed) }
     let(:create_params) { Hash[ email: '', password: '' ] }
+    before { bypass_rescue }
 
     context "when user is not signed in" do
-      specify "permits GET to #new" do
-        get :new
-        expect(flash[:danger]).to_not match(already_signed_in_error)
+      it "permits GET to #new" do
+        expect { get :new }.to be_permitted
       end
 
-      specify "permits POST to #create" do
-        post :create, create_params
-        expect(flash[:danger]).to_not match(already_signed_in_error)
+      it "permits POST to #create" do
+        expect { post :create, create_params }.to be_permitted
       end
 
-      specify "forbids DELETE to #destroy" do
-        delete :destroy
-        expect(flash[:danger]).to match(not_authorized_error)
+      it "forbids DELETE to #destroy" do
+        expect { delete :destroy }.to_not be_permitted
       end
     end
 
     context "when user is signed in" do
       before { sign_in_as(user, no_capybara: true) }
 
-      specify "forbids GET to #new" do
-        get :new
-        expect(flash[:danger]).to match(already_signed_in_error)
+      it "forbids GET to #new" do
+        expect { get :new }.to_not be_permitted
       end
 
-      specify "forbids POST to #create" do
-        post :create, create_params
-        expect(flash[:danger]).to match(already_signed_in_error)
+      it "forbids POST to #create" do
+        expect { post :create, create_params }.to_not be_permitted
       end
 
-      specify "permits DELETE to #destroy" do
-        delete :destroy
-        expect(flash[:danger]).to_not match(not_authorized_error)
+      it "permits DELETE to #destroy" do
+        expect { delete :destroy }.to be_permitted
       end
     end
   end

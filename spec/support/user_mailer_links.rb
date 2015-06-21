@@ -18,8 +18,8 @@ end
 
 def extract_link(type)
   url_difference = case type
-  when :activation
-    'activate'
+  when :email_confirmation
+    'confirm'
   when :password_reset
     'recover'
   end  

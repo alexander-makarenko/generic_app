@@ -9,8 +9,7 @@ describe UserPolicy do
 
     it { is_expected.to     permit(:new)    }
     it { is_expected.to     permit(:create) }
-    it { is_expected.to_not permit(:edit)   }
-    it { is_expected.to_not permit(:update) }
+    it { is_expected.to_not permit(:show)   }
   end
 
   context "when user is signed in" do
@@ -20,15 +19,13 @@ describe UserPolicy do
     it { is_expected.to_not permit(:create) }
 
     context "as another user" do
-      it { is_expected.to_not permit(:edit)   }
-      it { is_expected.to_not permit(:update) }
+      it { is_expected.to_not permit(:show) }
     end
 
     context "as target user" do
       let(:current_user) { user }
 
-      it { is_expected.to permit(:edit)   }
-      it { is_expected.to permit(:update) }
+      it { is_expected.to permit(:show) }
     end
   end
 end

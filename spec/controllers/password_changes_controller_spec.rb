@@ -2,33 +2,29 @@ require 'rails_helper'
 
 describe PasswordChangesController do
   describe "authorization" do
-    let(:user) { FactoryGirl.create(:user, :activated) }    
-    let(:not_authorized_error) { t('p.default') }
+    let(:user) { FactoryGirl.create(:user, :email_confirmed) }    
     let(:create_params) { Hash[ password: '' ] }
+    before { bypass_rescue }
 
     context "when user is not signed in" do
-      specify "forbids GET to #new" do
-        get :new
-        expect(flash[:danger]).to match(not_authorized_error)
+      it "forbids GET to #new" do
+        expect { get :new }.to_not be_permitted      
       end
 
-      specify "forbids POST to #create" do
-        post :create, create_params
-        expect(flash[:danger]).to match(not_authorized_error)
+      it "forbids POST to #create" do
+        expect { post :create, create_params}.to_not be_permitted        
       end
     end
 
     context "when user is signed in" do
       before { sign_in_as(user, no_capybara: true) }
 
-      specify "permits GET to #new" do
-        get :new
-        expect(flash[:danger]).to_not match(not_authorized_error)
+      it "permits GET to #new" do
+        expect { get :new }.to be_permitted        
       end
 
-      specify "permits POST to #create" do
-        post :create, create_params
-        expect(flash[:danger]).to_not match(not_authorized_error)
+      it "permits POST to #create" do
+        expect { post :create, create_params }.to be_permitted        
       end
     end
   end

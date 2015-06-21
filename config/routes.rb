@@ -8,13 +8,13 @@ Rails.application.routes.draw do
   # get '*path', to: redirect("/#{I18n.default_locale}/%{path}")
 
   scope '(:locale)', locale: /en|ru/ do
-    resources :users, only: [:update]
+    resources :users, only: [:show]
 
     scope controller: :users do
-      get  'signup'             => :new
-      post 'signup'             => :create
-      get  'users/:id/settings' => :edit, as: 'settings'
-      post 'users/validate'     => :validate, as: 'users_validation'
+      get  'signup'         => :new
+      post 'signup'         => :create
+      get  'account'        => :show, as: 'account'
+      post 'users/validate' => :validate, as: 'users_validation'
     end
 
     scope controller: :sessions do
@@ -24,10 +24,9 @@ Rails.application.routes.draw do
     end
   
     scope path: 'user' do      
-      scope controller: :account_activations do
-        get  'activate'                      => :new,    as: 'new_account_activation'
-        post 'activate'                      => :create, as: 'account_activations'
-        get  'activate/:hashed_email/:token' => :edit,   as: 'edit_account_activation'
+      scope controller: :email_confirmations do
+        post 'confirm'                      => :create, as: 'email_confirmations'
+        get  'confirm/:hashed_email/:token' => :edit,   as: 'edit_email_confirmation'
       end
 
       scope controller: :password_resets do
@@ -40,6 +39,11 @@ Rails.application.routes.draw do
       scope controller: :password_changes do
         get  'change-password' => :new,    as: 'new_password_change'
         post 'change-password' => :create, as: 'password_changes'
+      end
+
+      scope controller: :name_changes do
+        get  'change-name' => :new,    as: 'new_name_change'
+        post 'change-name' => :create, as: 'name_changes'
       end
     end
   end

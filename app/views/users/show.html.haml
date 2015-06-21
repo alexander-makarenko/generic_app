@@ -1,2 +1,17 @@
-%h1 Users#show
-%p Find me in app/views/users/show.html.haml
+= render 'shared/validation_errors_simple', obj: @user
+%h2= t('v.users.show.heading')
+.row.account-settings
+  .col-sm-6
+    %h4= @user.name
+    = link_to t('v.users.show.name_change'), new_name_change_path
+  .col-sm-6
+    %p.text-muted= t('v.users.show.subheadings.email')
+    = @user.email
+    %br
+    = link_to t('v.users.show.email_change'), '#'
+  .col-sm-6
+  .col-sm-6
+    %p.text-muted= t('v.users.show.subheadings.password')
+    = link_to t('v.users.show.password_change'), new_password_change_path
+    %br
+    = link_to t('v.users.show.password_reset'), new_password_reset_path

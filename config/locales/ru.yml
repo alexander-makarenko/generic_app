@@ -5,8 +5,21 @@ ru:
         current_password: "неверный"
         new_password: "новый пароль"
         new_password_confirmation: "подтверждение"
+      password_reset:
+        email: "адрес электронной почты"
+      name_change:
+        new_first_name: "имя"
+        new_last_name: "фамилия"
     errors:
       models:
+        name_change:
+          attributes:
+            new_first_name:
+              blank: "не должно быть пустым"
+              too_long: "должно быть длиной не более %{count} символов"
+            new_last_name:
+              blank: "не должна быть пустой"
+              too_long: "должна быть длиной не более %{count} символов"
         password_change:
           attributes:
             current_password:
@@ -15,8 +28,15 @@ ru:
               blank: "не должен быть пустым"
               too_short: "должен быть длиной не менее %{count} символов"
               too_long: "должен быть длиной не более %{count} символов"
-            new_password_confirmation:              
+            new_password_confirmation:
               confirmation: "не совпадает с новым паролем"
+        password_reset:
+          attributes:
+            email:
+              blank: "не должен быть пустым"
+              invalid: "имеет неверный формат"
+              nonexistent: "no user found with specified email"
+              too_long: "должен быть длиной не более %{count} символов"              
   activerecord:
     attributes:
       user:
@@ -24,7 +44,7 @@ ru:
         last_name: "фамилия"
         email: "адрес электронной почты"
         password: "пароль"
-        password_confirmation: "подтверждение"        
+        password_confirmation: "подтверждение"
     errors:
       models:
         user:
@@ -49,22 +69,23 @@ ru:
               blank: "не должен быть пустым"
               confirmation: "не совпадает с указанным паролем"
   c: # controllers
-    account_activations:
-      already_activated: "You have already activated your account."
+    email_confirmations:      
       create:
         flash:
-          info: "An activation email has been sent to your email address.
-            Click the link in the message to activate your account."
-          danger: "Wrong password."
+          info: "A confirmation link has been sent to your email address."
       edit:
         flash:
           danger:
-            expired: "The link has expired. To request another activation email,
-              click %{link}."
-            invalid: "Activation link is invalid. To request a new one, please
-              click %{link}."
-          success: "Thank you for activating your account."
+            expired: "The link has expired. To request a new one, please click
+              %{link}."
+            invalid: "The link is invalid. To request a new one, please click
+              %{link}."
+          success: "Email successfully confirmed."
           link: "here"
+    name_changes:
+      create:
+        flash:
+          success: "Name successfully updated."
     password_changes:
       create:
         flash:
@@ -74,8 +95,7 @@ ru:
         flash:
           info: "Email with instructions for resetting your password has been
             sent to your address. If you don't receive it within a few minutes,
-            be sure to check your junk email/spam filter folder."
-          danger: "Пользователь с таким адресом электронной почты не найден."
+            be sure to check your junk email/spam filter folder."          
       edit:
         flash:
           danger:
@@ -86,32 +106,41 @@ ru:
           link: "здесь"
       update:
         flash:
-          success: "Пароль успешно обновлен. Теперь вы можете войти в свою
-            учётную запись."
+          success: "Ваш пароль был успешно обновлен. Используйте его, чтобы
+            войти в свою учётную запись."
     sessions:
       create:
         flash:
           danger: "Неверный пароль или адрес электронной почты."
-    users:
-      create:
+    users:      
+      show:
         flash:
-          info: "Thank you for signing up! We have sent a confirmation email
-            to your address (%{email}). Please click the link it contains to
-            activate your account."
+          warning:
+            "1": "To be able to use email features you need to confirm your
+              email address. To do this, please click %{link}."
+            "2": "To confirm your email address, please click the link in the
+              message that has just been sent to you. If you don't receive it
+              within a few minutes, check your email junk/spam folder, or
+              request another confirmation link by clicking %{link}."
+            "3": "To confirm your email you should click the link in the message
+              that was sent to you %{time_ago} ago. If you still haven't
+              received it, check your email junk/spam folder, or request another
+              confirmation link by clicking %{link}."
+          link: "here"
       update:
         flash:
           success: "Изменения сохранены."
   m: # mailers
     user_mailer:
       greeting: "Здравствуйте, %{first_name}!"
-      activation:
-        subject: "Account creation - Confirm your account"
+      email_confirmation:
+        subject: "Подтверждение адреса электронной почты"
       password_reset:
         subject: "Восстановление пароля"
   p: #policies
     default: "You are not authorized to perform this action."
-    account_activation_policy:
-      new?: "Please sign in to access this page."
+    email_confirmation_policy:
+      already_confirmed: "Вы уже подтвердили свой имейл."      
       create?: "Please sign in to access this page."
     session_policy:
       new?: "You are already signed in."
@@ -120,32 +149,32 @@ ru:
       new?: "You are already registered."
       create?: "You are already registered."
   v: # views
-    account_activations:
-      new:
-        header: "Resend activation email"
-        invitation: "Please fill in the fields below, if necessary correcting
-          the email address that we have on file, and hit Resend."
-        fields:
-          email: "Адрес электронной почты"
-          password: "Пароль"
-        submit_button: "Resend"
     layouts:
       _header:
         nav_links:
           sign_in: "Вход"
           sign_out: "Выход"
-          settings: "Настройки"
+          settings: "Профиль"
       _footer:
         locale:
           en: "English"
           ru: "Русский"
+    name_changes:
+      new:
+        heading:
+          "Изменить имя"
+        fields:
+          new_first_name: "Имя"
+          new_last_name: "Фамилия"
+        submit: "Сохранить"
+        cancel: "Отменить"
     password_changes:
       new:
         header: "Изменение пароля"
         fields:
-          current_password: "Текущий пароль:"
-          new_password: "Новый пароль:"
-          new_password_confirmation: "Подтверждение:"
+          current_password: "Текущий пароль"
+          new_password: "Новый пароль"
+          new_password_confirmation: "Подтверждение"
         submit: "Сохранить"
         cancel: "Отменить"
     password_resets:
@@ -157,11 +186,10 @@ ru:
           password_confirmation: "Подтвердите пароль"
         submit_button: "Сохранить"
       new:
-        header: "Password reset"
-        invitation: "Send instructions to reset my password to this email
-          address:"
+        header: "Сброс пароля"
+        invitation: "Укажите, пожалуйста, ваш адрес электронной почты:"
         fields:
-          email: "Email"
+          email: "Имейл"
         submit_button: "Submit"
     sessions:
       new:
@@ -169,9 +197,9 @@ ru:
         fields:
           email: "Адрес электронной почты"
           password: "Пароль"
-        forgot?: "Забыли пароль?"
+        password_reset: "Забыли пароль?"
         keep_signed_in: "Запомнить меня"
-        submit_button: "Вход"        
+        submit_button: "Вход"
         or: "или"
         signup_link: "Регистрация"
     shared:
@@ -180,27 +208,18 @@ ru:
           one: "Обнаружена ошибка:"
           other: "Обнаружены следующие ошибки:"
     user_mailer:
-      activation:
+      email_confirmation:
         main:
           "1": "Thank you for creating an account on our website. To get
             started, we need you to confirm your email address, by clicking
             on the link below:"
-          "2": "Note: the link will expire in 3 days."      
+          "2": "Note: the link will expire in 3 days."
       password_reset:
         main:
           "1": "To reset your password, visit the following URL:"
           "2": "If you didn't request your password to be reset, ignore this
             email and your password will remain unchanged."
     users:
-      edit:
-        header: "Настройки"
-        fields:
-          first_name: "Имя"
-          last_name: "Фамилия"
-          email: "Адрес электронной почты"
-          password: "Пароль"
-        change_password: "Изменить пароль"
-        submit_button: "Сохранить"
       new:
         header: "Регистрация"
         fields:
@@ -212,3 +231,12 @@ ru:
         submit_button: "Регистрация"
         or: "или"
         signin_link: "Вход"
+      show:
+        heading: "Профиль"
+        subheadings:
+          email: "Имейл"
+          password: "Пароль"
+        name_change: "Изменить имя"
+        email_change: "Изменить имейл"
+        password_reset: "Забыли пароль?"
+        password_change: "Изменить пароль"

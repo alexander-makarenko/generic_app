@@ -1,13 +1,4 @@
 class UsersController < ApplicationController
-  def validate    
-    @user = User.new
-    @user.assign_and_validate_attributes(user_params)
-
-    respond_to do |format|
-      format.json { render :validate }
-    end
-  end
-
   def new
     @user = User.new
     authorize @user
@@ -16,41 +7,42 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     authorize @user
-
     if @user.save
-      @user.send_email(:activation)
-      sign_in(@user)
-      redirect_to localized_root_path(locale: I18n.locale),
-        info: t('c.users.create.flash.info', email: @user.email)
+      sign_in @user
+      # TO DO: SEND WELCOME EMAIL
+      redirect_to localized_root_path, info: t('c.users.create.flash.info', email: @user.email)
     else
       render :new
     end
   end
 
-  def edit
-    @user = User.find(params[:id])
+  def show
+    @user = params[:id].nil? ? current_user : User.find(params[:id])
+    # redirect_to(localized_root_path) unless @user
     authorize @user
-  end
-
-  def update
-    @user = User.find(params[:id])
-    authorize @user
-    @user.assign_attributes(user_params)
-
-    if User.find(params[:id]).authenticated(:password, @user.password)
-      if @user.valid?
-        @user.save
-        redirect_to localized_root_path(locale: I18n.locale),
-          success: t('c.users.update.flash.success')
+    unless @user.email_confirmed
+      link = view_context.link_to(t('c.users.show.flash.link'),
+        email_confirmations_path, method: :post)
+      sent_at = @user.email_confirmation_sent_at      
+      flash.now[:warning] = case
+      when !sent_at
+        t('c.users.show.flash.warning.1', link: link)
+      when sent_at < 5.minutes.ago
+        t('c.users.show.flash.warning.3', link: link, time_ago: time_ago_in_words(sent_at))
       else
-        render :edit
+        t('c.users.show.flash.warning.2', link: link)
       end
-    else
-      @user.errors.add(:password)      
-      render :edit
     end
   end
 
+  def validate
+    @user = User.new
+    @user.assign_and_validate_attributes(user_params)
+    respond_to do |format|
+      format.json { render :validate }
+    end
+  end
+  
   private
     def user_params
       params.require(:user).permit(:first_name, :last_name, :email, :password,

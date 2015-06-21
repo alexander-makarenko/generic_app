@@ -1,11 +1,11 @@
 %header
-  %nav.text-right
-    %ul.list-inline.list-unstyled
-      - if policy(:session).new?
-        %li= link_to t('v.layouts._header.nav_links.sign_in'), signin_path
-      - else
-        %li= current_user.name
-        %li= '|'
-        %li= link_to t('v.layouts._header.nav_links.settings'), settings_path(current_user)
-        %li= '|'
-        %li= link_to t('v.layouts._header.nav_links.sign_out'), signout_path, method: :delete
+  %nav.navbar.navbar-default.navbar-fixed-top
+    .container
+      %ul.nav.navbar-nav.navbar-right
+        - if policy(:session).new?
+          %li= link_to t('v.layouts._header.nav_links.sign_in'), signin_path
+        - else
+          %li.navbar-text= current_user.name          
+          %li= link_to t('v.layouts._header.nav_links.settings'), account_path          
+          %li= link_to t('v.layouts._header.nav_links.sign_out'), signout_path,
+          method: :delete

@@ -7,32 +7,22 @@ describe "Routing" do
     locale.nil? ? {} : { locale: locale.gsub('/', '') }
   end
   
-  describe "in AccountActivations controller routes" do
+  describe "in EmailConfirmations controller routes" do
     locales.each_with_index do |locale, i|
       describe "GET to" do
-        url = "#{locale}/user/activate/hashed_email/token"
+        url = "#{locale}/user/confirm/hashed_email/token"
         params = { hashed_email: 'hashed_email', token: 'token' }.merge locale_params[i]
-        target = 'account_activations#edit'
+        target = 'email_confirmations#edit'
         
         it "#{url} to #{target} | params = #{params}" do
           expect(get url).to route_to(target, params)
         end
       end
 
-      describe "GET to" do
-        url = "#{locale}/user/activate"
-        params = locale_params[i]
-        target = 'account_activations#new'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(get url).to route_to(target, params)
-        end
-      end      
-
       describe "POST to" do
-        url = "#{locale}/user/activate"
+        url = "#{locale}/user/confirm"
         params = locale_params[i]
-        target = 'account_activations#create'
+        target = 'email_confirmations#create'
 
         it "#{url} to #{target} | params = #{params}" do
           expect(post url).to route_to(target, params)
@@ -58,6 +48,31 @@ describe "Routing" do
         url = "#{locale}/user/change-password"
         params = locale_params[i]
         target = 'password_changes#create'
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(post url).to route_to(target, params)
+        end
+      end
+    end
+  end
+
+  describe "in NameChanges controller routes" do
+    locales.each_with_index do |locale, i|
+
+      describe "GET to" do
+        url = "#{locale}/user/change-name"
+        params = locale_params[i]
+        target = 'name_changes#new'
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(get url).to route_to(target, params)
+        end
+      end
+
+      describe "POST to" do
+        url = "#{locale}/user/change-name"
+        params = locale_params[i]
+        target = 'name_changes#create'
 
         it "#{url} to #{target} | params = #{params}" do
           expect(post url).to route_to(target, params)
@@ -158,45 +173,21 @@ describe "Routing" do
           expect(get url).to route_to(target, params)
         end
       end
-    end    
+    end
   end
 
   describe "in Users controller" do
     locales.each_with_index do |locale, i|
 
       describe "GET to" do
-        url = "#{locale}/users"
+        url = "#{locale}/users" # resourceful index action
         
         it "#{url} is not routable" do
           expect(get url).to_not be_routable
         end
       end
 
-      describe "GET to" do
-        url = "#{locale}/users/42/edit"
-        
-        it "#{url} is not routable" do
-          expect(get url).to_not be_routable
-        end
-      end
-
-      describe " to" do
-        url = "#{locale}/users/new"
-        
-        it "#{url} is not routable" do
-          expect(get url).to_not be_routable
-        end
-      end
-
-      describe "GET to" do
-        url = "#{locale}/users/42"
-        
-        it "#{url} is not routable" do
-          expect(get url).to_not be_routable
-        end
-      end      
-
-      describe "DELETE to" do
+      describe "DELETE to" do # resourceful destroy action
         url = "#{locale}/users/42"
         
         it "#{url} is not routable" do
@@ -215,6 +206,16 @@ describe "Routing" do
       end
 
       describe "GET to" do
+        url = "#{locale}/users/42"
+        params = { id: '42' }.merge locale_params[i]        
+        target = 'users#show'
+
+        it "#{url} to #{target} | params = #{params}" do
+          expect(get url).to route_to(target, params)
+        end
+      end
+
+      describe "GET to" do
         url = "#{locale}/signup"
         params = locale_params[i]
         target = 'users#new'
@@ -225,33 +226,43 @@ describe "Routing" do
       end
 
       describe "GET to" do
-        url = "#{locale}/users/42/settings"
-        params = { id: '42' }.merge locale_params[i]
-        target = 'users#edit'
+        url = "#{locale}/users/42/edit"
+        # params = { id: '42' }.merge locale_params[i]
+        # target = 'users#edit'
+
+        it "#{url} is not routable" do
+          expect(get url).to_not be_routable
+        end
+        
+        # it "#{url} to #{target} | params = #{params}" do
+        #   expect(get url).to route_to(target, params)
+        # end
+      end
+
+      describe "GET to" do
+        url = "#{locale}/account"
+        params = locale_params[i]
+        target = 'users#show'
 
         it "#{url} to #{target} | params = #{params}" do
           expect(get url).to route_to(target, params)
         end
-      end      
-
-      describe "PUT to" do
-        url = "#{locale}/users/42"
-        params = { id: '42' }.merge locale_params[i]
-        target = 'users#update'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(put url).to route_to(target, params)
-        end
       end
 
-      describe "PATCH to" do
+      describe "PUT/PATCH to" do
         url = "#{locale}/users/42"
-        params = { id: '42' }.merge locale_params[i]
-        target = 'users#update'
+        # params = { id: '42' }.merge locale_params[i]
+        # target = 'users#update'
 
-        it "#{url} to #{target} | params = #{params}" do
-          expect(patch url).to route_to(target, params)
+        it "#{url} is not routable" do
+          expect(put url).to_not be_routable
+          expect(patch url).to_not be_routable
         end
+
+        # it "#{url} to #{target} | params = #{params}" do
+        #   expect(put url).to route_to(target, params)
+        #   expect(patch url).to route_to(target, params)
+        # end
       end
 
       describe "POST to" do
@@ -264,5 +275,5 @@ describe "Routing" do
         end
       end
     end
-  end  
+  end
 end

@@ -4,8 +4,8 @@ feature "Password" do
   given(:user)             { FactoryGirl.create(:user) }
   given(:nonexistent_user) { FactoryGirl.build(:user) }
   background do
-    visit signin_path(locale: :ru)
-    click_link t('v.sessions.new.forgot?')
+    visit signin_path
+    click_link t('v.sessions.new.password_reset')
   end
 
   feature "reset" do
@@ -37,12 +37,11 @@ feature "Password" do
         it "re-renders page" do
           expect(page).to have_selector('h2',
             text: t('v.password_resets.new.header'))
-        end        
-
-        it "displays flash" do
-          expect(page).to have_flash :danger,
-            t('c.password_resets.create.flash.danger')
         end
+
+        it "shows validation errors" do
+          expect(page).to have_selector('.validation-errors')
+        end        
       end
 
       context "with correct email" do
@@ -53,7 +52,7 @@ feature "Password" do
         end
 
         it "redirects to home page" do
-          expect(current_path).to eq(localized_root_path({ locale: :ru }))
+          expect(current_path).to eq(localized_root_path(locale: I18n.locale))
         end
 
         it "displays flash" do
@@ -66,13 +65,27 @@ feature "Password" do
     feature "link" do
       background { request_password_reset(user.email) }
 
-      context "that is invalid" do
-        background do
-          visit link(:password_reset, hashed_email: 'invalid', token: 'invalid')
-        end
+      context "with invalid hashed email" do
+        let(:token) { extract_token(link(:password_reset)) }
+        before { visit link(:password_reset, hashed_email: 'invalid', token: token) }
 
         it "redirects to home page" do
-          expect(current_path).to eq(localized_root_path({ locale: :ru }))
+          expect(current_path).to eq(localized_root_path(locale: I18n.locale))
+        end
+
+        it "displays flash" do
+          expect(page).to have_flash :danger,
+            t('c.password_resets.edit.flash.danger.invalid',
+              link: t('c.password_resets.edit.flash.link'))
+        end
+      end
+
+      context "with invalid token" do
+        let(:hashed_email) { extract_hashed_email(link(:password_reset)) }
+        before { visit link(:password_reset, hashed_email: hashed_email, token: 'invalid') }
+
+        it "redirects to home page" do
+          expect(current_path).to eq(localized_root_path(locale: I18n.locale))
         end
 
         it "displays flash" do
@@ -90,7 +103,7 @@ feature "Password" do
         end
 
         it "redirects to home page" do
-          expect(current_path).to eq(localized_root_path({ locale: :ru }))
+          expect(current_path).to eq(localized_root_path(locale: I18n.locale))
         end
 
         it "displays flash" do
@@ -107,7 +120,7 @@ feature "Password" do
 
         it "redirects to password update page" do
           expect(current_path).to eq(
-            edit_password_path(locale: :ru, hashed_email: hashed_email, token: token))
+            edit_password_path(locale: I18n.locale, hashed_email: hashed_email, token: token))
         end
 
         context "when visited again after password was successfully reset" do
@@ -119,7 +132,7 @@ feature "Password" do
           end
 
           it "redirects to home page" do
-            expect(current_path).to eq(localized_root_path({ locale: :ru }))
+            expect(current_path).to eq(localized_root_path(locale: I18n.locale))
           end
 
           it "displays flash" do
@@ -188,7 +201,7 @@ feature "Password" do
         # replace with "expect(current_path).to eq(signin_path)" after
         # removing the "default_url_options" method from application_controller
         #=======================================================
-        expect(current_path).to eq(signin_path(locale: :ru))
+        expect(current_path).to eq(signin_path(locale: I18n.locale))
       end
 
       it "displays flash" do

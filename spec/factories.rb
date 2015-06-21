@@ -14,9 +14,9 @@ FactoryGirl.define do
       password   { Faker::Internet.password(4) }
     end
     
-    trait :activated do
-      activated true
-      activated_at Time.zone.now
+    trait :email_confirmed do
+      email_confirmed true
+      email_confirmed_at Time.zone.now
     end
 
     # trait :email_not_confirmed_in_time do

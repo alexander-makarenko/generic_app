@@ -8,8 +8,6 @@ class PasswordChange
   validates :new_password, length: { in: 6..30 }, unless: -> { new_password.blank? }
 
   def verify_current_password
-    unless user.authenticated(:password, current_password)
-      self.errors.add(:current_password)
-    end
+    errors.add(:current_password) unless user.authenticate(current_password)
   end
 end

@@ -1,14 +1,2 @@
-= render 'shared/validation_errors_simple', obj: @user
-/ later replace h2 with page title ?
-%h2.text-center= t('v.users.edit.header')
-= bootstrap_form_for @user, layout: :horizontal, inline_errors: false,
-  label_col: 'col-sm-3', control_col: 'col-sm-9', html: { id: 'user-settings',
-  class: 'center-block' } do |f|
-  = f.text_field :first_name, label: t('v.users.edit.fields.first_name')
-  = f.text_field :last_name, label: t('v.users.edit.fields.last_name')
-  = f.text_field :email, label: t('v.users.edit.fields.email')
-  = f.password_field :password, label: t('v.users.edit.fields.password')
-  = f.form_group do
-    = f.submit t('v.users.edit.submit_button'), class: 'btn btn-primary'
-    .pull-right
-      = link_to t('v.users.edit.change_password'), new_password_change_path
+%h1 Users#edit
+%p Find me in app/views/users/edit.html.haml

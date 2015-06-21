@@ -1,6 +1,6 @@
 %footer
   %nav.text-center
-    %div{ class: 'btn-group', role: 'group', 'aria-label' => 'Site language' }
+    %div{ class: 'btn-group', id: 'locale-selector', role: 'group', 'aria-label' => 'Site language' }
       = link_to_unless_current t('v.layouts._footer.locale.en'), { locale: 'en' },
       class: 'btn btn-default', role: 'button' do
         = content_tag :span, t('v.layouts._footer.locale.en'),

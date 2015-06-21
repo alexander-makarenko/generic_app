@@ -6,7 +6,7 @@ def sign_up_as(user)
   fill_in 'user_email',                 with: user.email.upcase
   fill_in 'user_password',              with: user.password
   fill_in 'user_password_confirmation', with: user.password_confirmation
-  click_button t('v.users.new.submit_button')
+  click_button t('v.users.new.submit_button')  
 end
 
 def sign_in_as(user, options={})
@@ -18,22 +18,6 @@ def sign_in_as(user, options={})
     check t('v.sessions.new.keep_signed_in') if options[:keep_signed_in]
     click_button t('v.sessions.new.submit_button')
   end
-end
-
-def update_profile_of(user, custom_values={})
-  values = {
-    first_name: user.first_name,
-    last_name: user.last_name,
-    email: user.email.upcase,
-    current_password: user.password
-  }
-  values.merge!(custom_values) if custom_values
-
-  fill_in 'user_first_name', with: values[:first_name]
-  fill_in 'user_last_name',  with: values[:last_name]
-  fill_in 'user_email',      with: values[:email]
-  fill_in 'user_password',   with: values[:current_password]
-  click_button t('v.users.edit.submit_button')
 end
 
 def change_password_of(user, custom_values={})
@@ -50,19 +34,21 @@ def change_password_of(user, custom_values={})
   click_button t('v.password_changes.new.submit')
 end
 
-def update_password_with(values={})  
-  fill_in 'password_reset_password',              with: values[:password]
-  fill_in 'password_reset_password_confirmation', with: values[:confirmation]
-  click_button t('v.password_resets.edit.submit_button')
+def change_name_of(user, opts={})  
+  fill_in 'name_change_new_first_name', with: opts[:to][0]
+  fill_in 'name_change_new_last_name',  with: opts[:to][1]
+  click_button t('v.name_changes.new.submit')
 end
 
-def rerequest_account_activation_as(user, custom_values={})
-  values = { email: user.email.upcase, password: user.password }
-  values.merge!(custom_values) if custom_values
+# def change_email_of(user, opts={})
+#   fill_in 'email', with: opts[:to]
+#   click_button t('v.email_changes.new.submit')
+# end
 
-  fill_in 'email',    with: values[:email]
-  fill_in 'password', with: values[:password]
-  click_button t('v.account_activations.new.submit_button')
+def update_password_with(values={})  
+  fill_in 'user_password',              with: values[:password]
+  fill_in 'user_password_confirmation', with: values[:confirmation]
+  click_button t('v.password_resets.edit.submit_button')
 end
 
 def request_password_reset(email)

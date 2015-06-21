@@ -41,6 +41,10 @@
 //   box-shadow: 0 5px 20px 0px rgba(0,0,0,.5);
 // }
 
+body {
+  padding-top: 70px;
+}
+
 div {
   // outline: 1px solid #eee;
 }
@@ -87,7 +91,7 @@ footer {
   }
 }
 
-#password-reset-new {
+#password-reset-new, #change-name, #change-password {
   max-width: 300px;
 }
 
@@ -95,7 +99,7 @@ footer {
   max-width: 200px;
 }
 
-#account-activation-new, #user-settings, #change-password {
+#email-confirmation-new, #user-settings {
   max-width: 300px;
   @media (min-width: 768px) {
     max-width: 400px;
@@ -108,6 +112,11 @@ footer {
 
 .panel-heading h3 {
   margin: 0;
+}
+
+.account-settings div {
+  padding-top: 5px;
+  padding-bottom: 20px;
 }
 
 .validation-errors {
@@ -137,6 +146,10 @@ footer {
     color: red;
     line-height: 1.6em;
   }
+}
+
+header ul {
+  margin-left: -15px !important;
 }
 
 // /* flash messages */

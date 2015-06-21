@@ -15,10 +15,10 @@
     %li signed in users cannot sign in another time (#new, #create);
     %li visitors cannot sign out (#destroy);
 
-  %p AccountActivations controller:
+  %p EmailConfirmations controller:
   %ul
-    %li only signed in and not activated users can re-request activation links (#new, #create);
-    %li activation links can be accessed by anyone except users who are signed in and already activated (#edit).
+    %li only signed in who haven't yet confirmed their email can re-request email confirmation links (#create);
+    %li email confirmation links can be accessed by anyone except signed in users who have already confirmed their email (#edit).
 
   %p PasswordResets controller:
   %ul

@@ -1,0 +1,4 @@
+%p= @greeting
+%p= t('v.user_mailer.email_confirmation.main.1')
+%p= raw link_to(nil, @email_confirmation_link, target: '_blank')
+%p= t('v.user_mailer.email_confirmation.main.2')

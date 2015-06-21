@@ -1,7 +1,7 @@
-- if obj.errors.any?
+- errors = obj.errors.full_messages.uniq
+- unless errors.empty?
   .validation-errors
-    %p= t('v.shared._validation_errors.message',
-      count: obj.errors.full_messages.uniq.count)
+    %p= t('v.shared._validation_errors.message', count: errors.count)
     %ul
-      - obj.errors.full_messages.uniq.each do |error|
+      - errors.each do |error|
         %li= error

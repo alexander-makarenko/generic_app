@@ -6,12 +6,15 @@ describe User do
   let(:email)      { 'first.last@example.com' }
   let(:password)   { 'qwerty123' }
 
-  subject(:user) { User.new(
-    first_name: first_name,
-    last_name: last_name,
-    email: email,
-    password: password,
-    password_confirmation: password) }
+  subject(:user) {
+    User.new(
+      first_name: first_name,
+      last_name: last_name,
+      email: email,
+      password: password,
+      password_confirmation: password
+    )
+  }
 
   describe "responds to" do
     known_methods = [
@@ -22,12 +25,11 @@ describe User do
       :password_digest,
       :password,
       :password_confirmation,
-      :authenticated,
-      :auth_digest,    
-      :activation_sent_at,
-      :activation_digest,
-      :activated,
-      :activated_at,
+      :auth_digest,
+      :email_confirmation_sent_at,
+      :email_confirmation_digest,
+      :email_confirmed,
+      :email_confirmed_at,
       :password_reset_token,
       :password_reset_digest,
       :password_reset_sent_at
@@ -41,75 +43,65 @@ describe User do
   end
 
   it { is_expected.to be_valid }
-  it { is_expected.to_not be_activated }
+  it { is_expected.to have_attributes(email_confirmed: false) }
 
   describe "with first name that" do
-    context "is blank" do
+    context "is blank", expect_errors: 1 do
       let(:first_name) { ' ' }
-      include_examples "is invalid and has errors", 1
     end
 
-    context "is too long" do
+    context "is too long", expect_errors: 1 do
       let(:first_name) { 'a' * 31 }
-      include_examples "is invalid and has errors", 1
     end
   end
 
   describe "with last name that" do
-    context "is blank" do
+    context "is blank", expect_errors: 1 do
       let(:last_name) { ' ' }
-      include_examples "is invalid and has errors", 1
     end
 
-    context "is too long" do
+    context "is too long", expect_errors: 1 do
       let(:last_name) { 'a' * 31 }
-      include_examples "is invalid and has errors", 1
     end
   end
 
   describe "with email that" do
-    context "is blank" do
+    context "is blank", expect_errors: 1 do
       let(:email) { ' ' }
-      include_examples "is invalid and has errors", 1
     end
 
-    context "is too long" do
-      let(:email) { "#{'a' * 39}@example.com" }
-      include_examples "is invalid and has errors", 1
+    context "is too long", expect_errors: 1 do
+      let(:email) { ('a' * 49).insert(-10, '@').insert(-4, '.') }
     end
 
-    context "is already taken" do
+    context "is already taken", expect_errors: 1 do
       let(:user_with_same_email) { user.dup }
       before do
         user_with_same_email.email = user.email.swapcase
         user_with_same_email.save
       end
-
-      include_examples "is invalid and has errors", 1
     end
 
     context "is of invalid format" do
-      let(:addresses) { %w[ .starts-with-dot@example.com double..dot@test.org
+      invalid_addresses = %w[ .starts-with-dot@example.com double..dot@test.org
         double.dot@test..org no_at_sign.net double@at@sign.com without@dot,com
-        ends+with@dot. ] }
-      
-      specify "is invalid and has an error" do
-        addresses.each do |invalid_address|
-          user.email = invalid_address
-          expect(user).to be_invalid
-          expect(user.errors.count).to eq(1)
+        ends+with@dot. ]
+        
+      invalid_addresses.each do |address|
+        describe "#{address}", expect_errors: 1 do 
+          before { subject.email = address }
         end
       end
     end
 
     context "is of valid format" do
-      let(:addresses) { %w[ user@example.com first.last@somewhere.COM
-        fir5t_la5t@somewhe.re FIRST+LAST@s.omwhe.re ] }
+      valid_addresses = %w[ user@example.com first.last@somewhere.COM
+        fir5t_la5t@somewhe.re FIRST+LAST@s.omwhe.re ]
       
-      specify "is valid" do
-        addresses.each do |valid_address|
-          user.email = valid_address
-          expect(user).to be_valid
+      valid_addresses.each do |address|
+        describe "#{address}" do 
+          before { subject.email = address }
+          it { is_expected.to be_valid }
         end
       end
     end
@@ -127,35 +119,29 @@ describe User do
 
   describe "with password that" do
     context "is blank" do
-      context "on create" do
-        let(:password) { ' ' * 6 }        
-        include_examples "is invalid and has errors", 1
+      context "on create", expect_errors: 1 do
+        let(:password) { ' ' * 6 }
       end
 
-      context "on update" do
+      context "on update", expect_errors: 1 do
         subject(:persisted_user) { User.find_by(email: user.email) }
         before do
           user.save
           persisted_user.password = ' ' * 6
-        end        
-
-        include_examples "is invalid and has errors", 1
+        end
       end
     end
 
-    context "is too short" do
+    context "is too short", expect_errors: 1 do
       let(:password) { 'a' * 5 }
-      include_examples "is invalid and has errors", 1
     end
 
-    context "is too long" do
-      let(:password) { 'a' * 31 }
-      include_examples "is invalid and has errors", 1
+    context "is too long", expect_errors: 1 do
+      let(:password) { 'a' * 31 }      
     end
 
-    context "does not match confirmation" do
+    context "does not match confirmation", expect_errors: 1 do
       before { user.password = 'mismatch' }
-      include_examples "is invalid and has errors", 1
     end
   end
 
@@ -166,16 +152,16 @@ describe User do
       expect(persisted_user.auth_digest).to_not be_blank
     end
 
-    it "is assigned virtual activation token" do
+    it "is assigned virtual email confirmation token" do
       expect { user.save }.to change {
-        user.activation_token
+        user.email_confirmation_token
       }.from(nil).to(String)
     end
 
-    it "is assigned activation digest" do
+    it "is assigned email confirmation digest" do
       user.save
       persisted_user = User.find_by(email: user.email)
-      expect(persisted_user.activation_digest).to_not be_blank
+      expect(persisted_user.email_confirmation_digest).to_not be_blank
     end
 
     it "is assigned virtual password reset token" do
@@ -196,27 +182,27 @@ describe User do
       expect(user.name).to match(
         /#{Regexp.quote(first_name)}\s{1}#{Regexp.quote(last_name)}/ )
     end
-  end
+  end  
 
-  describe "#authenticated" do
-    let(:found_user) { User.find_by(email: user.email) }
-    before { user.save }
+  describe "#confirm_email" do
+    before { user.send_email(:email_confirmation) }
 
-    accepted_attributes = [:password, :activation_token,
-      :password_reset_token]
-    accepted_attributes.each do |attribute|
-      context "with correct #{attribute}" do
-        it "returns false" do
-          expect(found_user.authenticated(attribute, 'incorrect')).to eq(false)
-        end
-      end
+    it "sets email_confirmed attribute to true" do
+      expect { user.confirm_email }.to change {
+        user.email_confirmed
+      }.from(false).to(true)
+    end
 
-      context "with incorrect #{attribute}" do
-        it "returns user" do
-          expect(found_user.authenticated(
-            attribute, user.send(attribute))).to eq(user)
-        end
-      end
+    it "sets email_confirmed_at time" do
+      expect { user.confirm_email }.to change {
+        user.email_confirmed_at
+      }.from(nil).to(ActiveSupport::TimeWithZone)
+    end
+
+    it "clears email_confirmation_sent_at time" do
+      expect { user.confirm_email }.to change {
+        user.email_confirmation_sent_at
+      }.from(ActiveSupport::TimeWithZone).to(nil)
     end
   end
 
@@ -253,8 +239,54 @@ describe User do
   describe "#send_email" do
     before { user.save }
     
-    [:activation, :password_reset].each do |email_type|
-      it "sets send time" do
+    [:email_confirmation, :password_reset].each do |email_type|
+      it "saves email sending time" do
+        expect { user.send_email(email_type) }.to change {
+          user.send("#{email_type}_sent_at")
+        }.from(nil).to(ActiveSupport::TimeWithZone)
+      end
+
+      context "when #{email_type}_token is blank" do
+        let(:found_user) { User.find_by(email: user.email) }
+        before { user.save }
+
+        it "generates new token" do
+          expect { found_user.send_email(email_type) }.to change {
+            found_user.send("#{email_type}_token")
+          }.from(nil).to(String)
+        end
+
+        it "updates #{email_type}_digest" do
+          expect { found_user.send_email(email_type) }.to change(
+            found_user.reload, "#{email_type}_digest")
+        end
+      end
+    end
+  end
+
+  describe "#authenticate_by" do
+    before { user.save }
+
+    describe "with :digested_email option" do
+      context "when digested value corresponds to actual" do
+        let(:digested_email) { described_class.digest(user.email) }
+        
+        it "returns self" do
+          expect(user.authenticate_by(digested_email: digested_email)).to eq(user)
+        end
+      end
+
+      context "when digested value does not correspond to actual" do
+        let(:digested_email) { 'incorrect' }
+        
+        it "returns false" do
+          expect(user.authenticate_by(digested_email: digested_email)).to eq(false)
+        end
+      end
+    end
+    
+    [:email_confirmation, :password_reset].each do |email_type|
+      it "saves email sending time" do
         expect { user.send_email(email_type) }.to change {
           user.send("#{email_type}_sent_at")
         }.from(nil).to(ActiveSupport::TimeWithZone)

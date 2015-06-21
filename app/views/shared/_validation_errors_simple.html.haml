@@ -1,6 +1,7 @@
-- if obj.errors.any?
+- errors = obj.errors.full_messages.uniq
+- unless errors.empty?
   %div{ class: 'alert alert-danger validation-errors alert-dismissible', role: 'alert' }
     %button.close{ 'aria-label' => 'Close', 'data-dismiss' => 'alert', type: 'button' }
       %span{ 'aria-hidden' => 'true'} &times;
-    - obj.errors.full_messages.uniq.each do |error|
+    - errors.each do |error|
       = error.capitalize + '.'

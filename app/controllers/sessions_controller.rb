@@ -6,9 +6,9 @@ class SessionsController < ApplicationController
 
   def create
     user = User.find_by(email: params[:email].downcase)
-    if user && user.authenticated(:password, params[:password])
+    if user && user.authenticate(params[:password])
       sign_in(user, params[:keep_signed_in])      
-      redirect_to localized_root_path(locale: I18n.locale)
+      redirect_to localized_root_path
     else
       flash.now[:danger] = t('c.sessions.create.flash.danger')
       render :new
@@ -17,6 +17,6 @@ class SessionsController < ApplicationController
 
   def destroy
     sign_out
-    redirect_to localized_root_path(locale: I18n.locale)
+    redirect_to localized_root_path
   end
 end

@@ -55,11 +55,7 @@ class ApplicationPolicy
     def signed_in?
       !current_user.nil?
     end
-
-    # def activated?
-    #   current_user && current_user.activated?
-    # end
-    
+        
     def current_user?(user)
       user == current_user
     end

@@ -5,8 +5,19 @@ en:
         current_password: "current password"
         new_password: "new password"
         new_password_confirmation: "confirmation"
+      password_reset:
+        email: "email"
+      name_change:
+        new_first_name: "first name"
+        new_last_name: "last name"
     errors:
       models:
+        name_change:
+          attributes:
+            new_first_name:
+              blank: "is required"
+            new_last_name:
+              blank: "is required"
         password_change:
           attributes:
             current_password:
@@ -16,6 +27,11 @@ en:
               too_short: "must be at least %{count} characters long"
             new_password_confirmation:
               confirmation: "does not match the %{attribute}"
+        password_reset:
+          attributes:
+            email:
+              blank: "is required"
+              nonexistent: "no user found with specified email"
   activerecord:
     attributes:
       user:
@@ -23,7 +39,7 @@ en:
         last_name: "last name"
         email: "email"
         password: "password"
-        password_confirmation: "confirmation"        
+        password_confirmation: "confirmation"
     errors:
       models:
         user:
@@ -39,36 +55,36 @@ en:
               invalid: "is incorrect"
               too_short: "must be at least %{count} characters long"
             password_confirmation:
-              blank: "is required"
-              confirmation: "does not match the %{attribute}"            
+              confirmation: "does not match the %{attribute}"
+              blank: "is required"              
   c: # controllers
-    account_activations:
-      already_activated: "You have already activated your account."
+    email_confirmations:      
       create:
         flash:
-          info: "An activation email has been sent to your email address.
-            Click the link in the message to activate your account."
-          danger: "Wrong password."
-      edit:        
+          info: "A confirmation link has been sent to your email address."
+      edit:
         flash:
-          danger:            
-            expired: "The link has expired. To request another activation email,
-              click %{link}."
-            invalid: "Activation link is invalid. To request a new one, please
-              click %{link}."
-          success: "Thank you for activating your account."
+          danger:
+            expired: "The link has expired. To request a new one, please click
+              %{link}."
+            invalid: "The link is invalid. To request a new one, please click
+              %{link}."
+          success: "Email successfully confirmed."
           link: "here"
+    name_changes:
+      create:
+        flash:
+          success: "Name successfully updated."
     password_changes:
       create:
         flash:
-          success: "Password successfully changed."          
+          success: "Password successfully changed."
     password_resets:
       create:
         flash:
           info: "Email with instructions for resetting your password has been
             sent to your address. If you don't receive it within a few minutes,
-            be sure to check your junk email/spam filter folder."
-          danger: "No user found with specified email."
+            be sure to check your junk email/spam filter folder."          
       edit:
         flash:
           danger:
@@ -79,31 +95,40 @@ en:
           link: "here"
       update:
         flash:
-          success: "Password successfully updated. You can now sign in."
+          success: "Update successful. Please sign in using your new password."
     sessions:
       create:
         flash:
-          danger: "Invalid email or password."      
-    users:
-      create:
+          danger: "Invalid email or password."
+    users:      
+      show:
         flash:
-          info: "Thank you for signing up! We have sent a confirmation email
-            to your address (%{email}). Please click the link it contains to
-            activate your account."
+          warning:
+            "1": "To be able to use email features you need to confirm your
+              email address. To do this, please click %{link}."
+            "2": "To confirm your email address, please click the link in the
+              message that has just been sent to you. If you don't receive it
+              within a few minutes, check your email junk/spam folder, or
+              request another confirmation link by clicking %{link}."
+            "3": "To confirm your email you should click the link in the message
+              that was sent to you %{time_ago} ago. If you still haven't
+              received it, check your email junk/spam folder, or request another
+              confirmation link by clicking %{link}."
+          link: "here"
       update:
         flash:
           success: "Changes saved."
   m: # mailers
     user_mailer:
       greeting: "Hi %{first_name},"
-      activation:
-        subject: "Account creation - Confirm your account"      
+      email_confirmation:
+        subject: "Confirm your email address"
       password_reset:
         subject: "Password reset"
   p: #policies
     default: "You are not authorized to perform this action."
-    account_activation_policy:
-      new?: "Please sign in to access this page."
+    email_confirmation_policy:
+      already_confirmed: "You have already confirmed your email."      
       create?: "Please sign in to access this page."
     session_policy:
       new?: "You are already signed in."
@@ -112,32 +137,32 @@ en:
       new?: "You are already registered."
       create?: "You are already registered."
   v: # views
-    account_activations:
-      new:
-        header: "Resend activation email"
-        invitation: "Please fill in the fields below, if necessary correcting
-          the email address that we have on file, and hit Resend."
-        fields:
-          email: "Email"
-          password: "Password"
-        submit_button: "Resend"
     layouts:
       _header:
         nav_links:
           sign_in: "Sign in"
           sign_out: "Sign out"
-          settings: "Settings"
+          settings: "Account"
       _footer:
         locale:
           en: "English"
           ru: "Русский"
+    name_changes:
+      new:
+        heading:
+          "Update name"
+        fields:
+          new_first_name: "First name"
+          new_last_name: "Last name"
+        submit: "Save changes"
+        cancel: "Cancel"
     password_changes:
       new:
         header: "Change password"
         fields:
-          current_password: "Current password:"
-          new_password: "New password:"
-          new_password_confirmation: "Confirmation:"
+          current_password: "Current password"
+          new_password: "New password"
+          new_password_confirmation: "Confirmation"
         submit: "Save changes"
         cancel: "Cancel"
     password_resets:
@@ -150,8 +175,7 @@ en:
         submit_button: "Save"
       new:
         header: "Reset password"
-        invitation: "Send instructions to reset my password to this email
-          address:"
+        invitation: "Please enter your email address:"
         fields:
           email: "Email"
         submit_button: "Submit"
@@ -161,7 +185,7 @@ en:
         fields:
           email: "Email"
           password: "Password"
-        forgot?: "Forgot your password?"
+        password_reset: "Forgot password?"
         keep_signed_in: "Keep me signed in"
         submit_button: "Sign in"
         or: "or"
@@ -172,28 +196,18 @@ en:
           one: "Oops! There is an error:"
           other: "Oops! There are %{count} errors:"
     user_mailer:
-      activation:
+      email_confirmation:
         main:
           "1": "Thank you for creating an account on our website. To get
             started, we need you to confirm your email address, by clicking
             on the link below:"
           "2": "Note: the link will expire in 3 days."
-      
       password_reset:
         main:
           "1": "To reset your password, visit the following URL:"
           "2": "If you didn't request your password to be reset, ignore this
             email and your password will remain unchanged."
     users:
-      edit:
-        header: "Settings"
-        fields:
-          first_name: "First name"
-          last_name: "Last name"
-          email: "Email"
-          password: "Password"
-        change_password: "Change password"
-        submit_button: "Save"
       new:
         header: "Sign up"
         fields:
@@ -205,3 +219,12 @@ en:
         submit_button: "Sign up"
         or: "or"
         signin_link: "Sign in"
+      show:
+        heading: "Account"
+        subheadings:
+          email: "Email"
+          password: "Password"        
+        name_change: "Change name"        
+        email_change: "Change email"
+        password_reset: "Forgot password?"
+        password_change: "Change password"

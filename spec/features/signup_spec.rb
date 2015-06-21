@@ -3,7 +3,7 @@ require 'rails_helper'
 feature "Signup form" do
   given(:user)         { FactoryGirl.build(:user) }
   given(:invalid_user) { FactoryGirl.build(:user, :invalid) }
-  background { visit signup_path(locale: :ru) }
+  background { visit signup_path }
 
   specify "has proper header" do
     expect(page).to have_selector('form h3', text: t('v.users.new.header'))
@@ -27,7 +27,7 @@ feature "Signup form" do
         expect { sign_up_as(invalid_user) }.to_not change(User, :count)
       end
 
-      it "does not send activation link" do
+      it "does not send email confirmation link" do
         expect { sign_up_as(invalid_user) }.to_not change(deliveries, :count)
       end
 
@@ -49,18 +49,13 @@ feature "Signup form" do
 
       include_examples "user is signed in", submit_before: true
 
-      it "sends activation link" do
-        expect { sign_up_as(user) }.to change(deliveries, :count).from(0).to(1)
-      end
+      # it "sends email confirmation link" do
+      #   expect { sign_up_as(user) }.to change(deliveries, :count).from(0).to(1)
+      # end
 
       it "redirects to home page", submit_before: true do
-        expect(current_path).to eq(localized_root_path({ locale: :ru }))
-      end
-
-      it "shows flash", submit_before: true do
-        expect(page).to have_flash :info,
-          t('c.users.create.flash.info', email: user.email)
-      end
+        expect(current_path).to eq(localized_root_path(locale: I18n.locale))
+      end      
     end
   end
 end

@@ -1,7 +1,10 @@
+include ActionView::Helpers::TextHelper
+
 module Capybara
   class Session
-    def has_flash?(type, contents)
-      has_selector?("div.alert-#{type.to_s}", text: contents)
+    def has_flash?(type, text = nil)
+      text = text ? { text: text } : {}
+      has_selector?("div.alert-#{type.to_s}", text)
     end
   end
 end
@@ -11,6 +14,11 @@ def t(string, options={})
   I18n.t(string, options)
 end
 
+def switch_locale_to(sym)
+  en, ru = t [:en, :ru], scope: 'v.layouts._footer.locale'
+  locales = { en: en, ru: ru }
+  within('#locale-selector') { click_link locales[sym] }
+end
 
 shared_examples "user is not signed in" do |conditions={}|
   it "has signin link", conditions do
@@ -38,10 +46,8 @@ shared_examples "user is signed in" do |conditions={}|
   end
 end
 
-shared_examples "is invalid and has errors" do |count, conditions={}|
-  count_message = count == 1 ? 'an error' : "#{count} errors"  
-  specify %Q|is invalid and has #{count_message}|, conditions do
-    expect(subject).to be_invalid
-    expect(subject.errors.count).to eq(count)
+shared_examples expect_errors: 1 do
+  it "is invalid and has 1 error" do
+    expect(subject).to have_errors(1)
   end
 end

@@ -35,6 +35,7 @@ group :test do
   gem 'libnotify'
   gem 'factory_girl_rails'
   gem 'launchy'
+  gem 'timecop'
 end
 
 group :production do  

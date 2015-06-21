@@ -1,15 +1,15 @@
-= render 'shared/validation_errors_simple', obj: @mock_user
+= render 'shared/validation_errors_simple', obj: @user
 %h2.text-center= t('v.password_resets.edit.header')
 %p.text-center= t('v.password_resets.edit.invitation')
-= bootstrap_form_for @mock_user, as: :password_reset, url: password_resets_path,
-  method: :patch, inline_errors: false, html: { id: 'password-reset-edit',
-  class: 'center-block' } do |f|
+= bootstrap_form_for @user, url: password_resets_path, method: :patch,
+inline_errors: false, html: { id: 'password-reset-edit',
+class: 'center-block' } do |f|
   = f.password_field :password, hide_label: true,
-    label: t('v.password_resets.edit.fields.password'),
-    placeholder: t('v.password_resets.edit.fields.password')
+  label: t('v.password_resets.edit.fields.password'),
+  placeholder: t('v.password_resets.edit.fields.password')
   = f.password_field :password_confirmation, hide_label: true,
-    label: t('v.password_resets.edit.fields.password_confirmation'),
-    placeholder: t('v.password_resets.edit.fields.password_confirmation')
+  label: t('v.password_resets.edit.fields.password_confirmation'),
+  placeholder: t('v.password_resets.edit.fields.password_confirmation')
   .text-center
     = f.form_group do
       = f.submit t('v.password_resets.edit.submit_button'), class: 'btn btn-primary'

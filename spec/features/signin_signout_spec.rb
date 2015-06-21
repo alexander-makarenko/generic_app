@@ -59,7 +59,7 @@ end
 feature "Signout" do
   given(:user) { FactoryGirl.create(:user) }
   background do
-    visit signin_path(locale: :ru)
+    visit signin_path    
     sign_in_as(user)    
     click_link t('v.layouts._header.nav_links.sign_out')
   end
@@ -67,6 +67,6 @@ feature "Signout" do
   include_examples "user is not signed in"  
 
   it "redirects to home page" do
-    expect(current_path).to eq(localized_root_path(locale: :ru))
+    expect(current_path).to eq(localized_root_path(locale: I18n.locale))
   end
 end
