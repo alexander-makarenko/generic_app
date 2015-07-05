@@ -45,12 +45,12 @@ feature "Password change page" do
       expect(user.password_digest).to_not eql(user.reload.password_digest)
     end
 
-    it "redirects to current user profile page" do
+    it "redirects to profile page of current user" do
       expect(current_path).to match(account_path)
     end
 
     it "displays flash" do
-      expect(page).to have_flash :success, t('c.password_changes.create.flash.success')
+      expect(page).to have_flash :success, t('c.password_changes.create.success')
     end
   end
 
@@ -61,7 +61,7 @@ feature "Password change page" do
       expect(user.password_digest).to eql(user.reload.password_digest)
     end
 
-    it "shows current user profile page" do
+    it "shows profile page of current user" do
       expect(current_path).to match(account_path)
     end
   end

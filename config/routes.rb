@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   # get '*path', to: redirect("/#{I18n.default_locale}/%{path}")
 
   scope '(:locale)', locale: /en|ru/ do
-    resources :users, only: [:show]
+    # resources :users, only: [:show]
 
     scope controller: :users do
       get  'signup'         => :new

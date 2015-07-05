@@ -206,18 +206,18 @@ describe User do
     end
   end
 
-  describe "#assign_and_validate_attributes" do
+  describe "#attributes_valid?" do
     let(:user) { User.new }
 
     context "when attribute(s) is invalid" do
       let(:invalid_attrs) { Hash[email: 'not_an@email', password: ' '] }
 
       it "returns false" do
-        expect(user.assign_and_validate_attributes(invalid_attrs)).to eq(false)
+        expect(user.attributes_valid?(invalid_attrs)).to eq(false)
       end
 
       it "deletes irrelevant keys from errors hash" do
-        user.assign_and_validate_attributes(invalid_attrs)
+        user.attributes_valid?(invalid_attrs)
         expect(user.errors.keys).to match_array(invalid_attrs.keys)
       end
     end
@@ -226,11 +226,11 @@ describe User do
       let(:valid_attrs) { Hash[email: 'valid@email.net', password: 'password'] }
 
       it "returns true" do
-        expect(user.assign_and_validate_attributes(valid_attrs)).to eq(true)
+        expect(user.attributes_valid?(valid_attrs)).to eq(true)
       end
 
       it "leaves errors hash empty" do
-        user.assign_and_validate_attributes(valid_attrs)
+        user.attributes_valid?(valid_attrs)
         expect(user.errors).to be_empty
       end
     end

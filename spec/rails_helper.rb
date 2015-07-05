@@ -23,6 +23,8 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.maintain_test_schema!
 
+include ActionView::Helpers::DateHelper
+
 RSpec.configure do |config|
   Capybara.javascript_driver = :webkit
   

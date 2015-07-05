@@ -3,7 +3,7 @@
   .panel-heading
     %h3.text-center= t('v.users.new.header')  
   .panel-body
-    = render 'shared/validation_errors', obj: @user
+    = render 'validation_errors', obj: @user
     .row
       = f.text_field :first_name, label: t('v.users.new.fields.first_name'),
         hide_label: true, placeholder: t('v.users.new.fields.first_name'),

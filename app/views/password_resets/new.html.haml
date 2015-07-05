@@ -1,4 +1,4 @@
-= render 'shared/validation_errors_simple', obj: @password_reset
+= render 'shared/validation_errors', obj: @password_reset
 %h2.text-center= t('v.password_resets.new.header')
 %p.text-center= t('v.password_resets.new.invitation')
 = bootstrap_form_for @password_reset, inline_errors: false,

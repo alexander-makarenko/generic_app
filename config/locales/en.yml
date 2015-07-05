@@ -56,84 +56,71 @@ en:
               too_short: "must be at least %{count} characters long"
             password_confirmation:
               confirmation: "does not match the %{attribute}"
-              blank: "is required"              
+              blank: "is required"
   c: # controllers
-    email_confirmations:      
-      create:
-        flash:
-          info: "A confirmation link has been sent to your email address."
+    email_confirmations:
       edit:
-        flash:
-          danger:
-            expired: "The link has expired. To request a new one, please click
-              %{link}."
-            invalid: "The link is invalid. To request a new one, please click
-              %{link}."
-          success: "Email successfully confirmed."
-          link: "here"
+        expired: "The link has expired. To request a new one, please click
+          %{link}."
+        invalid: "The link is invalid. To request a new one, please click
+          %{link}."
+        success: "Email successfully confirmed."
+        link: "here"
     name_changes:
       create:
-        flash:
-          success: "Name successfully updated."
+        success: "Name successfully updated."
     password_changes:
       create:
-        flash:
-          success: "Password successfully changed."
+        success: "Password successfully changed."
     password_resets:
       create:
-        flash:
-          info: "Email with instructions for resetting your password has been
-            sent to your address. If you don't receive it within a few minutes,
-            be sure to check your junk email/spam filter folder."          
+        info: "Instructions for resetting your password have been sent to your
+          email address. If you don't receive it within a few minutes, please
+          check your email spam folder."
       edit:
-        flash:
-          danger:
-            expired: "The link has expired. If you still want to reset your
-              password, please click %{link}."
-            invalid: "The link is invalid. If you still want to reset your
-              password, please click %{link}."
-          link: "here"
+        expired: "The link has expired. If you still want to reset your
+          password, please click %{link}."
+        invalid: "The link is invalid. If you still want to reset your password
+          password, please click %{link}."
+        link: "here"
       update:
-        flash:
-          success: "Update successful. Please sign in using your new password."
+        success: "Update successful. Please sign in using your new password."
     sessions:
       create:
-        flash:
-          danger: "Invalid email or password."
-    users:      
+        invalid: "Invalid email or password."
+    users:
       show:
-        flash:
-          warning:
-            "1": "To be able to use email features you need to confirm your
-              email address. To do this, please click %{link}."
-            "2": "To confirm your email address, please click the link in the
-              message that has just been sent to you. If you don't receive it
-              within a few minutes, check your email junk/spam folder, or
-              request another confirmation link by clicking %{link}."
-            "3": "To confirm your email you should click the link in the message
-              that was sent to you %{time_ago} ago. If you still haven't
-              received it, check your email junk/spam folder, or request another
-              confirmation link by clicking %{link}."
-          link: "here"
-      update:
-        flash:
-          success: "Changes saved."
+        email_not_confirmed:
+          - "Email not confirmed"
+          - "To be able to use email features you should confirm your email
+            address. Request a confirmation link by clicking %{link}."
+        confirmation_just_sent:
+          - "Email confirmation pending"
+          - "To confirm your email address, click the link that has
+            just been sent to you."
+        confirmation_sent_mins_ago:
+          - "Email confirmation pending"
+          - "To confirm your email address, click the link that has been sent
+            to you %{time_ago} ago. If you still haven't received it, please
+            check your spam folder, or request another confirmation link by
+            clicking %{link}."
+        link: "here"
   m: # mailers
     user_mailer:
       greeting: "Hi %{first_name},"
       email_confirmation:
-        subject: "Confirm your email address"
+        subject: "Email confirmation"
       password_reset:
         subject: "Password reset"
   p: #policies
     default: "You are not authorized to perform this action."
-    email_confirmation_policy:
-      already_confirmed: "You have already confirmed your email."      
+    email_confirmation:
+      already_confirmed: "You have already confirmed your email."
       create?: "Please sign in to access this page."
-    session_policy:
+    session:
       new?: "You are already signed in."
       create?: "You are already signed in."
-    user_policy:
+    user:
       new?: "You are already registered."
       create?: "You are already registered."
   v: # views
@@ -197,16 +184,11 @@ en:
           other: "Oops! There are %{count} errors:"
     user_mailer:
       email_confirmation:
-        main:
-          "1": "Thank you for creating an account on our website. To get
-            started, we need you to confirm your email address, by clicking
-            on the link below:"
-          "2": "Note: the link will expire in 3 days."
+        click_link: "Click the link below to confirm your email address:"
       password_reset:
-        main:
-          "1": "To reset your password, visit the following URL:"
-          "2": "If you didn't request your password to be reset, ignore this
-            email and your password will remain unchanged."
+        click_link: "To reset your password, click the link below:"
+        ignore: "If you didn't request your password to be reset, please ignore
+          this email and your password will remain unchanged."
     users:
       new:
         header: "Sign up"
@@ -223,8 +205,8 @@ en:
         heading: "Account"
         subheadings:
           email: "Email"
-          password: "Password"        
-        name_change: "Change name"        
+          password: "Password"
+        name_change: "Change name"
         email_change: "Change email"
         password_reset: "Forgot password?"
         password_change: "Change password"

@@ -1,6 +1,6 @@
 class NameChangesController < ApplicationController
   before_action { authorize :name_change }
-  
+
   def new
     @name_change = NameChange.new
   end
@@ -14,7 +14,7 @@ class NameChangesController < ApplicationController
         last_name: @name_change.new_last_name
       }
       current_user.save(validate: false)
-      redirect_to account_path, success: t('c.name_changes.create.flash.success')
+      redirect_to account_path, success: t('c.name_changes.create.success')
     else
       render :new
     end

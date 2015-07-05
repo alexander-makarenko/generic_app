@@ -19,6 +19,10 @@ FactoryGirl.define do
       email_confirmed_at Time.zone.now
     end
 
+    trait :email_confirmation_sent do      
+      email_confirmation_sent_at Time.zone.now
+    end
+
     # trait :email_not_confirmed_in_time do
     #   email_confirmation_sent_at { 3.days.ago }
     # end

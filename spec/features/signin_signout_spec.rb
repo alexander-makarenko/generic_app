@@ -23,7 +23,7 @@ feature "Signin" do
     end
 
     it "displays flash" do
-      expect(page).to have_flash :danger, t('c.sessions.create.flash.danger')
+      expect(page).to have_flash :danger, t('c.sessions.create.invalid')
     end
   end
 

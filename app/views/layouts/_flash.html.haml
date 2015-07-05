@@ -1,0 +1,14 @@
+- flash.each do |key, value|
+  - next unless value.is_a?(String) || value.is_a?(Array)
+  
+  %div{ class: "alert alert-#{key} alert-dismissible", role: 'alert' }
+    %button.close{ 'aria-label' => 'Close', 'data-dismiss' => 'alert', type: 'button' }
+      %span{ 'aria-hidden' => 'true'} &times;
+
+    - if value.is_a?(String)
+      %p= value.html_safe
+    - else
+      - flash_heading, flash_body = value.first.html_safe, value.second.html_safe
+      %p
+        %strong= flash_heading
+      %p= flash_body

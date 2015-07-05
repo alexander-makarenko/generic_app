@@ -12,8 +12,8 @@ describe UserMailer, :type => :mailer do
       expect(mail.from).to eq(['noreply@example.com'])
     end
 
-    it "renders the body" do
-      expect(mail.body.encoded).to match(/confirm\/(.+)/i)
+    it "renders the body" do      
+      expect(mail.body.encoded).to match(/#{I18n.locale}(\/.*)+\/confirm\/(.+)/i)
     end
   end
 
@@ -27,7 +27,7 @@ describe UserMailer, :type => :mailer do
     end
 
     it "renders the body" do
-      expect(mail.body.encoded).to match(/recover\/(.+)/i)
+      expect(mail.body.encoded).to match(/#{I18n.locale}(\/.*)+\/recover\/(.+)/i)
     end
   end
 end

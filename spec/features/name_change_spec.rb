@@ -36,12 +36,12 @@ feature "Name change page" do
       expect(user.name).to_not eql(user.reload.name)
     end
 
-    it "redirects to current user profile page" do
+    it "redirects to profile page of current user" do
       expect(current_path).to match(account_path)
     end
 
     it "displays flash" do
-      expect(page).to have_flash :success, t('c.name_changes.create.flash.success')
+      expect(page).to have_flash :success, t('c.name_changes.create.success')
     end
   end
 
@@ -52,7 +52,7 @@ feature "Name change page" do
       expect(user.name).to eql(user.reload.name)
     end
 
-    it "shows current user profile page" do
+    it "shows profile page of current user" do
       expect(current_path).to match(account_path)
     end
   end

@@ -15,8 +15,9 @@ gem 'uglifier'
 gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder'
-# gem 'coffee-rails'
 gem 'pundit', github: 'elabs/pundit'
+gem 'rails-i18n'
+# gem 'coffee-rails'
 # gem 'lodash-rails'
 
 group :development, :test do

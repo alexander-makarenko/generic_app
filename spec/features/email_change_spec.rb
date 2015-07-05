@@ -52,12 +52,12 @@ feature "Email change page" do
   #     expect(deliveries.count).to eq(1)
   #   end
 
-  #   it "redirects to current user profile page" do
+  #   it "redirects to profile page of current user" do
   #     expect(current_path).to match(account_path)
   #   end
 
   #   it "displays flash" do
-  #     expect(page).to have_flash :success, t('c.email_changes.create.flash.success')
+  #     expect(page).to have_flash :success, t('c.email_changes.create.success')
   #   end
   # end
 
@@ -68,7 +68,7 @@ feature "Email change page" do
   #     expect(user.email).to eql(user.reload.email)
   #   end
 
-  #   it "shows current user profile page" do
+  #   it "shows profile page of current user" do
   #     expect(current_path).to match(account_path)
   #   end
   # end

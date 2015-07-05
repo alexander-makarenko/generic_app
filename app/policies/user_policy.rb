@@ -17,6 +17,10 @@ class UserPolicy < ApplicationPolicy
   end
 
   def show?
-    current_user?(user)
+    signed_in?
+  end
+
+  def validate?
+    create?
   end
 end

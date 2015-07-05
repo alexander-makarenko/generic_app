@@ -1,278 +1,164 @@
 require 'rails_helper'
 
 describe "Routing" do
-  locales = [ nil, '/en', '/ru' ]
+  locale_prefixes = [ nil, '/en', '/ru' ]
 
-  locale_params = locales.map do |locale|
-    locale.nil? ? {} : { locale: locale.gsub('/', '') }
+  def locale_prefix_to_param(prefix)
+    prefix.nil? ? {} : { locale: prefix.gsub('/', '') }
   end
-  
-  describe "in EmailConfirmations controller routes" do
-    locales.each_with_index do |locale, i|
-      describe "GET to" do
-        url = "#{locale}/user/confirm/hashed_email/token"
-        params = { hashed_email: 'hashed_email', token: 'token' }.merge locale_params[i]
-        target = 'email_confirmations#edit'
-        
-        it "#{url} to #{target} | params = #{params}" do
-          expect(get url).to route_to(target, params)
-        end
+
+  shared_context "metadata options" do
+    url, method = metadata[:description].dup, metadata[:method]
+    let(:url) { url }
+    let(:method) { method }
+
+    # modifies example group description for better readability
+    metadata[:description] = "#{method.upcase} to #{url}"
+  end
+
+  shared_examples is_routable: true do
+    include_context "metadata options"
+    it "routes to" do |example|
+      example.metadata[:description] = "#{example.metadata[:description]} #{target} with #{params}"
+      expect(send(method, url)).to route_to(target, params)
+    end
+  end
+
+  shared_examples is_routable: false do
+    include_context "metadata options"
+    it "is not routable" do
+      expect(send(method, url)).to_not be_routable
+    end
+  end
+
+  describe "in EmailConfirmations controller" do
+    locale_prefixes.each do |prefix|
+
+      describe "#{prefix}/user/confirm/hashed_email/token", method: :get, is_routable: true do
+        let(:target) { 'email_confirmations#edit' }
+        let(:params) { { hashed_email: 'hashed_email', token: 'token' }.merge locale_prefix_to_param(prefix) }
       end
 
-      describe "POST to" do
-        url = "#{locale}/user/confirm"
-        params = locale_params[i]
-        target = 'email_confirmations#create'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(post url).to route_to(target, params)
-        end
+      describe "#{prefix}/user/confirm", method: :post, is_routable: true do
+        let(:target) { 'email_confirmations#create' }
+        let(:params) { locale_prefix_to_param(prefix) }
       end
     end
   end
 
-  describe "in PasswordChanges controller routes" do
-    locales.each_with_index do |locale, i|
+  describe "in PasswordChanges controller" do
+    locale_prefixes.each do |prefix|
 
-      describe "GET to" do
-        url = "#{locale}/user/change-password"
-        params = locale_params[i]
-        target = 'password_changes#new'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(get url).to route_to(target, params)
-        end
+      describe "#{prefix}/user/change-password", method: :get, is_routable: true do
+        let(:target) { 'password_changes#new' }
+        let(:params) { locale_prefix_to_param(prefix) }
       end
 
-      describe "POST to" do
-        url = "#{locale}/user/change-password"
-        params = locale_params[i]
-        target = 'password_changes#create'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(post url).to route_to(target, params)
-        end
+      describe "#{prefix}/user/change-password", method: :post, is_routable: true do
+        let(:target) { 'password_changes#create' }
+        let(:params) { locale_prefix_to_param(prefix) }
       end
     end
   end
 
-  describe "in NameChanges controller routes" do
-    locales.each_with_index do |locale, i|
+  describe "in NameChanges controller" do
+    locale_prefixes.each do |prefix|
 
-      describe "GET to" do
-        url = "#{locale}/user/change-name"
-        params = locale_params[i]
-        target = 'name_changes#new'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(get url).to route_to(target, params)
-        end
+      describe "#{prefix}/user/change-name", method: :get, is_routable: true do
+        let(:target) { 'name_changes#new' }
+        let(:params) { locale_prefix_to_param(prefix) }
       end
 
-      describe "POST to" do
-        url = "#{locale}/user/change-name"
-        params = locale_params[i]
-        target = 'name_changes#create'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(post url).to route_to(target, params)
-        end
+      describe "#{prefix}/user/change-name", method: :post, is_routable: true do
+        let(:target) { 'name_changes#create' }
+        let(:params) { locale_prefix_to_param(prefix) }
       end
     end
   end
 
-  describe "in PasswordResets controller routes" do
-    locales.each_with_index do |locale, i|
+  describe "in PasswordResets controller" do
+    locale_prefixes.each do |prefix|
 
-      describe "GET to" do
-        url = "#{locale}/user/recover"
-        target = 'password_resets#new'
-        params = locale_params[i]
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(get url).to route_to(target, params)
-        end
+      describe "#{prefix}/user/recover", method: :get, is_routable: true do
+        let(:target) { 'password_resets#new' }
+        let(:params) { locale_prefix_to_param(prefix) }
       end
 
-      describe "POST to" do
-        url = "#{locale}/user/recover"
-        params = locale_params[i]
-        target = 'password_resets#create'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(post url).to route_to(target, params)
-        end
+      describe "#{prefix}/user/recover", method: :post, is_routable: true do
+        let(:target) { 'password_resets#create' }
+        let(:params) { locale_prefix_to_param(prefix) }
       end
 
-      describe "GET to" do
-        url = "#{locale}/user/recover/hashed_email/token"
-        params = { hashed_email: 'hashed_email', token: 'token' }.merge locale_params[i]
-        target = 'password_resets#edit'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(get url).to route_to(target, params)
-        end
+      describe "#{prefix}/user/recover/hashed_email/token", method: :get, is_routable: true do
+        let(:target) { 'password_resets#edit' }
+        let(:params) { { hashed_email: 'hashed_email', token: 'token' }.merge locale_prefix_to_param(prefix) }
       end
 
-      describe "PATCH to" do
-        url = "#{locale}/user/recover"
-        params = locale_params[i]
-        target = 'password_resets#update'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(patch url).to route_to(target, params)
-        end
+      describe "#{prefix}/user/recover", method: :patch, is_routable: true do
+        let(:target) { 'password_resets#update' }
+        let(:params) { locale_prefix_to_param(prefix) }
       end
     end
   end
 
-  describe "in Sessions controller routes" do
-    locales.each_with_index do |locale, i|
+  describe "in Sessions controller" do
+    locale_prefixes.each do |prefix|
 
-      describe "GET to" do
-        url = "#{locale}/signin"
-        params = locale_params[i]
-        target = 'sessions#new'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(get url).to route_to(target, params)
-        end
+      describe "#{prefix}/signin", method: :get, is_routable: true do
+        let(:target) { 'sessions#new' }
+        let(:params) { locale_prefix_to_param(prefix) }
       end
 
-      describe "POST to" do
-        url = "#{locale}/signin"
-        params = locale_params[i]
-        target = 'sessions#create'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(post url).to route_to(target, params)
-        end
+      describe "#{prefix}/signin", method: :post, is_routable: true do
+        let(:target) { 'sessions#create' }
+        let(:params) { locale_prefix_to_param(prefix) }
       end
 
-      describe "DELETE to" do
-        url = "#{locale}/signout"
-        params = locale_params[i]
-        target = 'sessions#destroy'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(delete url).to route_to(target, params)
-        end
+      describe "#{prefix}/signout", method: :delete, is_routable: true do
+        let(:target) { 'sessions#destroy' }
+        let(:params) { locale_prefix_to_param(prefix) }
       end
     end
   end
 
-  describe "in StaticPages controller routes" do
-    locales[1..-1].each_with_index do |locale, i|
+  describe "in StaticPages controller" do
+    locale_prefixes.drop(1).each do |prefix|
 
-      describe "GET to" do
-        url = "#{locale}/"
-        params = locale_params[i + 1]
-        target = 'static_pages#home'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(get url).to route_to(target, params)
-        end
+      describe "#{prefix}/", method: :get, is_routable: true do
+        let(:target) { 'static_pages#home' }
+        let(:params) { locale_prefix_to_param(prefix) }
       end
     end
   end
 
   describe "in Users controller" do
-    locales.each_with_index do |locale, i|
+    locale_prefixes.each do |prefix|
 
-      describe "GET to" do
-        url = "#{locale}/users" # resourceful index action
-        
-        it "#{url} is not routable" do
-          expect(get url).to_not be_routable
-        end
+      # describe "#{prefix}/users", method: :get, is_routable: false do; end         # resourceful index
+      # describe "#{prefix}/users/42", method: :get, is_routable: false do; end      # resourceful show
+      # describe "#{prefix}/users/42/edit", method: :get, is_routable: false do; end # resourceful edit
+      # describe "#{prefix}/users/42", method: :put, is_routable: false do; end      # resourceful update
+      # describe "#{prefix}/users/42", method: :patch, is_routable: false do; end    # resourceful update
+      # describe "#{prefix}/users/42", method: :delete, is_routable: false do; end   # resourceful destroy
+
+      describe "#{prefix}/signup", method: :get, is_routable: true do
+        let(:target) { 'users#new' }
+        let(:params) { locale_prefix_to_param(prefix) }
       end
 
-      describe "DELETE to" do # resourceful destroy action
-        url = "#{locale}/users/42"
-        
-        it "#{url} is not routable" do
-          expect(delete url).to_not be_routable
-        end
+      describe "#{prefix}/signup", method: :post, is_routable: true do
+        let(:target) { 'users#create' }
+        let(:params) { locale_prefix_to_param(prefix) }
       end
 
-      describe "POST to" do
-        url = "#{locale}/signup"
-        params = locale_params[i]
-        target = 'users#create'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(post url).to route_to(target, params)
-        end
+      describe "#{prefix}/account", method: :get, is_routable: true do
+        let(:target) { 'users#show' }
+        let(:params) { locale_prefix_to_param(prefix) }
       end
 
-      describe "GET to" do
-        url = "#{locale}/users/42"
-        params = { id: '42' }.merge locale_params[i]        
-        target = 'users#show'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(get url).to route_to(target, params)
-        end
-      end
-
-      describe "GET to" do
-        url = "#{locale}/signup"
-        params = locale_params[i]
-        target = 'users#new'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(get url).to route_to(target, params)
-        end
-      end
-
-      describe "GET to" do
-        url = "#{locale}/users/42/edit"
-        # params = { id: '42' }.merge locale_params[i]
-        # target = 'users#edit'
-
-        it "#{url} is not routable" do
-          expect(get url).to_not be_routable
-        end
-        
-        # it "#{url} to #{target} | params = #{params}" do
-        #   expect(get url).to route_to(target, params)
-        # end
-      end
-
-      describe "GET to" do
-        url = "#{locale}/account"
-        params = locale_params[i]
-        target = 'users#show'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(get url).to route_to(target, params)
-        end
-      end
-
-      describe "PUT/PATCH to" do
-        url = "#{locale}/users/42"
-        # params = { id: '42' }.merge locale_params[i]
-        # target = 'users#update'
-
-        it "#{url} is not routable" do
-          expect(put url).to_not be_routable
-          expect(patch url).to_not be_routable
-        end
-
-        # it "#{url} to #{target} | params = #{params}" do
-        #   expect(put url).to route_to(target, params)
-        #   expect(patch url).to route_to(target, params)
-        # end
-      end
-
-      describe "POST to" do
-        url = "#{locale}/users/validate"
-        params = locale_params[i]
-        target = 'users#validate'
-
-        it "#{url} to #{target} | params = #{params}" do
-          expect(post url).to route_to(target, params)
-        end
+      describe "#{prefix}/users/validate", method: :post, is_routable: true do
+        let(:target) { 'users#validate' }
+        let(:params) { locale_prefix_to_param(prefix) }
       end
     end
   end

@@ -1,4 +1,4 @@
-= render 'shared/validation_errors_simple', obj: @name_change
+= render 'shared/validation_errors', obj: @name_change
 %h2.text-center= t('v.name_changes.new.heading')
 = bootstrap_form_for @name_change, inline_errors: false,
 html: { id: 'change-name', class: 'center-block' } do |f|

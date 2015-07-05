@@ -1,4 +1,4 @@
-= render 'shared/validation_errors_simple', obj: @password_change
+= render 'shared/validation_errors', obj: @password_change
 %h2.text-center= t('v.password_changes.new.header')
 = bootstrap_form_for @password_change, inline_errors: false,
 html: { id: 'change-password', class: 'center-block' } do |f|

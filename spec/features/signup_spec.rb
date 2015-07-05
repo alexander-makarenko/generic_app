@@ -14,7 +14,7 @@ feature "Signup form" do
 
     it "shows validation errors and removes them when corrected" do
       expect(page).to have_selector('.validation-errors')
-      fill_in 'user_email', with: user.email      
+      fill_in 'user_email', with: user.email
       expect(page).to have_no_selector('.validation-errors')
     end
   end
@@ -55,7 +55,7 @@ feature "Signup form" do
 
       it "redirects to home page", submit_before: true do
         expect(current_path).to eq(localized_root_path(locale: I18n.locale))
-      end      
+      end
     end
   end
 end

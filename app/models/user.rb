@@ -34,7 +34,7 @@ class User < ActiveRecord::Base
     }
   end
 
-  def assign_and_validate_attributes(attrs)
+  def attributes_valid?(attrs)
     self.attributes = attrs
     valid?
     errors.keys.each { |key| errors.delete(key) unless attrs.include?(key) }

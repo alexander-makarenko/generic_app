@@ -1,3 +1,18 @@
+module Capybara
+  class Session
+    def has_flash?(type, contents = nil)
+      case contents
+      when Array
+        contents.each do |element|
+          return false unless has_selector?("div.alert-#{type.to_s}", text: element)
+        end
+      else
+        has_selector?("div.alert-#{type.to_s}", contents ? { text: contents } : {})
+      end
+    end
+  end
+end
+
 # Pundit
 RSpec::Matchers.define :permit do |action|
   match do |policy|
@@ -18,9 +33,9 @@ RSpec::Matchers.define :permit do |action|
 end
 
 RSpec::Matchers.define :be_permitted do
-  match do |request_block|
+  match do |request|
     begin
-      request_block.call
+      request.call
       true
     rescue Pundit::NotAuthorizedError
       false

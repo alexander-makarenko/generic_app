@@ -1,7 +1,10 @@
 - errors = obj.errors.full_messages.uniq
 - unless errors.empty?
-  .validation-errors
-    %p= t('v.shared._validation_errors.message', count: errors.count)
-    %ul
-      - errors.each do |error|
-        %li= error
+  
+  %div{ class: 'alert alert-danger validation-errors alert-dismissible', role: 'alert' }
+    %button.close{ 'aria-label' => 'Close', 'data-dismiss' => 'alert', type: 'button' }
+      %span{ 'aria-hidden' => 'true'} &times;
+      
+    - errors.each do |error|
+      = error.mb_chars.capitalize.to_s + '.'
+      %br

@@ -57,7 +57,7 @@ feature "Password" do
 
         it "displays flash" do
           expect(page).to have_flash :info,
-            t('c.password_resets.create.flash.info')
+            t('c.password_resets.create.info')
         end
       end
     end
@@ -75,8 +75,8 @@ feature "Password" do
 
         it "displays flash" do
           expect(page).to have_flash :danger,
-            t('c.password_resets.edit.flash.danger.invalid',
-              link: t('c.password_resets.edit.flash.link'))
+            t('c.password_resets.edit.invalid',
+              link: t('c.password_resets.edit.link'))
         end
       end
 
@@ -90,15 +90,14 @@ feature "Password" do
 
         it "displays flash" do
           expect(page).to have_flash :danger,
-            t('c.password_resets.edit.flash.danger.invalid',
-              link: t('c.password_resets.edit.flash.link'))
+            t('c.password_resets.edit.invalid',
+              link: t('c.password_resets.edit.link'))
         end
       end
 
-      context "that has expired" do
-        let(:persisted_user) { User.find_by(email: user.email) }
+      context "that has expired" do        
         background do
-          persisted_user.update_attribute(:password_reset_sent_at, 4.hours.ago)
+          Timecop.travel(4.hours)          
           visit link(:password_reset)
         end
 
@@ -108,8 +107,8 @@ feature "Password" do
 
         it "displays flash" do
           expect(page).to have_flash :danger,
-            t('c.password_resets.edit.flash.danger.expired',
-              link: t('c.password_resets.edit.flash.link'))
+            t('c.password_resets.edit.expired',
+              link: t('c.password_resets.edit.link'))
         end
       end
 
@@ -137,8 +136,8 @@ feature "Password" do
 
           it "displays flash" do
             expect(page).to have_flash :danger,
-              t('c.password_resets.edit.flash.danger.expired',
-                link: t('c.password_resets.edit.flash.link'))
+              t('c.password_resets.edit.expired',
+                link: t('c.password_resets.edit.link'))
           end
         end
       end
@@ -160,7 +159,7 @@ feature "Password" do
       background do
         update_password_with(
           password: '',
-          confirmation: 'mismatch')
+          confirmation: 'mismatch')        
       end
 
       it "does not update user's password" do
@@ -197,16 +196,12 @@ feature "Password" do
       end
 
       it "redirects to signin page" do
-        #=======================================================
-        # replace with "expect(current_path).to eq(signin_path)" after
-        # removing the "default_url_options" method from application_controller
-        #=======================================================
         expect(current_path).to eq(signin_path(locale: I18n.locale))
       end
 
       it "displays flash" do
         expect(page).to have_flash :success,
-          t('c.password_resets.update.flash.success')
+          t('c.password_resets.update.success')
       end
     end
   end
