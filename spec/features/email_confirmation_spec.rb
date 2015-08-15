@@ -16,36 +16,34 @@ feature "Email confirmation" do
     within('.alert') { click_link links[:send_confirmation_email] }
   end
 
-  shared_examples "redirects to home page" do
+  shared_examples "redirects to the home page" do
     it "redirects to home page" do
-      expect(current_path).to eq(localized_root_path(locale: I18n.locale))
+      expect(current_path).to eq root_path
     end
   end
 
-  shared_examples "redirects to profile page of current user" do
-    it "redirects to profile page of current user" do
+  shared_examples "redirects to the profile page of the current user" do
+    it "redirects to the profile page of current user" do
       expect(current_path).to match(account_path)
     end
   end
 
   feature "request" do
-    include_examples "redirects to profile page of current user"
+    include_examples "redirects to the profile page of the current user"
   end
 
   feature "link" do
-    subject(:persisted_user) { User.find_by(email: user.email) }
+    subject { User.find_by(email: user.email) }
 
     context "that is invalid" do
       shared_examples "shared" do
-        it "does not update user's email confirmation related attributes" do
-          expect(subject.email_confirmed).to be false
-          expect(subject.email_confirmed_at).to be_nil
-          expect(subject.email_confirmation_sent_at).to_not be_nil
+        it "does not change the user's email status" do
+          expect(subject.email_confirmed).to be false          
         end
 
-        include_examples "redirects to home page"
+        include_examples "redirects to the home page"
 
-        it "shows appropriate flash" do
+        it "shows an appropriate flash" do
           expect(page).to have_flash :danger, message
         end
       end
@@ -85,32 +83,30 @@ feature "Email confirmation" do
       shared_examples "shared" do
         let(:message) { t('c.email_confirmations.edit.success') }
 
-        it "updates user's email confirmation related attributes" do
-          expect(subject.email_confirmed).to be true
-          expect(subject.email_confirmed_at).to_not be_nil
-          expect(subject.email_confirmation_sent_at).to be_nil
+        it "changes the user's email status to confirmed" do
+          expect(subject.email_confirmed).to be true          
         end
 
-        it "shows appropriate flash" do
+        it "shows an appropriate flash" do
           expect(page).to have_flash :success, message
         end
       end
 
-      context "when user is signed in" do
+      context "when the user is signed in" do
         before { visit link(:email_confirmation) }
 
         include_examples "shared"
-        include_examples "redirects to profile page of current user" 
+        include_examples "redirects to the profile page of the current user" 
       end
 
-      context "when user is not signed in" do
+      context "when the user is not signed in" do
         before do
           click_link links[:sign_out]
           visit link(:email_confirmation)
         end
 
         include_examples "shared"
-        include_examples "redirects to home page"
+        include_examples "redirects to the home page"
       end
     end
   end
@@ -122,6 +118,6 @@ feature "Email confirmation" do
       within('.alert') { click_link links[:resend_confirmation_email] }
     end
 
-    include_examples "redirects to profile page of current user"
+    include_examples "redirects to the profile page of the current user"
   end
 end

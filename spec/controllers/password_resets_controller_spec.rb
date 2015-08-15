@@ -12,15 +12,15 @@ describe PasswordResetsController do
     end
 
     it "permits POST to #create" do
-      expect { post :create, create_params }.to be_permitted      
+      expect { post :create, create_params }.to be_permitted
     end
 
     it "permits GET to #edit" do
-      expect { get :edit, edit_params }.to be_permitted      
+      expect { get :edit, edit_params }.to be_permitted
     end
 
     it "permits PATCH to #update" do
-      expect { patch :update, update_params }.to be_permitted      
+      expect { patch :update, update_params }.to be_permitted
     end
   end
 end

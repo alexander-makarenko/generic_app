@@ -10,6 +10,8 @@
     %br
     = link_to t('v.users.show.email_change'), '#'
   .col-sm-6
+    %p.text-muted= t('v.users.show.subheadings.language')
+    = render 'shared/locale_selector'
   .col-sm-6
     %p.text-muted= t('v.users.show.subheadings.password')
     = link_to t('v.users.show.password_change'), new_password_change_path

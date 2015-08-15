@@ -4,7 +4,7 @@ describe UserPolicy do
   subject { described_class.new(current_user, user) }
   let(:user) { FactoryGirl.build_stubbed(:user) }
 
-  context "when user is not signed in" do
+  context "when the user is not signed in" do
     let(:current_user) { nil }
 
     it { is_expected.to     permit(:new)      }
@@ -13,7 +13,7 @@ describe UserPolicy do
     it { is_expected.to_not permit(:show)     }
   end
 
-  context "when user is signed in" do
+  context "when the user is signed in" do
     let(:current_user) { FactoryGirl.build_stubbed(:user) }
 
     it { is_expected.to_not permit(:new)      }

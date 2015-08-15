@@ -162,4 +162,14 @@ describe "Routing" do
       end
     end
   end
+
+  describe "in Locale controller" do
+    locale_prefixes.each do |prefix|
+
+      describe "#{prefix}/set-locale", method: :post, is_routable: true do
+        let(:target) { 'locale_changes#create' }
+        let(:params) { locale_prefix_to_param(prefix) }
+      end
+    end
+  end
 end

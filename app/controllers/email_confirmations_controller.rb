@@ -23,7 +23,7 @@ class EmailConfirmationsController < ApplicationController
     else
       flash[:danger] = t('c.email_confirmations.edit.invalid', link: link)
     end
-    redirect_to(localized_root_path)
+    redirect_to(root_path)
   end
 
   private

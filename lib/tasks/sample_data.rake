@@ -6,7 +6,8 @@ namespace :db do
       last_name: 'Makarenko',
       email: 'alexander.makarenko@zoho.com',
       password: 'qwerty',
-      password_confirmation: 'qwerty'
+      password_confirmation: 'qwerty',
+      locale: :ru
     )
 
     19.times do |n|

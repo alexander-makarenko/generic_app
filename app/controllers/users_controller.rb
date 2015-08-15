@@ -9,8 +9,8 @@ class UsersController < ApplicationController
     authorize @user
     if @user.save
       sign_in @user
-      # TO DO: SEND WELCOME EMAIL
-      redirect_to localized_root_path#, info: t('c.users.create.info', email: @user.email)
+      @user.send_email(:welcome)
+      redirect_to root_path
     else
       render :new
     end

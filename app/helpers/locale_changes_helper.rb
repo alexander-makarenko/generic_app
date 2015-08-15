@@ -1,0 +1,2 @@
+module LocaleChangesHelper
+end

@@ -73,7 +73,7 @@ feature "Profile page" do
   end
 
   it "contains name change link" do
-    expect(page).to have_link links[:name_change], href: new_name_change_path(locale: I18n.locale)
+    expect(page).to have_link links[:name_change], href: new_name_change_path
   end
 
   it "contains email change link" do
@@ -81,10 +81,14 @@ feature "Profile page" do
   end
 
   it "contains password change link" do
-    expect(page).to have_link links[:password_change], href: new_password_change_path(locale: I18n.locale)
+    expect(page).to have_link links[:password_change], href: new_password_change_path
   end
 
   it "contains password reset link" do
-    expect(page).to have_link links[:password_reset], href: new_password_reset_path(locale: I18n.locale)
+    expect(page).to have_link links[:password_reset], href: new_password_reset_path
+  end
+
+  it "contains locale selector" do
+    expect(page).to have_selector('#locale-selector')
   end
 end

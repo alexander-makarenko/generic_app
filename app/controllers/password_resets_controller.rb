@@ -9,7 +9,7 @@ class PasswordResetsController < ApplicationController
     @password_reset = PasswordReset.new(create_params)
     if @password_reset.valid?
       @password_reset.user.send_email(:password_reset)
-      redirect_to localized_root_path, info: t('c.password_resets.create.info')
+      redirect_to root_path, info: t('c.password_resets.create.info')
     else
       render :new
     end
@@ -31,7 +31,7 @@ class PasswordResetsController < ApplicationController
     else
       flash[:danger] = t('c.password_resets.edit.invalid', link: link)
     end
-    redirect_to localized_root_path
+    redirect_to root_path
   end
 
   def update
@@ -47,7 +47,7 @@ class PasswordResetsController < ApplicationController
         render :edit
       end
     else
-      redirect_to localized_root_path
+      redirect_to root_path
     end
   end
 

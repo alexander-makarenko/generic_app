@@ -5,14 +5,14 @@ feature "Signup form" do
   given(:invalid_user) { FactoryGirl.build(:user, :invalid) }
   background { visit signup_path }
 
-  specify "has proper header" do
+  specify "has proper heading" do
     expect(page).to have_selector('form h3', text: t('v.users.new.header'))
   end
   
   context "on typing invalid data", js: true do
     background { fill_in 'user_email', with: invalid_user.email }
 
-    it "shows validation errors and removes them when corrected" do
+    it "shows validation errors and removes them when corrected" do      
       expect(page).to have_selector('.validation-errors')
       fill_in 'user_email', with: user.email
       expect(page).to have_no_selector('.validation-errors')
@@ -27,7 +27,7 @@ feature "Signup form" do
         expect { sign_up_as(invalid_user) }.to_not change(User, :count)
       end
 
-      it "does not send email confirmation link" do
+      it "does not send welcome email" do
         expect { sign_up_as(invalid_user) }.to_not change(deliveries, :count)
       end
 
@@ -49,12 +49,12 @@ feature "Signup form" do
 
       include_examples "user is signed in", submit_before: true
 
-      # it "sends email confirmation link" do
-      #   expect { sign_up_as(user) }.to change(deliveries, :count).from(0).to(1)
-      # end
+      it "sends welcome email" do
+        expect { sign_up_as(user) }.to change(deliveries, :count).from(0).to(1)
+      end
 
       it "redirects to home page", submit_before: true do
-        expect(current_path).to eq(localized_root_path(locale: I18n.locale))
+        expect(current_path).to eq root_path
       end
     end
   end

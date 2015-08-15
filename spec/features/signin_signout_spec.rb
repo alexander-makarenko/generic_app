@@ -7,12 +7,12 @@ feature "Signin" do
   
   specify "form has proper header" do
     expect(page).to have_selector('form h3', text: t('v.sessions.new.header'))
-  end  
+  end
   
   context "with invalid data" do
     background { sign_in_as(nonexistent_user) }
     
-    include_examples "user is not signed in"    
+    include_examples "user is not signed in"
 
     it "displays user's name in header" do
       expect(page).to_not have_selector('header nav li', text: user.name)
@@ -57,16 +57,20 @@ feature "Signin" do
 end
 
 feature "Signout" do
-  given(:user) { FactoryGirl.create(:user) }
+  given(:user) { FactoryGirl.create(:user, locale: :ru) }
   background do
-    visit signin_path    
-    sign_in_as(user)    
+    visit signin_path
+    sign_in_as(user)
     click_link t('v.layouts._header.nav_links.sign_out')
   end
 
-  include_examples "user is not signed in"  
+  include_examples "user is not signed in"
 
-  it "redirects to home page" do
-    expect(current_path).to eq(localized_root_path(locale: I18n.locale))
+  it "redirects to the home page" do
+    expect(current_path).to eq root_path
+  end
+
+  it "leaves the locale as the user had it set in their preferences" do
+    expect(I18n.locale).to eq :ru
   end
 end

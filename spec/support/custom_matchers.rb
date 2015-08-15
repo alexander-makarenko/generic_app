@@ -1,3 +1,5 @@
+include ActionView::Helpers::TextHelper
+
 module Capybara
   class Session
     def has_flash?(type, contents = nil)
@@ -54,10 +56,10 @@ RSpec::Matchers.define :have_errors do |count|
   end
 
   failure_message do |object|
-    "expected that #{object} would have #{count ? pluralize(count, 'error') + ' ' : 'errors'}"
+    "expected that #{object.class} instance would have #{count ? pluralize(count, 'error') + ' ' : 'errors'}"
   end
 
   failure_message_when_negated do |object|
-    "expected that #{object} would not have errors"
+    "expected that #{object.class} instance would not have errors"
   end
 end

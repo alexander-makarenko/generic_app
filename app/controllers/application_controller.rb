@@ -14,11 +14,16 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   def set_locale
-    I18n.locale = params[:locale] || I18n.default_locale
-  end
-
-  def default_url_options(options = {})
-    { locale: I18n.locale }.merge options
+    I18n.locale = case      
+    when params[:locale]
+      params[:locale]
+    when current_user
+      current_user.locale
+    when I18n.available_locales.map(&:to_s).include?(cookies[:locale])
+      cookies[:locale].to_sym
+    else
+      cookies[:locale] = I18n.default_locale
+    end
   end
   
   private
@@ -28,6 +33,6 @@ class ApplicationController < ActionController::Base
         policy_name = exception.policy.class.to_s.gsub(/policy/i, '').underscore
         flash[:danger] = t "#{policy_name}.#{exception.query}", scope: 'p', default: :default
       end
-      redirect_to(request.referrer || localized_root_path)
+      redirect_to(request.referrer || root_path)
     end
 end

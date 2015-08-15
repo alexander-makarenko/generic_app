@@ -112,6 +112,8 @@ en:
         subject: "Email confirmation"
       password_reset:
         subject: "Password reset"
+      welcome:
+        subject: "Welcome to our website!"
   p: #policies
     default: "You are not authorized to perform this action."
     email_confirmation:
@@ -129,11 +131,7 @@ en:
         nav_links:
           sign_in: "Sign in"
           sign_out: "Sign out"
-          settings: "Account"
-      _footer:
-        locale:
-          en: "English"
-          ru: "Русский"
+          settings: "Account"      
     name_changes:
       new:
         heading:
@@ -182,6 +180,9 @@ en:
         message:
           one: "Oops! There is an error:"
           other: "Oops! There are %{count} errors:"
+      _locale_selector:
+        en: "English"
+        ru: "Русский"
     user_mailer:
       email_confirmation:
         click_link: "Click the link below to confirm your email address:"
@@ -189,6 +190,8 @@ en:
         click_link: "To reset your password, click the link below:"
         ignore: "If you didn't request your password to be reset, please ignore
           this email and your password will remain unchanged."
+      welcome: "You have successfully created an account. Welcome to our
+        website!"
     users:
       new:
         header: "Sign up"
@@ -205,6 +208,7 @@ en:
         heading: "Account"
         subheadings:
           email: "Email"
+          language: "Language"
           password: "Password"
         name_change: "Change name"
         email_change: "Change email"

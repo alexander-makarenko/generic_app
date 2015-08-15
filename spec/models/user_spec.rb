@@ -16,36 +16,10 @@ describe User do
     )
   }
 
-  describe "responds to" do
-    known_methods = [
-      :first_name,
-      :last_name,
-      :name,
-      :email,
-      :password_digest,
-      :password,
-      :password_confirmation,
-      :auth_digest,
-      :email_confirmation_sent_at,
-      :email_confirmation_digest,
-      :email_confirmed,
-      :email_confirmed_at,
-      :password_reset_token,
-      :password_reset_digest,
-      :password_reset_sent_at
-    ]
-
-    known_methods.each do |method|
-      it %Q|"#{method}" method| do
-        expect(subject).to respond_to method
-      end
-    end
-  end
-
   it { is_expected.to be_valid }
   it { is_expected.to have_attributes(email_confirmed: false) }
 
-  describe "with first name that" do
+  describe "with a first name that" do
     context "is blank", expect_errors: 1 do
       let(:first_name) { ' ' }
     end
@@ -55,7 +29,7 @@ describe User do
     end
   end
 
-  describe "with last name that" do
+  describe "with a last name that" do
     context "is blank", expect_errors: 1 do
       let(:last_name) { ' ' }
     end
@@ -65,7 +39,7 @@ describe User do
     end
   end
 
-  describe "with email that" do
+  describe "with an email that" do
     context "is blank", expect_errors: 1 do
       let(:email) { ' ' }
     end
@@ -83,25 +57,19 @@ describe User do
     end
 
     context "is of invalid format" do
-      invalid_addresses = %w[ .starts-with-dot@example.com double..dot@test.org
-        double.dot@test..org no_at_sign.net double@at@sign.com without@dot,com
-        ends+with@dot. ]
-        
-      invalid_addresses.each do |address|
-        describe "#{address}", expect_errors: 1 do 
-          before { subject.email = address }
+      it "is invalid and has 1 error" do
+        INVALID_EMAILS.each do |email|
+          subject.email = email
+          expect(subject).to have_errors(1)
         end
       end
     end
 
     context "is of valid format" do
-      valid_addresses = %w[ user@example.com first.last@somewhere.COM
-        fir5t_la5t@somewhe.re FIRST+LAST@s.omwhe.re ]
-      
-      valid_addresses.each do |address|
-        describe "#{address}" do 
-          before { subject.email = address }
-          it { is_expected.to be_valid }
+      it "is valid" do
+        VALID_EMAILS.each do |email|
+          subject.email = email
+          expect(subject).to be_valid
         end
       end
     end
@@ -109,7 +77,7 @@ describe User do
     context "is mixed-case" do
       let(:mixed_case_email) { 'first.LAST@example.COM' }
             
-      it "is saved with email in lower case" do
+      it "is saved with the email in lower case" do
         user.email = mixed_case_email.dup
         user.save
         expect(user.reload.email).to eq(mixed_case_email.downcase)
@@ -117,7 +85,7 @@ describe User do
     end
   end
 
-  describe "with password that" do
+  describe "with a password that" do
     context "is blank" do
       context "on create", expect_errors: 1 do
         let(:password) { ' ' * 6 }
@@ -127,7 +95,7 @@ describe User do
         subject(:persisted_user) { User.find_by(email: user.email) }
         before do
           user.save
-          persisted_user.password = ' ' * 6
+          subject.password = ' ' * 6
         end
       end
     end
@@ -137,99 +105,114 @@ describe User do
     end
 
     context "is too long", expect_errors: 1 do
-      let(:password) { 'a' * 31 }      
+      let(:password) { 'a' * 31 }
     end
 
-    context "does not match confirmation", expect_errors: 1 do
+    context "does not match the confirmation", expect_errors: 1 do
       before { user.password = 'mismatch' }
     end
   end
 
+  describe "with a locale that" do
+    context "is unknown" do
+      context "on update", expect_errors: 1 do
+        subject(:persisted_user) { User.find_by(email: user.email) }
+        before do
+          user.save          
+          subject.attributes = { password: password, locale: 'es' }          
+        end
+      end
+    end
+  end
+
   context "when created" do
-    it "is assigned auth digest" do
-      user.save
-      persisted_user = User.find_by(email: user.email)
-      expect(persisted_user.auth_digest).to_not be_blank
+    subject(:persisted_user) { User.find_by(email: user.email) }
+    before { user.save }
+
+    it "is assigned a default locale" do
+      expect(subject.locale).to eq I18n.default_locale
     end
 
-    it "is assigned virtual email confirmation token" do
-      expect { user.save }.to change {
-        user.email_confirmation_token
-      }.from(nil).to(String)
+    it "is assigned an auth digest" do
+      expect(subject.auth_digest).to_not be_blank
     end
 
-    it "is assigned email confirmation digest" do
-      user.save
-      persisted_user = User.find_by(email: user.email)
-      expect(persisted_user.email_confirmation_digest).to_not be_blank
+    it "is assigned an email confirmation digest" do
+      expect(subject.email_confirmation_digest).to_not be_blank
     end
-
-    it "is assigned virtual password reset token" do
-      expect { user.save }.to change {
-        user.password_reset_token
-      }.from(nil).to(String)
-    end
-
-    it "is assigned password reset digest" do
-      user.save
-      persisted_user = User.find_by(email: user.email)
-      expect(persisted_user.password_reset_digest).to_not be_blank
+    
+    it "is assigned a password reset digest" do
+      expect(subject.password_reset_digest).to_not be_blank
     end
   end
 
   describe "#name" do
-    it "returns first and last name separated by space" do
-      expect(user.name).to match(
-        /#{Regexp.quote(first_name)}\s{1}#{Regexp.quote(last_name)}/ )
+    it "returns the first and last name separated by space" do
+      regex = /#{Regexp.quote(first_name)}\s{1}#{Regexp.quote(last_name)}/
+      expect(user.name).to match regex
     end
-  end  
+  end
+
+  describe "#locale" do
+    context "when the locale attribute is not set" do
+      it "returns nil" do
+        expect(subject.locale).to be nil
+      end
+    end
+
+    context "when the locale attribute is set" do
+      it "returns its value" do
+        subject.save
+        expect(subject.locale).to be_a Symbol
+      end
+    end
+  end
 
   describe "#confirm_email" do
     before { user.send_email(:email_confirmation) }
+    subject { user.confirm_email }
 
-    it "sets email_confirmed attribute to true" do
-      expect { user.confirm_email }.to change {
-        user.email_confirmed
-      }.from(false).to(true)
+    it "sets the email_confirmed attribute to true" do
+      expect { subject }.to change(user, :email_confirmed).from(false).to(true)
     end
 
-    it "sets email_confirmed_at time" do
-      expect { user.confirm_email }.to change {
-        user.email_confirmed_at
-      }.from(nil).to(ActiveSupport::TimeWithZone)
+    it "sets the email_confirmed_at time" do
+      expect { subject }.to change(
+        user, :email_confirmed_at
+      ).from(nil).to(ActiveSupport::TimeWithZone)
     end
 
-    it "clears email_confirmation_sent_at time" do
-      expect { user.confirm_email }.to change {
-        user.email_confirmation_sent_at
-      }.from(ActiveSupport::TimeWithZone).to(nil)
+    it "clears the email_confirmation_sent_at time" do
+      expect { subject }.to change(
+        user, :email_confirmation_sent_at
+      ).from(ActiveSupport::TimeWithZone).to(nil)
     end
   end
 
   describe "#attributes_valid?" do
     let(:user) { User.new }
 
-    context "when attribute(s) is invalid" do
-      let(:invalid_attrs) { Hash[email: 'not_an@email', password: ' '] }
+    context "when an attribute(s) is invalid" do
+      let(:invalid_attrs) { { email: 'not_an@email', password: ' ' } }
 
       it "returns false" do
         expect(user.attributes_valid?(invalid_attrs)).to eq(false)
       end
 
-      it "deletes irrelevant keys from errors hash" do
+      it "deletes irrelevant keys from the errors hash" do
         user.attributes_valid?(invalid_attrs)
         expect(user.errors.keys).to match_array(invalid_attrs.keys)
       end
     end
 
-    context "when attribute(s) is valid" do
-      let(:valid_attrs) { Hash[email: 'valid@email.net', password: 'password'] }
+    context "when an attribute(s) is valid" do
+      let(:valid_attrs) { { email: 'valid@email.net', password: 'password' } }
 
       it "returns true" do
         expect(user.attributes_valid?(valid_attrs)).to eq(true)
       end
 
-      it "leaves errors hash empty" do
+      it "leaves the errors hash empty" do
         user.attributes_valid?(valid_attrs)
         expect(user.errors).to be_empty
       end
@@ -238,75 +221,111 @@ describe User do
 
   describe "#send_email" do
     before { user.save }
-    
-    [:email_confirmation, :password_reset].each do |email_type|
-      it "saves email sending time" do
-        expect { user.send_email(email_type) }.to change {
-          user.send("#{email_type}_sent_at")
-        }.from(nil).to(ActiveSupport::TimeWithZone)
+
+    shared_examples "shared" do
+      subject(:send_email) { user.send_email(email_type) }
+
+      it "saves the email sending time" do
+        expect { send_email }.to change(
+          user, "#{email_type}_sent_at"
+        ).from(nil).to(ActiveSupport::TimeWithZone)
       end
+    end
 
-      context "when #{email_type}_token is blank" do
-        let(:found_user) { User.find_by(email: user.email) }
-        before { user.save }
-
-        it "generates new token" do
-          expect { found_user.send_email(email_type) }.to change {
-            found_user.send("#{email_type}_token")
-          }.from(nil).to(String)
-        end
-
-        it "updates #{email_type}_digest" do
-          expect { found_user.send_email(email_type) }.to change(
-            found_user.reload, "#{email_type}_digest")
-        end
+    it "sends an email of specified type" do
+      [:welcome, :email_confirmation, :password_reset].each do |email_type|
+        expect { user.send_email(email_type) }.to change(deliveries, :count).by(1)
       end
+    end
+
+    context "with a :password_reset option" do
+      let(:email_type) { :password_reset }
+      include_examples "shared"
+    end
+
+    context "with an :email_confirmation option" do
+      let(:email_type) { :email_confirmation }
+      include_examples "shared"
     end
   end
 
   describe "#authenticate_by" do
     before { user.save }
 
-    describe "with :digested_email option" do
-      context "when digested value corresponds to actual" do
+    describe "with a :digested_email option" do
+      subject(:return_value) { user.authenticate_by(digested_email: digested_email) }
+
+      context "when a digested value corresponds to the actual" do
         let(:digested_email) { described_class.digest(user.email) }
-        
+
         it "returns self" do
-          expect(user.authenticate_by(digested_email: digested_email)).to eq(user)
+          expect(return_value).to eq(user)
         end
       end
 
-      context "when digested value does not correspond to actual" do
+      context "when a digested value does not correspond to the actual" do
         let(:digested_email) { 'incorrect' }
-        
+
         it "returns false" do
-          expect(user.authenticate_by(digested_email: digested_email)).to eq(false)
-        end
-      end
-    end
-    
-    [:email_confirmation, :password_reset].each do |email_type|
-      it "saves email sending time" do
-        expect { user.send_email(email_type) }.to change {
-          user.send("#{email_type}_sent_at")
-        }.from(nil).to(ActiveSupport::TimeWithZone)
-      end
-
-      context "when #{email_type}_token is blank" do
-        let(:found_user) { User.find_by(email: user.email) }
-        before { user.save }
-
-        it "generates new token" do
-          expect { found_user.send_email(email_type) }.to change {
-            found_user.send("#{email_type}_token")
-          }.from(nil).to(String)
-        end
-
-        it "updates #{email_type}_digest" do
-          expect { found_user.send_email(email_type) }.to change(
-            found_user.reload, "#{email_type}_digest")
+          expect(return_value).to eq(false)
         end
       end
     end
   end
+
+  shared_examples attribute_setter: true do
+    attr_name = metadata[:description].match(/#(.*)_.*/)[1]
+    subject { user.send("#{attr_name}_token=", 'foo') }
+
+    it "assigns a value to the #{attr_name}_token attribute" do
+      expect { subject }.to change {
+        user.instance_variable_get("@#{attr_name}_token")
+      }.to('foo')
+    end
+
+    it "updates the #{attr_name}_digest attribute" do
+      expect { subject }.to change(user, "#{attr_name}_digest")
+    end
+
+    context "when the record is persisted" do
+      before { user.save }
+
+      it "updates the #{attr_name}_digest column in the database" do
+        expect { subject }.to change(user.reload, "#{attr_name}_digest")
+      end
+    end
+  end
+
+  shared_examples attribute_getter: true do
+    attr_name = metadata[:description].match(/#(.*)_.*/)[1]
+    subject { user.send("#{attr_name}_token") }
+
+    context "when the #{attr_name}_token attribute is nil" do
+      it "calls the #{attr_name}_token= setter with a newly generated token" do
+        expect(user.instance_variable_get("@#{attr_name}_token")).to be_nil
+        expect(user).to receive("#{attr_name}_token=").with(String)
+        subject
+      end
+
+      it "returns the new token" do
+        expect(subject).to be_a(String)
+      end
+    end
+
+    context "when the #{attr_name}_token attribute is not nil" do
+      before { user.send("#{attr_name}_token=", 'foo') }
+
+      it "return its value" do
+        expect(subject).to eq('foo')
+      end
+    end
+  end
+
+  describe "#auth_token", :attribute_getter do end
+  describe "#email_confirmation_token", :attribute_getter do end
+  describe "#password_reset_token", :attribute_getter do end
+
+  describe "#auth_token=", :attribute_setter do end
+  describe "#email_confirmation_token=", :attribute_setter do end
+  describe "#password_reset_token=", :attribute_setter do end
 end

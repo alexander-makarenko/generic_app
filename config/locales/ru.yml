@@ -124,6 +124,8 @@ ru:
         subject: "Подтверждение адреса электронной почты"
       password_reset:
         subject: "Восстановление пароля"
+      welcome:
+        subject: "Welcome to our website!"
   p: #policies
     default: "You are not authorized to perform this action."
     email_confirmation:
@@ -141,11 +143,7 @@ ru:
         nav_links:
           sign_in: "Вход"
           sign_out: "Выход"
-          settings: "Профиль"
-      _footer:
-        locale:
-          en: "English"
-          ru: "Русский"
+          settings: "Профиль"      
     name_changes:
       new:
         heading:
@@ -174,7 +172,7 @@ ru:
         submit_button: "Сохранить"
       new:
         header: "Сброс пароля"
-        invitation: "Укажите, пожалуйста, ваш адрес электронной почты:"
+        invitation: "Пожалуйста, укажите ваш адрес электронной почты:"
         fields:
           email: "Имейл"
         submit_button: "Submit"
@@ -194,6 +192,9 @@ ru:
         message:
           one: "Обнаружена ошибка:"
           other: "Обнаружены следующие ошибки:"
+      _locale_selector:
+        en: "English"
+        ru: "Русский"
     user_mailer:
       email_confirmation:
         click_link: "Click the link below to confirm your email address:"
@@ -201,6 +202,7 @@ ru:
         click_link: "To reset your password, click the link below:"
         ignore: "If you didn't request your password to be reset, please ignore
           this email and your password will remain unchanged."
+      welcome: "Регистрация прошла успешно. Добро пожаловать на наш сайт!"
     users:
       new:
         header: "Регистрация"
@@ -217,6 +219,7 @@ ru:
         heading: "Профиль"
         subheadings:
           email: "Имейл"
+          language: "Язык"
           password: "Пароль"
         name_change: "Изменить имя"
         email_change: "Изменить имейл"

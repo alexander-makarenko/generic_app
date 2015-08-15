@@ -1,33 +1,82 @@
 require 'rails_helper'
 
-feature "Locale selector" do
-  background { visit root_path }
+feature "Locale selector" do  
+  given(:locale_switcher) { '#locale-selector' }
+  given(:english) { t('v.shared._locale_selector.en') }
+  given(:russian) { t('v.shared._locale_selector.ru') }
+  given(:links) { { account_settings: t('v.layouts._header.nav_links.settings') } }
+
+  shared_examples "a locale selector" do
+    subject { page.find(locale_switcher) }
+
+    def current_locale
+      I18n.locale
+    end
+
+    it "lists the available locales" do
+      [english, russian].each do |locale_name|
+        expect(subject).to have_content(locale_name).or have_button(locale_name)
+      end
+    end
+
+    it "has a button for all locales except the current one" do
+      within(locale_switcher) { click_button russian }
+      expect(subject).to     have_button english
+      expect(subject).to_not have_button russian
+    end
+
+    context "button when clicked" do
+      it "switches the locale" do
+        expect(current_locale).to eq :en
+        subject.click_button russian
+        expect(current_locale).to eq :ru
+      end
+
+      it "sets the locale cookie" do
+        expect(get_me_the_cookie('locale')[:value]).to eq 'en'
+        subject.click_button russian
+        expect(get_me_the_cookie('locale')[:value]).to eq 'ru'
+      end
+    end
+  end
+
+  context "when user is not signed in" do
+    background { visit root_path }
+
+    it "is shown in the layout" do
+      expect(page).to have_selector(locale_switcher)
+    end
+
+    it_behaves_like "a locale selector"
+  end
   
-  english, russian = t [:en, :ru], scope: 'v.layouts._footer.locale'
+  context "when user is signed in" do
+    given(:user) { FactoryGirl.create(:user) }
 
-  it "lists available locales" do
-    [english, russian].each do |locale|
-      expect(find('footer')).to have_content(locale)
-    end
-  end
-
-  it "does not show link to current locale" do
-    within('footer') do
-      expect(page).to_not have_link english
-      expect(page).to     have_link russian
+    background do
+      visit signin_path
+      sign_in_as user
     end
 
-    within('footer') { click_link russian }
-
-    within('footer') do
-      expect(page).to     have_link english
-      expect(page).to_not have_link russian
+    it "is not shown in the layout" do
+      expect(page).to_not have_selector(locale_switcher)
     end
-  end
 
-  it "switches locale when respective link is clicked" do
-    expect(current_path).to eq localized_root_path(locale: :en)
-    within('footer') { click_link russian }
-    expect(current_path).to eq localized_root_path(locale: :ru)
+    it "is shown on the users's profile page" do
+      click_link links[:account_settings]
+      within('.main') { expect(page).to have_selector(locale_switcher) }
+    end
+
+    context "button when clicked" do
+      it "updates the user's locale preference" do
+        click_link links[:account_settings]
+        within(locale_switcher) { click_button russian }
+        expect(user.reload.locale).to eq :ru
+      end
+    end
+
+    it_behaves_like "a locale selector" do
+      background { click_link links[:account_settings] }
+    end
   end
 end

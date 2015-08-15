@@ -2,7 +2,7 @@
   %nav.navbar.navbar-default.navbar-fixed-top
     .container
       %ul.nav.navbar-nav.navbar-right
-        - if policy(:session).new?
+        - if policy(:session).new? # if user is not signed in
           %li= link_to t('v.layouts._header.nav_links.sign_in'), signin_path
         - else
           %li.navbar-text= current_user.name          

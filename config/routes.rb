@@ -1,11 +1,9 @@
 Rails.application.routes.draw do
-
   mount JasmineRails::Engine => '/specs' if defined?(JasmineRails)
   
-  get '/', to: redirect("/#{I18n.default_locale}"), as: 'root'
-  get ':locale' => 'static_pages#home', locale: /en|ru/, as: 'localized_root'
-
-  # get '*path', to: redirect("/#{I18n.default_locale}/%{path}")
+  root 'static_pages#home'
+  get ':locale' => 'static_pages#home', locale: /en|ru/
+  # get ':locale/*path', locale: /en|ru/, to: redirect('%{path}')
 
   scope '(:locale)', locale: /en|ru/ do
     # resources :users, only: [:show]
@@ -23,7 +21,7 @@ Rails.application.routes.draw do
       delete 'signout' => :destroy
     end
   
-    scope path: 'user' do      
+    scope path: 'user' do
       scope controller: :email_confirmations do
         post 'confirm'                      => :create, as: 'email_confirmations'
         get  'confirm/:hashed_email/:token' => :edit,   as: 'edit_email_confirmation'
@@ -45,6 +43,10 @@ Rails.application.routes.draw do
         get  'change-name' => :new,    as: 'new_name_change'
         post 'change-name' => :create, as: 'name_changes'
       end
+    end
+
+    scope controller: :locale_changes do
+      post 'set-locale' => :create, as: 'locale_changes'
     end
   end
 end

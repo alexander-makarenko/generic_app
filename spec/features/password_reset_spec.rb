@@ -52,7 +52,7 @@ feature "Password" do
         end
 
         it "redirects to home page" do
-          expect(current_path).to eq(localized_root_path(locale: I18n.locale))
+          expect(current_path).to eq root_path
         end
 
         it "displays flash" do
@@ -70,7 +70,7 @@ feature "Password" do
         before { visit link(:password_reset, hashed_email: 'invalid', token: token) }
 
         it "redirects to home page" do
-          expect(current_path).to eq(localized_root_path(locale: I18n.locale))
+          expect(current_path).to eq root_path
         end
 
         it "displays flash" do
@@ -85,7 +85,7 @@ feature "Password" do
         before { visit link(:password_reset, hashed_email: hashed_email, token: 'invalid') }
 
         it "redirects to home page" do
-          expect(current_path).to eq(localized_root_path(locale: I18n.locale))
+          expect(current_path).to eq root_path
         end
 
         it "displays flash" do
@@ -102,7 +102,7 @@ feature "Password" do
         end
 
         it "redirects to home page" do
-          expect(current_path).to eq(localized_root_path(locale: I18n.locale))
+          expect(current_path).to eq root_path
         end
 
         it "displays flash" do
@@ -118,8 +118,7 @@ feature "Password" do
         background { visit link(:password_reset) }
 
         it "redirects to password update page" do
-          expect(current_path).to eq(
-            edit_password_path(locale: I18n.locale, hashed_email: hashed_email, token: token))
+          expect(current_path).to eq(edit_password_path(hashed_email: hashed_email, token: token))
         end
 
         context "when visited again after password was successfully reset" do
@@ -131,7 +130,7 @@ feature "Password" do
           end
 
           it "redirects to home page" do
-            expect(current_path).to eq(localized_root_path(locale: I18n.locale))
+            expect(current_path).to eq root_path
           end
 
           it "displays flash" do
@@ -157,9 +156,7 @@ feature "Password" do
 
     context "with invalid data" do
       background do
-        update_password_with(
-          password: '',
-          confirmation: 'mismatch')        
+        update_password_with(password: '', confirmation: 'mismatch')        
       end
 
       it "does not update user's password" do
@@ -182,9 +179,7 @@ feature "Password" do
 
     context "with valid data" do
       background do
-        update_password_with(
-          password: 'new_password',
-          confirmation: 'new_password')
+        update_password_with(password: 'new_password', confirmation: 'new_password')
       end
 
       it "updates user's password" do
@@ -196,7 +191,7 @@ feature "Password" do
       end
 
       it "redirects to signin page" do
-        expect(current_path).to eq(signin_path(locale: I18n.locale))
+        expect(current_path).to eq(signin_path)
       end
 
       it "displays flash" do
