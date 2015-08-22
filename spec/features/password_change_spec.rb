@@ -9,7 +9,7 @@ feature "Password change page" do
     click_link t('v.users.show.password_change')
   end
 
-  specify "has proper header" do
+  specify "has a proper heading" do
     expect(page).to have_selector 'h2', text: t('v.password_changes.new.header')
   end
 
@@ -18,11 +18,11 @@ feature "Password change page" do
       change_password_of(user, current_password: 'incorrect', new_password: ' ')
     end
 
-    it "does not change user password" do
+    it "does not change the user's password" do
       expect(user.password_digest).to eql(user.reload.password_digest)
     end
 
-    it "re-renders page" do
+    it "re-renders the page" do
       expect(page).to have_selector 'h2', text: t('v.password_changes.new.header')
     end
 
@@ -41,15 +41,15 @@ feature "Password change page" do
         confirmation:     new_password)
     end
 
-    it "updates user's password" do
+    it "updates the user's password" do
       expect(user.password_digest).to_not eql(user.reload.password_digest)
     end
 
-    it "redirects to profile page of current user" do
+    it "redirects to the profile page of the current user" do
       expect(current_path).to match(account_path)
     end
 
-    it "displays flash" do
+    it "shows an appropriate flash" do
       expect(page).to have_flash :success, t('c.password_changes.create.success')
     end
   end
@@ -57,11 +57,11 @@ feature "Password change page" do
   context "when cancelled" do
     background { click_link t('v.password_changes.new.cancel') }
 
-    it "does not change user password" do
+    it "does not change the user's password" do
       expect(user.password_digest).to eql(user.reload.password_digest)
     end
 
-    it "shows profile page of current user" do
+    it "shows the profile page of the current user" do
       expect(current_path).to match(account_path)
     end
   end

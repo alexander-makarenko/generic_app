@@ -17,13 +17,13 @@ feature "Email confirmation" do
   end
 
   shared_examples "redirects to the home page" do
-    it "redirects to home page" do
+    it "redirects to the home page" do
       expect(current_path).to eq root_path
     end
   end
 
   shared_examples "redirects to the profile page of the current user" do
-    it "redirects to the profile page of current user" do
+    it "redirects to the profile page of the current user" do
       expect(current_path).to match(account_path)
     end
   end
@@ -38,7 +38,7 @@ feature "Email confirmation" do
     context "that is invalid" do
       shared_examples "shared" do
         it "does not change the user's email status" do
-          expect(subject.email_confirmed).to be false          
+          expect(subject.email_confirmed).to be false
         end
 
         include_examples "redirects to the home page"
@@ -84,7 +84,7 @@ feature "Email confirmation" do
         let(:message) { t('c.email_confirmations.edit.success') }
 
         it "changes the user's email status to confirmed" do
-          expect(subject.email_confirmed).to be true          
+          expect(subject.email_confirmed).to be true
         end
 
         it "shows an appropriate flash" do
@@ -96,7 +96,7 @@ feature "Email confirmation" do
         before { visit link(:email_confirmation) }
 
         include_examples "shared"
-        include_examples "redirects to the profile page of the current user" 
+        include_examples "redirects to the profile page of the current user"
       end
 
       context "when the user is not signed in" do

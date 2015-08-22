@@ -28,10 +28,8 @@ class EmailConfirmationsController < ApplicationController
 
   private
 
-    def user_not_authorized(exception)
-      if exception.query == 'edit?'
-        flash[:danger] = t('p.email_confirmation.already_confirmed')
-      end
-      super
+    def user_not_authorized
+      flash[:danger] = not_authorized_message
+      redirect_to root_path
     end
 end

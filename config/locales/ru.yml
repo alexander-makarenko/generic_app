@@ -127,16 +127,10 @@ ru:
       welcome:
         subject: "Welcome to our website!"
   p: #policies
-    default: "You are not authorized to perform this action."
+    default: "Please sign in to access this page."
     email_confirmation:
-      already_confirmed: "Вы уже подтвердили свой имейл."
-      create?: "Please sign in to access this page."
-    session:
-      new?: "You are already signed in."
-      create?: "You are already signed in."
-    user:
-      new?: "You are already registered."
-      create?: "You are already registered."
+      edit?: "You have already confirmed your email."
+      create?: "You are not authorized to perform this action."
   v: # views
     layouts:
       _header:

@@ -6,7 +6,7 @@ describe PasswordChangesController do
     let(:create_params) { Hash[ password: '' ] }
     before { bypass_rescue }
 
-    context "when user is not signed in" do
+    context "when the user is not signed in" do
       it "forbids GET to #new" do
         expect { get :new }.to_not be_permitted
       end
@@ -16,7 +16,7 @@ describe PasswordChangesController do
       end
     end
 
-    context "when user is signed in" do
+    context "when the user is signed in" do
       before { sign_in_as(user, no_capybara: true) }
 
       it "permits GET to #new" do

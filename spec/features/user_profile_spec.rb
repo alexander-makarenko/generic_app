@@ -17,32 +17,32 @@ feature "Profile page" do
     click_link links[:account_settings]
   end
   
-  it "has proper heading" do
+  it "has a proper heading" do
     expect(page).to have_selector 'h2', text: t('v.users.show.heading')
   end
 
-  context "when email is not confirmed" do
-    shared_examples "shows appropriate flash" do
-      it "shows appropriate flash" do
+  context "when the email is not confirmed" do
+    shared_examples "shows an appropriate flash" do
+      it "shows an appropriate flash" do
         expect(page).to have_flash :warning, message
       end
     end
 
-    context "and confirmation link hasn't been requested" do
+    context "and a confirmation link has not been requested" do
       given(:message) { t('c.users.show.email_not_confirmed',
         link: links[:send_confirmation_email]) }
 
-      include_examples "shows appropriate flash"
+      include_examples "shows an appropriate flash"
     end
 
-    context "immediately after confirmation link was requested" do
+    context "immediately after a confirmation link was requested" do
       given(:message) { t('c.users.show.confirmation_just_sent') }
       background { click_link links[:send_confirmation_email] }
 
-      include_examples "shows appropriate flash"
+      include_examples "shows an appropriate flash"
     end
 
-    context "3 minutes after confirmation link was requested" do      
+    context "3 minutes after a confirmation link was requested" do
       given(:message) { t('c.users.show.confirmation_sent_mins_ago',
         time_ago: time_ago_in_words(user.reload.email_confirmation_sent_at),
         link: links[:send_confirmation_email]) }
@@ -53,11 +53,11 @@ feature "Profile page" do
         visit current_path # reload page
       end
 
-      include_examples "shows appropriate flash"
+      include_examples "shows an appropriate flash"
     end
   end
 
-  context "when email is confirmed" do
+  context "when the email is confirmed" do
     given(:user) { FactoryGirl.create(:user, :email_confirmed) }
 
     it "shows no flash" do
@@ -65,30 +65,30 @@ feature "Profile page" do
     end
   end  
 
-  it "contains user's full name and email" do
+  it "contains the user's full name and email" do
     within('.main') do
       expect(page).to have_content user.name
       expect(page).to have_content user.email
     end
   end
 
-  it "contains name change link" do
+  it "contains a link to the name change page" do
     expect(page).to have_link links[:name_change], href: new_name_change_path
   end
 
-  it "contains email change link" do
+  it "contains a link to the email change page" do
     expect(page).to have_link links[:email_change], href: '#'
   end
 
-  it "contains password change link" do
+  it "contains a link to the password change page" do
     expect(page).to have_link links[:password_change], href: new_password_change_path
   end
 
-  it "contains password reset link" do
+  it "contains a link to the password recovery page" do
     expect(page).to have_link links[:password_reset], href: new_password_reset_path
   end
 
-  it "contains locale selector" do
+  it "contains a locale selector" do
     expect(page).to have_selector('#locale-selector')
   end
 end

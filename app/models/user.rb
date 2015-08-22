@@ -29,19 +29,19 @@ class User < ActiveRecord::Base
   end
 
   [:auth, :email_confirmation, :password_reset].each do |attr_name|
-    define_method("#{attr_name}_token=") do |token|
-      instance_variable_set("@#{attr_name}_token", token)
-      send("#{attr_name}_digest=", User.digest(token))
-      save(validate: false) unless new_record?
+    define_method("#{attr_name}_token") do
+      instance_variable_get("@#{attr_name}_token") || send("#{attr_name}_token=", self.class.new_token)
     end
 
-    define_method("#{attr_name}_token") do
-      send("#{attr_name}_token=", User.new_token) if instance_variable_get("@#{attr_name}_token").nil?
-      instance_variable_get("@#{attr_name}_token")
+    define_method("#{attr_name}_token=") do |token|
+      instance_variable_set("@#{attr_name}_token", token)
+      send("#{attr_name}_digest=", self.class.digest(token))
+      save(validate: false) unless new_record?
+      token
     end
 
     define_method("generate_#{attr_name}_digest") do
-      send("#{attr_name}_digest=", User.digest(User.new_token))
+      send("#{attr_name}_digest=", self.class.digest(self.class.new_token))
     end
 
     private "generate_#{attr_name}_digest"
@@ -103,7 +103,7 @@ class User < ActiveRecord::Base
       email.downcase!
     end
 
-    def ensure_locale_is_set      
+    def ensure_locale_is_set
       self.locale ||= I18n.default_locale.to_s
     end
 end

@@ -19,5 +19,3 @@ class EmailConfirmationPolicy < ApplicationPolicy
       current_user.email_confirmed?
     end
 end
-
-  

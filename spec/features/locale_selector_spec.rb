@@ -25,7 +25,7 @@ feature "Locale selector" do
       expect(subject).to_not have_button russian
     end
 
-    context "button when clicked" do
+    context "when a button is clicked" do
       it "switches the locale" do
         expect(current_locale).to eq :en
         subject.click_button russian
@@ -40,7 +40,7 @@ feature "Locale selector" do
     end
   end
 
-  context "when user is not signed in" do
+  context "when the user is not signed in" do
     background { visit root_path }
 
     it "is shown in the layout" do
@@ -50,7 +50,7 @@ feature "Locale selector" do
     it_behaves_like "a locale selector"
   end
   
-  context "when user is signed in" do
+  context "when the user is signed in" do
     given(:user) { FactoryGirl.create(:user) }
 
     background do
@@ -67,7 +67,7 @@ feature "Locale selector" do
       within('.main') { expect(page).to have_selector(locale_switcher) }
     end
 
-    context "button when clicked" do
+    context "when a button is clicked" do
       it "updates the user's locale preference" do
         click_link links[:account_settings]
         within(locale_switcher) { click_button russian }

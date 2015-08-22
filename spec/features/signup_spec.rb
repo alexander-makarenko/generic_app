@@ -5,7 +5,7 @@ feature "Signup form" do
   given(:invalid_user) { FactoryGirl.build(:user, :invalid) }
   background { visit signup_path }
 
-  specify "has proper heading" do
+  specify "has a proper heading" do
     expect(page).to have_selector('form h3', text: t('v.users.new.header'))
   end
   
@@ -23,15 +23,15 @@ feature "Signup form" do
     context "with invalid data" do
       background(submit_before: true) { sign_up_as(invalid_user) }
       
-      it "does not save user" do
+      it "does not save the user" do
         expect { sign_up_as(invalid_user) }.to_not change(User, :count)
       end
 
-      it "does not send welcome email" do
+      it "does not send a welcome email" do
         expect { sign_up_as(invalid_user) }.to_not change(deliveries, :count)
       end
 
-      it "re-renders page", submit_before: true do
+      it "re-renders the page", submit_before: true do
         expect(page).to have_selector('form h3', text: t('v.users.new.header'))
       end
 
@@ -43,17 +43,17 @@ feature "Signup form" do
     context "with valid data" do
       background(submit_before: true) { sign_up_as(user) }
 
-      it "saves user" do
+      it "saves the user" do
         expect { sign_up_as(user) }.to change(User, :count).from(0).to(1)
       end
 
-      include_examples "user is signed in", submit_before: true
+      include_examples "the user is signed in", submit_before: true
 
-      it "sends welcome email" do
+      it "sends a welcome email" do
         expect { sign_up_as(user) }.to change(deliveries, :count).from(0).to(1)
       end
 
-      it "redirects to home page", submit_before: true do
+      it "redirects to the home page", submit_before: true do
         expect(current_path).to eq root_path
       end
     end

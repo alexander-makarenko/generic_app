@@ -26,6 +26,8 @@ ActiveRecord::Migration.maintain_test_schema!
 include ActionView::Helpers::DateHelper
 
 RSpec.configure do |config|
+  config.include Rails.application.routes.url_helpers
+
   Capybara.javascript_driver = :webkit
   
   config.before { ActionMailer::Base.deliveries.clear }

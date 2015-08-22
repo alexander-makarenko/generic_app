@@ -1,14 +1,74 @@
 require 'rails_helper'
 
 describe ApplicationController do
-  controller do
-    def index
-      render nothing: true # do nothing other than invoke filters
+  describe "authorization exception handler" do
+    controller do
+      def index
+        raise Pundit::NotAuthorizedError
+      end
+    end
+
+    before { get :index }
+
+    it "sets a flash" do
+      expect(flash[:danger]).to_not be_nil
+    end
+
+    it "stores the current location in the session" do
+      expect(session[:return_to]).to eq request.original_url
+    end
+
+    it "redirects to the signin page" do
+      expect(response).to redirect_to signin_path
+    end
+  end
+
+  describe "#not_authorized_message" do
+    describe "when a translation corresponding to the associated policy and query method" do
+      let(:scope) { 'p' }
+      subject { response.body }
+
+      context "is available" do
+        controller(EmailConfirmationsController) do
+          def edit
+            render text: not_authorized_message
+          end
+        end
+
+        let(:policy_name) { request.params[:controller].sub(/s\z/, '') }
+        let(:query)       { request.params[:action] + '?' }
+
+        before { get :edit, id: 'foo' }
+
+        it "returns a translated message" do
+          expect(subject).to eq t("#{policy_name}.#{query}", scope: scope)
+        end
+      end
+
+      context "is not available" do
+        controller(UsersController) do
+          def new
+            render text: not_authorized_message
+          end
+        end
+
+        before { get :new }
+
+        it "returns the default message" do
+          expect(subject).to eq t('default', scope: scope)
+        end
+      end
     end
   end
 
   describe "#set_locale" do
-    subject(:current_locale) { I18n.locale }    
+    controller do
+      def index
+        render nothing: true # do nothing other than invoke filters
+      end
+    end
+
+    subject(:current_locale) { I18n.locale }
     before { I18n.locale = I18n.default_locale }
 
     context "when a locale param is passed in the url" do
@@ -46,7 +106,7 @@ describe ApplicationController do
           end
         end
 
-        context "and a locale cookie is set" do          
+        context "and a locale cookie is set" do
           before do
             request.cookies['locale'] = cookie_locale
             get :index

@@ -18,11 +18,11 @@ describe PasswordChange do
 
   it { is_expected.to be_valid }
 
-  describe "with incorrect current password", expect_errors: 1 do
+  describe "with an incorrect current password", expect_errors: 1 do
     let(:current_password) { 'incorrect' }
   end
 
-  describe "with new password that" do
+  describe "with a new password that" do
     context "is blank", expect_errors: 1 do
       let(:new_password) { ' ' }
     end
@@ -36,7 +36,7 @@ describe PasswordChange do
     end
   end
 
-  describe "with incorrect confirmation of new password", expect_errors: 1 do
+  describe "with an incorrect confirmation of the new password", expect_errors: 1 do
     let(:new_password_confirmation) { 'mismatch' }
   end
 end

@@ -9,7 +9,7 @@ feature "Email change page" do
   #   click_link t('v.users.show.email_change')
   # end
 
-  # it "has proper heading" do
+  # it "has a proper heading" do
   #   expect(page).to have_selector 'h2', text: t('v.email_changes.new.heading')
   # end
 
@@ -56,7 +56,7 @@ feature "Email change page" do
   #     expect(current_path).to match(account_path)
   #   end
 
-  #   it "displays flash" do
+  #   it "shows an appropriate flash" do
   #     expect(page).to have_flash :success, t('c.email_changes.create.success')
   #   end
   # end

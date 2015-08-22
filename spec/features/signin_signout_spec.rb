@@ -5,24 +5,24 @@ feature "Signin" do
   given(:nonexistent_user) { FactoryGirl.build(:user) }
   background { visit signin_path }
   
-  specify "form has proper header" do
+  specify "form has a proper heading" do
     expect(page).to have_selector('form h3', text: t('v.sessions.new.header'))
   end
   
   context "with invalid data" do
     background { sign_in_as(nonexistent_user) }
     
-    include_examples "user is not signed in"
+    include_examples "the user is not signed in"
 
-    it "displays user's name in header" do
+    it "shows the user's name in the header" do
       expect(page).to_not have_selector('header nav li', text: user.name)
     end
 
-    it "re-renders page" do
+    it "re-renders the page" do
       expect(page).to have_selector('form h3', text: t('v.sessions.new.header'))
     end
 
-    it "displays flash" do
+    it "shows an appropriate flash" do
       expect(page).to have_flash :danger, t('c.sessions.create.invalid')
     end
   end
@@ -31,9 +31,13 @@ feature "Signin" do
     let(:keep_signed_in) { Hash[ keep_signed_in: false ] }
     background { sign_in_as(user, keep_signed_in) }
 
-    include_examples "user is signed in"
+    include_examples "the user is signed in"
 
-    it "displays user's name in header" do
+    it "redirects to the home page" do
+      expect(current_path).to eq root_path
+    end
+
+    it "shows the user's name in the header" do
       expect(page).to have_selector('header nav li', text: user.name)
     end
 
@@ -44,13 +48,13 @@ feature "Signin" do
       end
 
       context "not checked, after browser reopening" do
-        include_examples "user is not signed in"
+        include_examples "the user is not signed in"
       end
 
       context "checked, after browser reopening" do
         let(:keep_signed_in) { Hash[ keep_signed_in: true ] }
         
-        include_examples "user is signed in"
+        include_examples "the user is signed in"
       end
     end
   end
@@ -64,7 +68,7 @@ feature "Signout" do
     click_link t('v.layouts._header.nav_links.sign_out')
   end
 
-  include_examples "user is not signed in"
+  include_examples "the user is not signed in"
 
   it "redirects to the home page" do
     expect(current_path).to eq root_path

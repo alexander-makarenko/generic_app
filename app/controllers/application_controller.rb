@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   def set_locale
-    I18n.locale = case      
+    I18n.locale = case
     when params[:locale]
       params[:locale]
     when current_user
@@ -28,11 +28,13 @@ class ApplicationController < ActionController::Base
   
   private
   
-    def user_not_authorized(exception)
-      unless flash[:danger]
-        policy_name = exception.policy.class.to_s.gsub(/policy/i, '').underscore
-        flash[:danger] = t "#{policy_name}.#{exception.query}", scope: 'p', default: :default
-      end
-      redirect_to(request.referrer || root_path)
+    def not_authorized_message
+      t("#{controller_name.sub(/s\z/, '')}.#{action_name}?", scope: 'p', default: :default)
+    end
+
+    def user_not_authorized
+      flash[:danger] = not_authorized_message
+      store_location
+      redirect_to signin_path
     end
 end

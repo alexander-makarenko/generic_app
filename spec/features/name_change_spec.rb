@@ -9,18 +9,18 @@ feature "Name change page" do
     click_link t('v.users.show.name_change')
   end
 
-  specify "has proper heading" do
+  specify "has a proper heading" do
     expect(page).to have_selector 'h2', text: t('v.name_changes.new.heading')
   end
 
   context "on submitting invalid data" do
     background { change_name_of user, to: [' ', 'LAST'] }
 
-    it "does not change user's name" do
+    it "does not change the user's name" do
       expect(user.name).to eql(user.reload.name)
     end
 
-    it "re-renders page" do
+    it "re-renders the page" do
       expect(page).to have_selector 'h2', text: t('v.name_changes.new.heading')
     end
 
@@ -32,15 +32,15 @@ feature "Name change page" do
   context "on submitting valid data" do
     background { change_name_of user, to: ['First', 'L'] }
 
-    it "updates user's name" do
+    it "updates the user's name" do
       expect(user.name).to_not eql(user.reload.name)
     end
 
-    it "redirects to profile page of current user" do
+    it "redirects to the profile page of the current user" do
       expect(current_path).to match(account_path)
     end
 
-    it "displays flash" do
+    it "shows an appropriate flash" do
       expect(page).to have_flash :success, t('c.name_changes.create.success')
     end
   end
@@ -48,11 +48,11 @@ feature "Name change page" do
   context "when cancelled" do
     background { click_link t('v.name_changes.new.cancel') }
 
-    it "does not change user's name" do
+    it "does not change the user's name" do
       expect(user.name).to eql(user.reload.name)
     end
 
-    it "shows profile page of current user" do
+    it "shows the profile page of the current user" do
       expect(current_path).to match(account_path)
     end
   end

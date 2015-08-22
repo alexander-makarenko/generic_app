@@ -9,15 +9,15 @@ feature "Password" do
   end
 
   feature "reset" do
-    it "form has correct header" do
+    it "form has a proper heading" do
       expect(page).to have_selector 'h2', text: t('v.password_resets.new.header')
     end
     
     feature "request" do
-      context "with email of invalid format" do
+      context "with an email of invalid format" do
         background { request_password_reset('not.an@email') }
 
-        it "re-renders page" do
+        it "re-renders the page" do
           expect(page).to have_selector('h2',
             text: t('v.password_resets.new.header'))
         end
@@ -27,14 +27,14 @@ feature "Password" do
         end
       end
 
-      context "with email that does not exist" do
+      context "with an email that does not exist" do
         background { request_password_reset(nonexistent_user.email) }
 
-        it "does not send password reset link" do
+        it "does not send a password reset link" do
           expect(deliveries).to be_empty
         end
 
-        it "re-renders page" do
+        it "re-renders the page" do
           expect(page).to have_selector('h2',
             text: t('v.password_resets.new.header'))
         end
@@ -44,20 +44,19 @@ feature "Password" do
         end        
       end
 
-      context "with correct email" do
+      context "with a correct email" do
         background { request_password_reset(user.email) }
         
-        it "sends password reset link" do
+        it "sends a password reset link" do
           expect(deliveries.count).to eq(1)
         end
 
-        it "redirects to home page" do
+        it "redirects to the home page" do
           expect(current_path).to eq root_path
         end
 
-        it "displays flash" do
-          expect(page).to have_flash :info,
-            t('c.password_resets.create.info')
+        it "shows an appropriate flash" do
+          expect(page).to have_flash :info, t('c.password_resets.create.info')
         end
       end
     end
@@ -65,47 +64,46 @@ feature "Password" do
     feature "link" do
       background { request_password_reset(user.email) }
 
-      context "with invalid hashed email" do
+      context "with an invalid hashed email" do
         let(:token) { extract_token(link(:password_reset)) }
         before { visit link(:password_reset, hashed_email: 'invalid', token: token) }
 
-        it "redirects to home page" do
+        it "redirects to the home page" do
           expect(current_path).to eq root_path
         end
 
-        it "displays flash" do
+        it "shows an appropriate flash" do
           expect(page).to have_flash :danger,
             t('c.password_resets.edit.invalid',
               link: t('c.password_resets.edit.link'))
         end
       end
 
-      context "with invalid token" do
+      context "with an invalid token" do
         let(:hashed_email) { extract_hashed_email(link(:password_reset)) }
         before { visit link(:password_reset, hashed_email: hashed_email, token: 'invalid') }
 
-        it "redirects to home page" do
+        it "redirects to the home page" do
           expect(current_path).to eq root_path
         end
 
-        it "displays flash" do
+        it "shows an appropriate flash" do
           expect(page).to have_flash :danger,
-            t('c.password_resets.edit.invalid',
-              link: t('c.password_resets.edit.link'))
+            t('c.password_resets.edit.invalid', link: t('c.password_resets.edit.link'))
         end
       end
 
-      context "that has expired" do        
+      context "that has expired" do
         background do
-          Timecop.travel(4.hours)          
+          Timecop.travel(4.hours)
           visit link(:password_reset)
         end
 
-        it "redirects to home page" do
+        it "redirects to the home page" do
           expect(current_path).to eq root_path
         end
 
-        it "displays flash" do
+        it "shows an appropriate flash" do
           expect(page).to have_flash :danger,
             t('c.password_resets.edit.expired',
               link: t('c.password_resets.edit.link'))
@@ -117,11 +115,11 @@ feature "Password" do
         let(:token)        { extract_token(link(:password_reset)) }
         background { visit link(:password_reset) }
 
-        it "redirects to password update page" do
+        it "redirects to the password update page" do
           expect(current_path).to eq(edit_password_path(hashed_email: hashed_email, token: token))
         end
 
-        context "when visited again after password was successfully reset" do
+        context "when visited again after the password has been successfully reset" do
           background do            
             update_password_with(
               password: 'new_password',
@@ -129,11 +127,11 @@ feature "Password" do
             visit link(:password_reset)    
           end
 
-          it "redirects to home page" do
+          it "redirects to the home page" do
             expect(current_path).to eq root_path
           end
 
-          it "displays flash" do
+          it "shows an appropriate flash" do
             expect(page).to have_flash :danger,
               t('c.password_resets.edit.expired',
                 link: t('c.password_resets.edit.link'))
@@ -149,7 +147,7 @@ feature "Password" do
       visit link(:password_reset)
     end
 
-    it "has proper header" do
+    it "page has a proper heading" do
       expect(page).to have_selector 'h2',
         text: t('v.password_resets.edit.header')
     end    
@@ -159,17 +157,16 @@ feature "Password" do
         update_password_with(password: '', confirmation: 'mismatch')        
       end
 
-      it "does not update user's password" do
+      it "does not update the user's password" do
         expect(user.password_digest).to eql(user.reload.password_digest)
       end
 
-      it "does not clear user's password_reset_sent_at attribute" do
+      it "does not clear the user's password_reset_sent_at attribute" do
         expect(user.reload.password_reset_sent_at).to_not be_nil
       end
 
-      it "re-renders page" do
-        expect(page).to have_selector 'h2',
-          text: t('v.password_resets.edit.header')
+      it "re-renders the page" do
+        expect(page).to have_selector 'h2', text: t('v.password_resets.edit.header')
       end
       
       it "shows validation errors" do
@@ -182,21 +179,20 @@ feature "Password" do
         update_password_with(password: 'new_password', confirmation: 'new_password')
       end
 
-      it "updates user's password" do
+      it "updates the user's password" do
         expect(user.password_digest).to_not eql(user.reload.password_digest)
       end
 
-      it "clears user's password_reset_sent_at attribute" do
+      it "clears the user's password_reset_sent_at attribute" do
         expect(user.reload.password_reset_sent_at).to be_nil
       end
 
-      it "redirects to signin page" do
+      it "redirects to the signin page" do
         expect(current_path).to eq(signin_path)
       end
 
-      it "displays flash" do
-        expect(page).to have_flash :success,
-          t('c.password_resets.update.success')
+      it "shows an appropriate flash" do
+        expect(page).to have_flash :success, t('c.password_resets.update.success')
       end
     end
   end

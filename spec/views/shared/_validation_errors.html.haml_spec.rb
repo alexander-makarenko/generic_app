@@ -7,7 +7,7 @@ describe "shared/_validation_errors" do
     render 'shared/validation_errors', obj: user
   end
 
-  context "when the provided object is valid" do
+  context "when a provided object is valid" do
     let(:user) { FactoryGirl.build(:user) }
 
     it "renders nothing" do
@@ -15,7 +15,7 @@ describe "shared/_validation_errors" do
     end
   end
 
-  context "when the provided object is invalid" do
+  context "when a provided object is invalid" do
     let(:user)   { FactoryGirl.build(:user, :invalid) }
     let(:errors) { user.errors.full_messages }
 
@@ -34,7 +34,7 @@ describe "shared/_validation_errors" do
         render 'shared/validation_errors', obj: user
       end
 
-      it "renders them only once" do
+      it "renders each of them only once" do
         expect(times_error_is_rendered).to eq(1)
       end
     end

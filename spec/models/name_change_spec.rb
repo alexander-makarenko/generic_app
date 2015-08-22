@@ -13,7 +13,7 @@ describe NameChange do
 
   it { is_expected.to be_valid }
 
-  describe "with new first name that" do
+  describe "with a new first name that" do
     context "is blank", expect_errors: 1 do
       let(:new_first_name) { ' ' }
     end
@@ -23,7 +23,7 @@ describe NameChange do
     end
   end
 
-  describe "with new last name that" do
+  describe "with a new last name that" do
     context "is blank", expect_errors: 1 do
       let(:new_last_name) { ' ' }
     end

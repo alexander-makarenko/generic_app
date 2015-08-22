@@ -54,4 +54,8 @@ class UsersController < ApplicationController
           time_ago: time_ago_in_words(sent_at), link: link)
       end
     end
+
+    def user_not_authorized
+      action_name == 'show' ? super : redirect_to(root_path)
+    end
 end

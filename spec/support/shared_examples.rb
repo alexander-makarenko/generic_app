@@ -9,14 +9,14 @@ def switch_locale_to(sym)
   within('#locale-selector') { click_link locales[sym] }
 end
 
-shared_examples "user is not signed in" do |conditions={}|
-  it "has signin link", conditions do
+shared_examples "the user is not signed in" do |conditions={}|
+  it "has a signin link", conditions do
     within('header nav') do
       expect(page).to have_link(t('v.layouts._header.nav_links.sign_in'))
     end
   end
   
-  it "does not have signout link", conditions do
+  it "does not have a signout link", conditions do
     within('header nav') do
       expect(page).to_not have_link(t('v.layouts._header.nav_links.sign_out'))
       expect(page).to_not have_link(t('v.layouts._header.nav_links.settings'))
@@ -24,15 +24,15 @@ shared_examples "user is not signed in" do |conditions={}|
   end
 end
 
-shared_examples "user is signed in" do |conditions={}|
-  it "has signout link", conditions do
+shared_examples "the user is signed in" do |conditions={}|
+  it "has a signout link", conditions do
     within('header nav') do
       expect(page).to have_link(t('v.layouts._header.nav_links.sign_out'))
       expect(page).to have_link(t('v.layouts._header.nav_links.settings'))
     end
   end
 
-  it "does not have signin link", conditions do
+  it "does not have a signin link", conditions do
     within('header nav') do
       expect(page).to_not have_link(t('v.layouts._header.nav_links.sign_in'))
     end

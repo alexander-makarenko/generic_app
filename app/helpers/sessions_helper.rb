@@ -1,6 +1,6 @@
 module SessionsHelper
 
-  def sign_in(user, keep_signed_in = nil)    
+  def sign_in(user, keep_signed_in = nil)
     auth_token = user.auth_token
     if keep_signed_in == '1'
       cookies.permanent[:auth_token] = auth_token
@@ -29,5 +29,13 @@ module SessionsHelper
 
   def signed_in?
     !current_user.nil?
+  end
+
+  def store_location
+    session[:return_to] = request.original_url if request.get?
+  end
+
+  def redirect_back_or(default)
+    redirect_to(session.delete(:return_to) || default)    
   end
 end

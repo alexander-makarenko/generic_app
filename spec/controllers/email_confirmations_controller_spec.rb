@@ -4,9 +4,10 @@ describe EmailConfirmationsController do
   describe "authorization" do
     let(:user) { FactoryGirl.create(:user) }
     let(:edit_params) { Hash[ hashed_email: 'foo', token: 'bar' ] }
-    before { bypass_rescue }
 
-    context "when user is not signed in" do
+    context "when the user is not signed in" do
+      before { bypass_rescue }
+
       it "forbids POST to #create" do
         expect { post :create }.to_not be_permitted
       end
@@ -16,8 +17,11 @@ describe EmailConfirmationsController do
       end
     end
 
-    context "when user is signed in" do
-      before { sign_in_as(user, no_capybara: true) }
+    context "when the user is signed in" do
+      before do
+        bypass_rescue
+        sign_in_as(user, no_capybara: true)
+      end
 
       context "and their email is not confirmed" do
         it "permits POST to #create" do
@@ -39,6 +43,24 @@ describe EmailConfirmationsController do
         it "forbids GET to #edit" do
           expect { get :edit, edit_params }.to_not be_permitted
         end
+      end
+    end
+
+    describe "exception handler" do
+      controller(EmailConfirmationsController) do
+        def index
+          raise Pundit::NotAuthorizedError
+        end
+      end
+      
+      before { get :index }
+
+      it "sets a flash" do
+        expect(flash[:danger]).to_not be_nil
+      end
+
+      it "redirects to the home page" do
+        expect(response).to redirect_to root_path
       end
     end
   end

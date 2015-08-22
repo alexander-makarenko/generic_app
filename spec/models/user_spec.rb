@@ -161,7 +161,7 @@ describe User do
     end
 
     context "when the locale attribute is set" do
-      it "returns its value" do
+      it "returns its value as a symbol" do
         subject.save
         expect(subject.locale).to be_a Symbol
       end
@@ -283,6 +283,10 @@ describe User do
       }.to('foo')
     end
 
+    it "returns the assigned value" do
+      expect(subject).to eq 'foo'
+    end
+
     it "updates the #{attr_name}_digest attribute" do
       expect { subject }.to change(user, "#{attr_name}_digest")
     end
@@ -301,7 +305,7 @@ describe User do
     subject { user.send("#{attr_name}_token") }
 
     context "when the #{attr_name}_token attribute is nil" do
-      it "calls the #{attr_name}_token= setter with a newly generated token" do
+      it "assigns it a new token through the #{attr_name}_token= setter" do
         expect(user.instance_variable_get("@#{attr_name}_token")).to be_nil
         expect(user).to receive("#{attr_name}_token=").with(String)
         subject
