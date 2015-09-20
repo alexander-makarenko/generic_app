@@ -14,29 +14,34 @@ describe PasswordChange do
     )
   }
 
-  before { password_change.user = user }
+  before { subject.user = user }
 
   it { is_expected.to be_valid }
 
-  describe "with an incorrect current password", expect_errors: 1 do
+  describe "with an incorrect current password" do
     let(:current_password) { 'incorrect' }
+    it { is_expected.to have_errors(1) }
   end
 
   describe "with a new password that" do
-    context "is blank", expect_errors: 1 do
+    context "is blank" do
       let(:new_password) { ' ' }
+      it { is_expected.to have_errors(1) }
     end
 
-    context "is too short", expect_errors: 1 do
+    context "is too short" do
       let(:new_password) { 'a' * 5 }
+      it { is_expected.to have_errors(1) }
     end
 
-    context "is too long", expect_errors: 1 do
+    context "is too long" do
       let(:new_password) { 'a' * 31 }
+      it { is_expected.to have_errors(1) }
     end
   end
 
-  describe "with an incorrect confirmation of the new password", expect_errors: 1 do
+  describe "with an incorrect confirmation of the new password" do
     let(:new_password_confirmation) { 'mismatch' }
+    it { is_expected.to have_errors(1) }
   end
 end

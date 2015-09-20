@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150819142829) do
+ActiveRecord::Schema.define(version: 20150906062216) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,9 @@ ActiveRecord::Schema.define(version: 20150819142829) do
     t.datetime "password_reset_sent_at"
     t.string   "last_name"
     t.hstore   "preferences"
+    t.string   "old_email"
+    t.boolean  "old_email_confirmed",        default: false
+    t.datetime "old_email_confirmed_at"
   end
 
   add_index "users", ["auth_digest"], name: "index_users_on_auth_digest", unique: true, using: :btree

@@ -1,54 +1,84 @@
 require 'rails_helper'
 
 feature "Password" do
-  given(:user)             { FactoryGirl.create(:user) }
+  given(:user) { FactoryGirl.create(:user) }
   given(:nonexistent_user) { FactoryGirl.build(:user) }
+  given(:forgot_password_link) { t 'v.sessions.new.password_reset' }
+  given(:account_link) { t 'v.layouts._header.nav_links.settings' }
+  given(:form_heading) { t 'v.password_resets.new.heading' }
+  
   background do
     visit signin_path
-    click_link t('v.sessions.new.password_reset')
+    click_link forgot_password_link
   end
 
   feature "reset" do
-    it "form has a proper heading" do
-      expect(page).to have_selector 'h2', text: t('v.password_resets.new.header')
+    feature "form" do
+      given(:email_field_value) { page.find('#password_reset_email').value }
+
+      it "has a proper heading" do
+        expect(page).to have_selector 'h2', text: form_heading
+      end
+
+      context "when the user is not signed in" do
+        it "has an empty email field" do
+          expect(email_field_value).to be_nil
+        end
+      end
+
+      context "when the user is signed in" do
+        background do
+          visit signin_path
+          sign_in_as user
+          click_link account_link
+          click_link forgot_password_link
+        end
+        
+        it "has the email field pre-filled" do
+          expect(email_field_value).to eq user.email
+        end
+      end
     end
     
     feature "request" do
+      background { request_password_reset(email: email) }
+
       context "with an email of invalid format" do
-        background { request_password_reset('not.an@email') }
+        given(:email) { 'invalid' }
 
         it "re-renders the page" do
-          expect(page).to have_selector('h2',
-            text: t('v.password_resets.new.header'))
+          expect(page).to have_selector 'h2', text: form_heading
         end
 
         it "shows validation errors" do
-          expect(page).to have_selector('.validation-errors')
+          expect(page).to have_selector '.validation-errors'
         end
       end
 
       context "with an email that does not exist" do
-        background { request_password_reset(nonexistent_user.email) }
+        given(:email) { nonexistent_user.email }
 
-        it "does not send a password reset link" do
+        it "does not send password reset instructions" do
           expect(deliveries).to be_empty
         end
 
         it "re-renders the page" do
-          expect(page).to have_selector('h2',
-            text: t('v.password_resets.new.header'))
+          expect(page).to have_selector 'h2', text: form_heading
         end
 
         it "shows validation errors" do
-          expect(page).to have_selector('.validation-errors')
-        end        
+          expect(page).to have_selector '.validation-errors'
+        end
       end
 
       context "with a correct email" do
-        background { request_password_reset(user.email) }
+        given(:email) { user.email }
+        given(:instructions_sent) do
+          t('c.password_resets.instructions_sent', email: email)
+        end
         
-        it "sends a password reset link" do
-          expect(deliveries.count).to eq(1)
+        it "sends password reset instructions" do
+          expect(deliveries.count).to eq 1
         end
 
         it "redirects to the home page" do
@@ -56,47 +86,54 @@ feature "Password" do
         end
 
         it "shows an appropriate flash" do
-          expect(page).to have_flash :info, t('c.password_resets.create.info')
+          expect(page).to have_flash :info, instructions_sent
         end
       end
     end
 
     feature "link" do
-      background { request_password_reset(user.email) }
+      given(:get_new_link) { t 'c.password_resets.get_new_link' }
+      given(:link_invalid) { t 'c.password_resets.link_invalid', get_new_link: get_new_link }
+      given(:link_expired) { t 'c.password_resets.link_expired', get_new_link: get_new_link }
+      given(:hashed_email) { get_hashed_email_from password_reset_link }
+      given(:token)        { get_token_from password_reset_link }
+      
+      subject { password_reset_link(hashed_email: hashed_email, token: token) }
+
+      background { request_password_reset(email: user.email) }
 
       context "with an invalid hashed email" do
-        let(:token) { extract_token(link(:password_reset)) }
-        before { visit link(:password_reset, hashed_email: 'invalid', token: token) }
+        given(:hashed_email) { 'invalid' }
+        
+        background { visit subject }
 
         it "redirects to the home page" do
           expect(current_path).to eq root_path
         end
 
         it "shows an appropriate flash" do
-          expect(page).to have_flash :danger,
-            t('c.password_resets.edit.invalid',
-              link: t('c.password_resets.edit.link'))
+          expect(page).to have_flash :danger, link_invalid
         end
       end
 
       context "with an invalid token" do
-        let(:hashed_email) { extract_hashed_email(link(:password_reset)) }
-        before { visit link(:password_reset, hashed_email: hashed_email, token: 'invalid') }
+        given(:token) { 'invalid' }
+
+        background { visit subject }
 
         it "redirects to the home page" do
           expect(current_path).to eq root_path
         end
 
         it "shows an appropriate flash" do
-          expect(page).to have_flash :danger,
-            t('c.password_resets.edit.invalid', link: t('c.password_resets.edit.link'))
+          expect(page).to have_flash :danger, link_invalid
         end
       end
 
       context "that has expired" do
         background do
-          Timecop.travel(4.hours)
-          visit link(:password_reset)
+          Timecop.travel 4.hours
+          visit subject
         end
 
         it "redirects to the home page" do
@@ -104,27 +141,21 @@ feature "Password" do
         end
 
         it "shows an appropriate flash" do
-          expect(page).to have_flash :danger,
-            t('c.password_resets.edit.expired',
-              link: t('c.password_resets.edit.link'))
+          expect(page).to have_flash :danger, link_expired
         end
       end
 
       context "that is valid" do
-        let(:hashed_email) { extract_hashed_email(link(:password_reset)) }
-        let(:token)        { extract_token(link(:password_reset)) }
-        background { visit link(:password_reset) }
+        background { visit subject }
 
         it "redirects to the password update page" do
-          expect(current_path).to eq(edit_password_path(hashed_email: hashed_email, token: token))
+          expect(current_path).to eq edit_password_path(hashed_email: hashed_email, token: token)
         end
 
         context "when visited again after the password has been successfully reset" do
-          background do            
-            update_password_with(
-              password: 'new_password',
-              confirmation: 'new_password')
-            visit link(:password_reset)    
+          background do
+            set_password(password: 'new_password')
+            visit subject
           end
 
           it "redirects to the home page" do
@@ -132,9 +163,7 @@ feature "Password" do
           end
 
           it "shows an appropriate flash" do
-            expect(page).to have_flash :danger,
-              t('c.password_resets.edit.expired',
-                link: t('c.password_resets.edit.link'))
+            expect(page).to have_flash :danger, link_expired
           end
         end
       end
@@ -142,57 +171,47 @@ feature "Password" do
   end
 
   feature "update" do
+    given(:form_heading) { t 'v.password_resets.edit.heading' }
+
+    subject { set_password(password: new_password) }
+
     background do
-      request_password_reset(user.email)
-      visit link(:password_reset)
+      request_password_reset(email: user.email)
+      visit password_reset_link
     end
 
     it "page has a proper heading" do
-      expect(page).to have_selector 'h2',
-        text: t('v.password_resets.edit.header')
-    end    
+      expect(page).to have_selector 'h2', text: form_heading
+    end
 
     context "with invalid data" do
-      background do
-        update_password_with(password: '', confirmation: 'mismatch')        
-      end
-
-      it "does not update the user's password" do
-        expect(user.password_digest).to eql(user.reload.password_digest)
-      end
-
-      it "does not clear the user's password_reset_sent_at attribute" do
-        expect(user.reload.password_reset_sent_at).to_not be_nil
-      end
+      given(:new_password) { ' ' }
+      
+      background { subject }
 
       it "re-renders the page" do
-        expect(page).to have_selector 'h2', text: t('v.password_resets.edit.header')
+        expect(page).to have_selector 'h2', text: form_heading
       end
       
       it "shows validation errors" do
-        expect(page).to have_selector('.validation-errors')
+        expect(page).to have_selector '.validation-errors'
       end
     end
 
     context "with valid data" do
-      background do
-        update_password_with(password: 'new_password', confirmation: 'new_password')
-      end
+      given(:signout_link) { t 'v.layouts._header.nav_links.sign_out' }
+      given(:signin_link) { t 'v.layouts._header.nav_links.sign_in' }
+      given(:password_changed) { t 'c.password_resets.password_changed' }
+      given(:new_password) { 'new_password' }
 
-      it "updates the user's password" do
-        expect(user.password_digest).to_not eql(user.reload.password_digest)
-      end
+      background { subject }
 
-      it "clears the user's password_reset_sent_at attribute" do
-        expect(user.reload.password_reset_sent_at).to be_nil
-      end
-
-      it "redirects to the signin page" do
-        expect(current_path).to eq(signin_path)
+      it "signs the user in" do
+        expect(page).to have_no_link(signin_link).and have_link(signout_link)
       end
 
       it "shows an appropriate flash" do
-        expect(page).to have_flash :success, t('c.password_resets.update.success')
+        expect(page).to have_flash :success, password_changed
       end
     end
   end

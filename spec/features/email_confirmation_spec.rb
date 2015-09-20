@@ -2,122 +2,149 @@ require 'rails_helper'
 
 feature "Email confirmation" do
   given(:user) { FactoryGirl.create(:user) }
-  given(:links) { Hash[
-    sign_out: t('v.layouts._header.nav_links.sign_out'),
-    account_settings: t('v.layouts._header.nav_links.settings'),
-    send_confirmation_email: t('c.users.show.link'),
-    resend_confirmation_email: t('c.email_confirmations.edit.link')
-  ] }
+  given(:account_link) { t 'v.layouts._header.nav_links.settings' }
+  given(:sign_out_link) { t 'v.layouts._header.nav_links.sign_out' }
+  given(:get_confirmation_link) { t 'c.users.show.confirm' }
+  given(:get_new_confirmation_link) { t 'c.email_confirmations.get_new_link' }
 
   background do
     visit signin_path
-    sign_in_as(user)
-    click_link links[:account_settings]
-    within('.alert') { click_link links[:send_confirmation_email] }
+    sign_in_as user
+    click_link account_link
+    within('.alert') { click_link get_confirmation_link }
   end
 
-  shared_examples "redirects to the home page" do
-    it "redirects to the home page" do
-      expect(current_path).to eq root_path
-    end
-  end
-
-  shared_examples "redirects to the profile page of the current user" do
-    it "redirects to the profile page of the current user" do
-      expect(current_path).to match(account_path)
-    end
-  end
+  subject { email_confirmation_link(hashed_email: hashed_email, token: token) }
 
   feature "request" do
-    include_examples "redirects to the profile page of the current user"
+    given(:email_sent) { t('c.email_confirmations.email_sent', email: user.email) }
+
+    it "redirects to the profile page of the current user" do
+      expect(current_path).to match account_path
+    end
+
+    it "shows an appropriate flash" do
+      expect(page).to have_flash :success, email_sent
+      expect(page).to_not have_flash :warning
+    end
   end
 
   feature "link" do
-    subject { User.find_by(email: user.email) }
+    given(:link_invalid) do
+      t('c.email_confirmations.link_invalid', get_new_link: get_new_confirmation_link)
+    end
+    given(:link_expired) do
+      t('c.email_confirmations.link_expired', get_new_link: get_new_confirmation_link)
+    end
+    given(:hashed_email) { get_hashed_email_from email_confirmation_link }
+    given(:token)        { get_token_from email_confirmation_link }
 
-    context "that is invalid" do
-      shared_examples "shared" do
-        it "does not change the user's email status" do
-          expect(subject.email_confirmed).to be false
-        end
-
-        include_examples "redirects to the home page"
-
-        it "shows an appropriate flash" do
-          expect(page).to have_flash :danger, message
-        end
+    context "with an invalid hashed email" do
+      given(:hashed_email) { 'invalid' }
+      
+      background { visit subject }
+      
+      it "redirects to the home page" do
+        expect(current_path).to eq root_path
       end
 
-      context "(invalid hashed email)" do
-        let(:message) { t('c.email_confirmations.edit.invalid',
-          link: links[:resend_confirmation_email]) }
-        let(:token) { extract_token(link(:email_confirmation)) }
-        before { visit link(:email_confirmation, hashed_email: 'invalid', token: token) }
+      it "shows an appropriate flash" do
+        expect(page).to have_flash :danger, link_invalid
+      end
+    end
 
-        include_examples "shared"
+    context "with an invalid token" do
+      given(:token) { 'invalid' }
+      
+      background { visit subject }
+
+      it "redirects to the home page" do
+        expect(current_path).to eq root_path
       end
 
-      context "(invalid token)" do
-        let(:message) { t('c.email_confirmations.edit.invalid',
-          link: links[:resend_confirmation_email]) }
-        let(:hashed_email) { extract_hashed_email(link(:email_confirmation)) }
-        before { visit link(:email_confirmation, hashed_email: hashed_email, token: 'invalid') }
+      it "shows an appropriate flash" do
+        expect(page).to have_flash :danger, link_invalid
+      end
+    end
 
-        include_examples "shared"
+    context "that has expired" do
+      background do
+        Timecop.travel 1.week
+        visit subject
       end
 
-      context "(expired)" do
-        let(:message) { t('c.email_confirmations.edit.expired',
-          link: links[:resend_confirmation_email]) }
-        before do
-          Timecop.travel(1.week)
-          visit link(:email_confirmation)
-          subject.reload
-        end
+      it "redirects to the home page" do
+        expect(current_path).to eq root_path
+      end
 
-        include_examples "shared"
+      it "shows an appropriate flash" do
+        expect(page).to have_flash :danger, link_expired
       end
     end
 
     context "that is valid" do
-      shared_examples "shared" do
-        let(:message) { t('c.email_confirmations.edit.success') }
-
-        it "changes the user's email status to confirmed" do
-          expect(subject.email_confirmed).to be true
-        end
-
-        it "shows an appropriate flash" do
-          expect(page).to have_flash :success, message
-        end
-      end
-
       context "when the user is signed in" do
-        before { visit link(:email_confirmation) }
+        background { visit subject }
 
-        include_examples "shared"
-        include_examples "redirects to the profile page of the current user"
+        it "redirects to the profile page of the current user" do
+          expect(current_path).to match account_path
+        end
       end
 
       context "when the user is not signed in" do
-        before do
-          click_link links[:sign_out]
-          visit link(:email_confirmation)
+        background do
+          click_link sign_out_link
+          visit subject
         end
 
-        include_examples "shared"
-        include_examples "redirects to the home page"
+        it "redirects to the home page" do
+          expect(current_path).to eq root_path
+        end
+      end
+
+      context "when the user has a pending email change" do
+        given(:email_change_link) { t 'v.users.show.email_change' }
+        given(:new_email) { 'new.email@example.com' }
+        given(:email_changed) do
+          t('c.email_confirmations.email_changed', email: user.reload.email)
+        end
+
+        background do
+          click_link email_change_link
+          change_email(new_email: new_email, current_password: user.password)
+          visit subject
+        end
+
+        it "shows an appropriate flash" do
+          expect(page).to have_flash :success, email_changed
+        end
+      end
+
+      context "when the user does not have a pending email change" do
+        given(:email_confirmed) do
+          t('c.email_confirmations.email_confirmed', email: user.email)
+        end
+
+        background { visit subject }
+
+        it "shows an appropriate flash" do
+          expect(page).to have_flash :success, email_confirmed
+        end
       end
     end
   end
 
   feature "rerequest" do
-    given(:invalid_confirmation_link) { link(:email_confirmation, hashed_email: 'invalid', token: 'invalid')}
+    given(:hashed_email) { 'invalid' }
+    given(:token) { 'invalid' }
+    
     background do
-      visit invalid_confirmation_link
-      within('.alert') { click_link links[:resend_confirmation_email] }
+      visit subject
+      within('.alert') { click_link get_new_confirmation_link }
     end
 
-    include_examples "redirects to the profile page of the current user"
+    it "redirects to the profile page of the current user" do
+      expect(current_path).to match account_path
+    end
   end
 end

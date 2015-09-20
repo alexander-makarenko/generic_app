@@ -19,6 +19,7 @@ gem 'pundit', github: 'elabs/pundit'
 gem 'rails-i18n'
 # gem 'coffee-rails'
 # gem 'lodash-rails'
+# gem 'paperclip', github: 'thoughtbot/paperclip'
 
 group :development, :test do
   gem 'rspec-rails'

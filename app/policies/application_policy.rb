@@ -52,6 +52,7 @@ class ApplicationPolicy
   end
 
   private
+  
     def signed_in?
       !current_user.nil?
     end

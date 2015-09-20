@@ -46,6 +46,26 @@ describe "Routing" do
     end
   end
 
+  describe "in EmailChanges controller" do
+    locale_prefixes.each do |prefix|
+
+      describe "#{prefix}/user/change-email", method: :get, is_routable: true do
+        let(:target) { 'email_changes#new' }
+        let(:params) { locale_prefix_to_param(prefix) }
+      end
+
+      describe "#{prefix}/user/change-email", method: :post, is_routable: true do
+        let(:target) { 'email_changes#create' }
+        let(:params) { locale_prefix_to_param(prefix) }
+      end
+
+      describe "#{prefix}/user/change-email", method: :delete, is_routable: true do
+        let(:target) { 'email_changes#destroy' }
+        let(:params) { locale_prefix_to_param(prefix) }
+      end
+    end
+  end
+
   describe "in PasswordChanges controller" do
     locale_prefixes.each do |prefix|
 

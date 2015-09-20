@@ -2,67 +2,61 @@ require 'rails_helper'
 
 feature "Password change page" do
   given(:user) { FactoryGirl.create(:user, :email_confirmed) }
+  given(:account_link) { t 'v.layouts._header.nav_links.settings' }
+  given(:password_change_link) { t 'v.users.show.password_change' }
+  given(:form_heading) { t 'v.password_changes.new.heading' }
+  
   background do
     visit signin_path
-    sign_in_as(user)
-    click_link t('v.layouts._header.nav_links.settings')
-    click_link t('v.users.show.password_change')
+    sign_in_as user
+    click_link account_link
+    click_link password_change_link
+  end
+
+  subject do
+    change_password(new_password: new_password, current_password: user.password)
   end
 
   specify "has a proper heading" do
-    expect(page).to have_selector 'h2', text: t('v.password_changes.new.header')
+    expect(page).to have_selector 'h2', text: form_heading
   end
 
   context "on submitting invalid data" do
-    background do
-      change_password_of(user, current_password: 'incorrect', new_password: ' ')
-    end
+    given(:new_password) { '' }
 
-    it "does not change the user's password" do
-      expect(user.password_digest).to eql(user.reload.password_digest)
-    end
+    background { subject }
 
     it "re-renders the page" do
-      expect(page).to have_selector 'h2', text: t('v.password_changes.new.header')
+      expect(page).to have_selector 'h2', text: form_heading
     end
 
     it "shows validation errors" do
-      expect(page).to have_selector('.validation-errors')
+      expect(page).to have_selector '.validation-errors'
     end
   end
 
   context "on submitting valid data" do
-    given(:new_password) { 'qwerty123' }
+    given(:new_password) { 'qwerty' }
+    given(:password_changed) { t 'c.password_changes.password_changed' }
 
-    background do
-      change_password_of(user,
-        current_password: user.password,
-        new_password:     new_password,
-        confirmation:     new_password)
-    end
-
-    it "updates the user's password" do
-      expect(user.password_digest).to_not eql(user.reload.password_digest)
-    end
+    background { subject }
 
     it "redirects to the profile page of the current user" do
-      expect(current_path).to match(account_path)
+      expect(current_path).to eq account_path
     end
 
     it "shows an appropriate flash" do
-      expect(page).to have_flash :success, t('c.password_changes.create.success')
+      expect(page).to have_flash :success, password_changed
     end
   end
 
   context "when cancelled" do
-    background { click_link t('v.password_changes.new.cancel') }
+    given(:cancel_link) { t 'v.password_changes.new.cancel' }
+    
+    background { click_link cancel_link }
 
-    it "does not change the user's password" do
-      expect(user.password_digest).to eql(user.reload.password_digest)
-    end
-
-    it "shows the profile page of the current user" do
-      expect(current_path).to match(account_path)
+    it "redirects to the profile page of the current user" do
+      expect(current_path).to eq account_path
     end
   end
 end

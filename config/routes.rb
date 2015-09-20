@@ -27,6 +27,12 @@ Rails.application.routes.draw do
         get  'confirm/:hashed_email/:token' => :edit,   as: 'edit_email_confirmation'
       end
 
+      scope controller: :email_changes do
+        get    'change-email' => :new,     as: 'new_email_change'
+        post   'change-email' => :create,  as: 'email_changes'
+        delete 'change-email' => :destroy
+      end
+
       scope controller: :password_resets do
         get   'recover'                      => :new,    as: 'new_password_reset'
         post  'recover'                      => :create, as: 'password_resets'

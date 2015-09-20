@@ -6,30 +6,28 @@ def last_email
   deliveries.last
 end
 
-def link(type, options = {})
-  link = extract_link(type)
-  hashed_email, token = extract_hashed_email(link), extract_token(link)
-  new_hashed_email, new_token = options[:hashed_email], options[:token]
-
-  link.gsub!(token, new_token) if new_token
-  link.gsub!(hashed_email, new_hashed_email) if new_hashed_email
-  link
+def get_urls_from(html_string)
+  URI.extract(html_string, 'http').uniq.map { |uri_string| URI.parse(uri_string) }
 end
 
-def extract_link(type)
-  url_difference = case type
-  when :email_confirmation
-    'confirm'
-  when :password_reset
-    'recover'
-  end  
-  last_email.body.match(%r[(?:href=(?:"|')\S+://[^/]+)(\S+#{url_difference}\S+)(?:"|')])[1]
+def get_hashed_email_from(path)
+  path.split('/')[3]
 end
 
-def extract_token(link)
-  link.match(%r[(?:/\S+/\S+/)(\S+)])[1]
+def get_token_from(path)
+  path.split('/')[4]
 end
 
-def extract_hashed_email(link)
-  link.match(%r[(?:/\S+/)(\S+)(?:/)])[1]
+[:hashed_email, :token].each do |segment|
+  define_method("replace_#{segment}!") do |path, new_value|
+    path.sub!(send("get_#{segment}_from", path), new_value)
+  end
+end
+
+[:password_reset, :email_confirmation].each do |type_of|
+  define_method("#{type_of}_link") do |**opts|
+    path = get_urls_from(last_email.body.to_s).first.path
+    opts.each { |segment, new_value| send("replace_#{segment}!", path, new_value) }
+    path
+  end
 end

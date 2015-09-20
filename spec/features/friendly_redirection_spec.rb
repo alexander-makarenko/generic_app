@@ -5,7 +5,7 @@ feature "Friendly redirection" do
 
   context "when a user, asked to sign in to view a page, signs in" do
     background do
-      visit new_password_change_path      
+      visit new_password_change_path
       sign_in_as user
     end
   
@@ -14,8 +14,10 @@ feature "Friendly redirection" do
     end
 
     context "and then out and in again" do
+      given(:sign_out_link) { t 'v.layouts._header.nav_links.sign_out' }
+
       background do
-        click_link t('v.layouts._header.nav_links.sign_out')
+        click_link sign_out_link
         visit signin_path
         sign_in_as user
       end

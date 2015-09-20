@@ -55,9 +55,51 @@ class User < ActiveRecord::Base
   end
 
   def authenticate_by(options={})
-    if options[:digested_email]
-      options[:digested_email] == self.class.digest(email) && self
+    if options[:hashed_email]
+      options[:hashed_email] == self.class.digest(email) && self
     end
+  end
+
+  def change_email_to(new_email)
+    backup_email_attrs
+    self.attributes = {
+      email: new_email,
+      email_confirmed: false,
+      email_confirmed_at: nil
+    }
+  end
+
+  def cancel_email_change
+    restore_email_attrs
+    clear_old_email_attrs
+  end
+
+  def email_change_pending?
+    old_email?
+  end
+
+  def backup_email_attrs
+    self.attributes = {
+      old_email: email,
+      old_email_confirmed: email_confirmed,
+      old_email_confirmed_at: email_confirmed_at
+    }
+  end
+
+  def restore_email_attrs
+    self.attributes = {
+      email: old_email,
+      email_confirmed: old_email_confirmed,
+      email_confirmed_at: old_email_confirmed_at
+    }    
+  end
+
+  def clear_old_email_attrs
+    self.attributes = {
+      old_email: nil,
+      old_email_confirmed: false,
+      old_email_confirmed_at: nil
+    }
   end
 
   def confirm_email
@@ -66,6 +108,7 @@ class User < ActiveRecord::Base
       email_confirmed_at: Time.zone.now,
       email_confirmation_sent_at: nil
     }
+    clear_old_email_attrs if email_change_pending?
   end
 
   def link_expired?(link_type)
@@ -89,12 +132,19 @@ class User < ActiveRecord::Base
     end
   end
 
-  def send_email(type)
-    case type
-    when :email_confirmation, :password_reset
-      update_attribute("#{type}_sent_at", Time.zone.now)
+  def send_email(*email_types)
+    email_types.each do |type|
+      sent_at_attr = case type
+      when :email_confirmation
+        :email_confirmation_sent_at
+      when :email_change_confirmation
+        :email_confirmation_sent_at
+      when :password_reset
+        :password_reset_sent_at
+      end
+      update_attribute(sent_at_attr, Time.zone.now) if sent_at_attr
+      UserMailer.send(type, self).deliver_now
     end
-    UserMailer.send(type, self).deliver_now
   end
 
   private

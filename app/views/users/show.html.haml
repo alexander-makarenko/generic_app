@@ -8,7 +8,7 @@
     %p.text-muted= t('v.users.show.subheadings.email')
     = @user.email
     %br
-    = link_to t('v.users.show.email_change'), '#'
+    = link_to t('v.users.show.email_change'), new_email_change_path
   .col-sm-6
     %p.text-muted= t('v.users.show.subheadings.language')
     = render 'shared/locale_selector'

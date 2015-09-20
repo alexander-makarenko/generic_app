@@ -1,17 +1,22 @@
 = render 'shared/validation_errors', obj: @password_change
-%h2.text-center= t('v.password_changes.new.header')
+%h2.text-center= t('v.password_changes.new.heading')
+
 = bootstrap_form_for @password_change, inline_errors: false,
 html: { id: 'change-password', class: 'center-block' } do |f|
+
   = f.password_field :current_password, hide_label: true,
     label: t('v.password_changes.new.fields.current_password'),
     placeholder: t('v.password_changes.new.fields.current_password')
+
   = f.password_field :new_password, hide_label: true,
     label: t('v.password_changes.new.fields.new_password'),
     placeholder: t('v.password_changes.new.fields.new_password')
+
   = f.password_field :new_password_confirmation, hide_label: true,
     label: t('v.password_changes.new.fields.new_password_confirmation'),
     placeholder: t('v.password_changes.new.fields.new_password_confirmation')
+    
   .text-center
     = f.form_group do
-      = f.submit t('v.password_changes.new.submit'), class: 'btn btn-primary'
+      = f.primary t('v.password_changes.new.submit')
       = link_to t('v.password_changes.new.cancel'), account_path, class: 'btn btn-primary'

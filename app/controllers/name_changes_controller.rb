@@ -14,7 +14,8 @@ class NameChangesController < ApplicationController
         last_name: @name_change.new_last_name
       }
       current_user.save(validate: false)
-      redirect_to account_path, success: t('c.name_changes.create.success')
+      flash[:success] = t('name_changed', scope: "c.#{controller_name}")
+      redirect_to account_path
     else
       render :new
     end

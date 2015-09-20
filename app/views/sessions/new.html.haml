@@ -1,7 +1,7 @@
 = bootstrap_form_tag url: signin_path, html: { id: 'login',
   class: 'panel panel-default center-block' } do |f|
   .panel-heading
-    %h3.text-center= t('v.sessions.new.header')
+    %h3.text-center= t('v.sessions.new.heading')
   .panel-body
     = f.text_field :email, label: t('v.sessions.new.fields.email'),
       hide_label: true, placeholder: t('v.sessions.new.fields.email')

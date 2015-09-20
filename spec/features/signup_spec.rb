@@ -1,59 +1,74 @@
 require 'rails_helper'
 
 feature "Signup form" do
-  given(:user)         { FactoryGirl.build(:user) }
-  given(:invalid_user) { FactoryGirl.build(:user, :invalid) }
+  given(:user) { FactoryGirl.build(:user) }
+  given(:form_heading) { t 'v.users.new.heading' }
+
   background { visit signup_path }
 
   specify "has a proper heading" do
-    expect(page).to have_selector('form h3', text: t('v.users.new.header'))
+    expect(page).to have_selector 'form h3', text: form_heading
   end
   
   context "on typing invalid data", js: true do
-    background { fill_in 'user_email', with: invalid_user.email }
+    background { fill_in 'user_email', with: 'invalid' }
 
-    it "shows validation errors and removes them when corrected" do      
-      expect(page).to have_selector('.validation-errors')
+    it "shows validation errors" do
+      expect(page).to have_selector '.validation-errors'
+    end
+
+    it "removes validation errors when corrected" do
       fill_in 'user_email', with: user.email
-      expect(page).to have_no_selector('.validation-errors')
+      expect(page).to_not have_selector '.validation-errors'
     end
   end
   
   feature "on submission" do
+    def submit
+      sign_up_as user
+    end
+
     context "with invalid data" do
-      background(submit_before: true) { sign_up_as(invalid_user) }
+      given(:user) { FactoryGirl.build(:user, :invalid) }
       
       it "does not save the user" do
-        expect { sign_up_as(invalid_user) }.to_not change(User, :count)
+        expect { submit }.to_not change(User, :count)
       end
 
       it "does not send a welcome email" do
-        expect { sign_up_as(invalid_user) }.to_not change(deliveries, :count)
+        expect { submit }.to_not change(deliveries, :count)
       end
 
-      it "re-renders the page", submit_before: true do
-        expect(page).to have_selector('form h3', text: t('v.users.new.header'))
+      it "re-renders the page" do
+        submit
+        expect(page).to have_selector 'form h3', text: form_heading
       end
 
-      it "shows validation errors", submit_before: true do
-        expect(page).to have_selector('.validation-errors')
+      it "shows validation errors" do
+        submit
+        expect(page).to have_selector '.validation-errors'
       end
     end
 
     context "with valid data" do
-      background(submit_before: true) { sign_up_as(user) }
-
+      given(:signout_link) { t 'v.layouts._header.nav_links.sign_out' }
+      given(:signin_link) { t 'v.layouts._header.nav_links.sign_in' }
+      
       it "saves the user" do
-        expect { sign_up_as(user) }.to change(User, :count).from(0).to(1)
+        expect { submit }.to change(User, :count).from(0).to(1)
       end
 
-      include_examples "the user is signed in", submit_before: true
+      it "signs the user in" do
+        submit
+        expect(page).to have_no_link(signin_link).and have_link(signout_link)
+      end
 
       it "sends a welcome email" do
-        expect { sign_up_as(user) }.to change(deliveries, :count).from(0).to(1)
+        expect { submit }.to change(deliveries, :count).from(0).to(1)
       end
 
-      it "redirects to the home page", submit_before: true do
+      it "redirects to the home page" do
+        submit
         expect(current_path).to eq root_path
       end
     end

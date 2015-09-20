@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
       sign_in(user, params[:keep_signed_in])
       redirect_back_or root_path
     else
-      flash.now[:danger] = t('c.sessions.create.invalid')
+      flash.now[:danger] = t('c.sessions.invalid_credentials')
       render :new
     end
   end

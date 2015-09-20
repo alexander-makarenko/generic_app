@@ -8,12 +8,14 @@ describe PasswordReset do
   it { is_expected.to be_valid }
 
   describe "with an email that" do
-    context "is blank", expect_errors: 1 do
+    context "is blank" do
       let(:email) { ' ' }
+      it { is_expected.to have_errors(1) }
     end
 
-    context "is too long", expect_errors: 1 do
+    context "is too long" do
       let(:email) { ('a' * 49).insert(-10, '@').insert(-4, '.') }
+      it { is_expected.to have_errors(1) }
     end
 
     context "is of invalid format" do

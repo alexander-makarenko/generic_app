@@ -1,7 +1,7 @@
 = bootstrap_form_for @user, url: signup_path, inline_errors: false,
   html: { id: 'signup', class: 'panel panel-default center-block' } do |f|
   .panel-heading
-    %h3.text-center= t('v.users.new.header')  
+    %h3.text-center= t('v.users.new.heading')  
   .panel-body
     = render 'validation_errors', obj: @user
     .row

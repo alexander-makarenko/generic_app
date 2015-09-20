@@ -1,12 +1,16 @@
 = render 'shared/validation_errors', obj: @name_change
 %h2.text-center= t('v.name_changes.new.heading')
+
 = bootstrap_form_for @name_change, inline_errors: false,
 html: { id: 'change-name', class: 'center-block' } do |f|
+
   = f.text_field :new_first_name, label: t('v.name_changes.new.fields.new_first_name'),
   hide_label: true, placeholder: t('v.name_changes.new.fields.new_first_name')
+
   = f.text_field :new_last_name, label: t('v.name_changes.new.fields.new_last_name'),
   hide_label: true, placeholder: t('v.name_changes.new.fields.new_last_name')
+
   .text-center
     = f.form_group do
-      = f.submit t('v.name_changes.new.submit'), class: 'btn btn-primary'
+      = f.primary t('v.name_changes.new.submit')
       = link_to t('v.name_changes.new.cancel'), account_path, class: 'btn btn-primary'

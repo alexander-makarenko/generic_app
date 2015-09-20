@@ -15,12 +15,22 @@ FactoryGirl.define do
     end
     
     trait :email_confirmed do
-      email_confirmed true
+      email_confirmed    true
       email_confirmed_at Time.zone.now
     end
 
-    trait :email_confirmation_sent do      
-      email_confirmation_sent_at Time.zone.now
+    trait :email_confirmation_sent do
+      email_confirmation_sent_at 2.minutes.ago
+    end
+
+    trait :password_reset_sent do
+      password_reset_sent_at 2.minutes.ago
+    end
+
+    trait :email_change_pending do
+      old_email              Faker::Internet.safe_email
+      old_email_confirmed    true
+      old_email_confirmed_at 1.week.ago      
     end
 
     # trait :email_not_confirmed_in_time do

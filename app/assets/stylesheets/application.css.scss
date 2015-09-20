@@ -91,7 +91,7 @@ footer {
   }
 }
 
-#password-reset-new, #change-name, #change-password {
+#password-reset-new, #change-name, #change-password, #change-email {
   max-width: 300px;
 }
 
@@ -150,6 +150,10 @@ footer {
 
 header ul {
   margin-left: -15px !important;
+}
+
+.alert {
+  border-width: 2px;
 }
 
 // /* flash messages */

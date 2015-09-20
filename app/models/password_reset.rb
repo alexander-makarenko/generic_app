@@ -6,19 +6,13 @@ class PasswordReset
 
   validates :email, presence: true, length: { maximum: 50 }
   validates :email, format: { with: EMAIL_REGEX }, if: -> { email.present? }
-  validate :user_with_given_email_exists, unless: -> { errors.include?(:email) }
+  validate  :verify_email_belongs_to_existing_user, unless: -> { errors.include?(:email) }
 
   def email=(value)
     @email = value.downcase
   end
 
-  def user_with_given_email_exists
-    user = User.find_by(email: email)
-    if user
-      self.user = user
-    else
-      errors.add(:email, :nonexistent)
-      self.user = nil
-    end
+  def verify_email_belongs_to_existing_user    
+    errors.add(:email, :nonexistent) unless self.user = User.find_by(email: email)
   end
 end

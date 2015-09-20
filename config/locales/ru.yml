@@ -1,6 +1,10 @@
 ru:
   activemodel:
     attributes:
+      email_change:
+        new_email: "имейл"
+        new_email_confirmation: "подтверждение"
+        current_password: "неверный"
       password_change:
         current_password: "неверный"
         new_password: "новый пароль"
@@ -12,6 +16,18 @@ ru:
         new_last_name: "фамилия"
     errors:
       models:
+        email_change:
+          attributes:
+            new_email:
+              invalid: "имеет неверный формат"
+              blank: "не должен быть пустым"
+              taken: "уже занят другим пользователем"
+              too_long: "должно быть длиной не более %{count} символов"
+              unchanged: "должен отличаться от текущего"
+            new_email_confirmation:
+              confirmation: "не совпадает с указанным имейлом"
+            current_password:
+              invalid: "текущий пароль"
         name_change:
           attributes:
             new_first_name:
@@ -69,59 +85,60 @@ ru:
               blank: "не должен быть пустым"
               confirmation: "не совпадает с указанным паролем"
   c: # controllers
+    email_changes:
+      create:
+        success: "Confirmation email sent to %{email}."
+      destroy:
+        info: "Your email change request has been canceled."
     email_confirmations:
-      edit:
-        expired: "The link has expired. To request a new one, please click
-          %{link}."
-        invalid: "The link is invalid. To request a new one, please click
-          %{link}."
-        success: "Email successfully confirmed."
-        link: "here"
+      email_sent: "Confirmation email sent to %{email}."
+      link_expired: "The link has expired. To request a new one, please click
+        %{get_new_link}."
+      link_invalid: "The link is invalid. To request a new one, please click
+        %{get_new_link}."
+      email_confirmed: "Email %{email} successfully confirmed."
+      email_changed: "Email successfully changed to %{email}."
+      get_new_link: "here"
     name_changes:
-      create:
-        success: "Name successfully updated."
+      name_changed: "Name successfully changed."
     password_changes:
-      create:
-        success: "Пароль успешно изменен."
+      password_changed: "Новый пароль сохранён."
     password_resets:
-      create:
-        info: "Instructions for resetting your password have been sent to your
-          email address. If you don't receive it within a few minutes, please
-          check your email spam folder."
-      edit:
-        expired: "The link has expired. If you still want to reset your
-          password, please click %{link}."
-        invalid: "The link is invalid. Если вы все ещё хотите сбросить ваш
-          пароль, пожалуйста, нажмите %{link}."
-        link: "здесь"
-      update:
-        success: "Ваш пароль был успешно обновлен. Используйте его, чтобы войти
-          в свою учётную запись."
+      instructions_sent: "Дальнейшие инструкции высланы на %{email}."
+      link_expired: "The link has expired. If you still want to reset your
+          password, please click %{get_new_link}."
+      link_invalid: "The link is invalid. Если вы все ещё хотите сбросить ваш
+          пароль, пожалуйста, нажмите %{get_new_link}."
+      get_new_link: "здесь"
+      password_changed: "Новый пароль сохранён."
     sessions:
-      create:
-        invalid: "Неверный пароль или адрес электронной почты."
+      invalid_credentials: "Неверный пароль или адрес электронной почты."
     users:
       show:
-        email_not_confirmed:
-          - "Email not confirmed"
-          - "To be able to use email features you should confirm your email
-            address. Request a confirmation link by clicking %{link}."
-        confirmation_just_sent:
-          - "Email confirmation pending"
-          - "To confirm your email address, click the link that has
-            just been sent to you."
-        confirmation_sent_mins_ago:
-          - "Email confirmation pending"
-          - "To confirm your email address, click the link that has been sent
-            to you %{time_ago} ago. If you still haven't received it, please
-            check your spam folder, or request another confirmation link by
-            clicking %{link}."
-        link: "here"
+        email_not_confirmed: "To be able to use email features you should
+          %{link} your email address."
+        confirm: "confirm"
+        confirmation_sent: "A confirmation email has been sent to %{email}.
+          Please click the link it contains to confirm your email address. If
+          you can't find it, check your spam folder or resend the email by
+          clicking %{link}."
+        here: "here"
+        email_change_pending: "A confirmation email has been sent to your new
+          email address, %{email}. Please click the link it contains to confirm
+          your email change. You can %{resend_link} the email if you have not
+          received it, or %{cancel_link} the request if you have changed your
+          mind."
+        resend: "resend"
+        cancel: "cancel"
   m: # mailers
     user_mailer:
       greeting: "Здравствуйте, %{first_name}!"
       email_confirmation:
         subject: "Подтверждение адреса электронной почты"
+      email_change_confirmation:
+        subject: "Confirm email change"
+      email_changed_notice:
+        subject: "Your account will no longer be associated with this address"
       password_reset:
         subject: "Восстановление пароля"
       welcome:
@@ -129,15 +146,25 @@ ru:
   p: #policies
     default: "Please sign in to access this page."
     email_confirmation:
+      create?: "You will be able to request a new confirmation email in your
+        account settings after signing in."
       edit?: "You have already confirmed your email."
-      create?: "You are not authorized to perform this action."
   v: # views
     layouts:
       _header:
         nav_links:
           sign_in: "Вход"
           sign_out: "Выход"
-          settings: "Профиль"      
+          settings: "Профиль"
+    email_changes:
+      new:
+        heading: "Update email"
+        fields:
+          new_email: "New email"
+          new_email_confirmation: "Confirm email"
+          current_password: "Password"
+        submit: "Update email"
+        cancel: "Cancel"
     name_changes:
       new:
         heading:
@@ -149,30 +176,31 @@ ru:
         cancel: "Отменить"
     password_changes:
       new:
-        header: "Изменение пароля"
+        heading: "Изменение пароля"
         fields:
           current_password: "Текущий пароль"
           new_password: "Новый пароль"
           new_password_confirmation: "Подтверждение"
         submit: "Сохранить"
         cancel: "Отменить"
-    password_resets:
+    password_resets:      
+      new:
+        heading: "Сбросить пароль"
+        invitation: "Введите адрес электронной почты, чтобы сбросить пароль.
+          Возможно, вам понадобится проверить папку нежелательной почты."
+        fields:
+          email: "Имейл"
+        submit_button: "Submit"
       edit:
-        header: "Set password"
+        heading: "Set password"
         invitation: "Please enter your new password below:"
         fields:
           password: "Пароль"
           password_confirmation: "Подтвердите пароль"
         submit_button: "Сохранить"
-      new:
-        header: "Сброс пароля"
-        invitation: "Пожалуйста, укажите ваш адрес электронной почты:"
-        fields:
-          email: "Имейл"
-        submit_button: "Submit"
     sessions:
       new:
-        header: "Войти"
+        heading: "Войти"
         fields:
           email: "Адрес электронной почты"
           password: "Пароль"
@@ -190,6 +218,13 @@ ru:
         en: "English"
         ru: "Русский"
     user_mailer:
+      email_change_confirmation:
+        click_link: "You have requested that the email address linked to your
+          account be changed to %{new_email}. Please click the following link to
+          confirm this address:"
+      email_changed_notice: "You requested to change the email associated with
+        your account. In order to complete the process, refer to the
+        instructions that were sent to your new email address."
       email_confirmation:
         click_link: "Click the link below to confirm your email address:"
       password_reset:
@@ -199,7 +234,7 @@ ru:
       welcome: "Регистрация прошла успешно. Добро пожаловать на наш сайт!"
     users:
       new:
-        header: "Регистрация"
+        heading: "Регистрация"
         fields:
           first_name: "Имя"
           last_name: "Фамилия"

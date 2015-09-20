@@ -11,7 +11,8 @@ class PasswordChangesController < ApplicationController
     
     if @password_change.valid?
       current_user.update_attribute(:password, @password_change.new_password)
-      redirect_to account_path, success: t('c.password_changes.create.success')
+      flash[:success] = t('password_changed', scope: "c.#{controller_name}")
+      redirect_to account_path
     else
       render :new
     end

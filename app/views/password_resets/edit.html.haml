@@ -1,5 +1,5 @@
 = render 'shared/validation_errors', obj: @user
-%h2.text-center= t('v.password_resets.edit.header')
+%h2.text-center= t('v.password_resets.edit.heading')
 %p.text-center= t('v.password_resets.edit.invitation')
 = bootstrap_form_for @user, url: password_resets_path, method: :patch,
 inline_errors: false, html: { id: 'password-reset-edit',

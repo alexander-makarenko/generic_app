@@ -2,15 +2,19 @@ require 'rails_helper'
 
 feature "Locale selector" do  
   given(:locale_switcher) { '#locale-selector' }
-  given(:english) { t('v.shared._locale_selector.en') }
-  given(:russian) { t('v.shared._locale_selector.ru') }
-  given(:links) { { account_settings: t('v.layouts._header.nav_links.settings') } }
+  given(:english) { t 'v.shared._locale_selector.en' }
+  given(:russian) { t 'v.shared._locale_selector.ru' }
+  given(:account_link) { t 'v.layouts._header.nav_links.settings' }
 
   shared_examples "a locale selector" do
     subject { page.find(locale_switcher) }
 
     def current_locale
       I18n.locale
+    end
+
+    def locale_cookie
+      get_me_the_cookie('locale')[:value]
     end
 
     it "lists the available locales" do
@@ -33,9 +37,9 @@ feature "Locale selector" do
       end
 
       it "sets the locale cookie" do
-        expect(get_me_the_cookie('locale')[:value]).to eq 'en'
+        expect(locale_cookie).to eq 'en'
         subject.click_button russian
-        expect(get_me_the_cookie('locale')[:value]).to eq 'ru'
+        expect(locale_cookie).to eq 'ru'
       end
     end
   end
@@ -44,7 +48,7 @@ feature "Locale selector" do
     background { visit root_path }
 
     it "is shown in the layout" do
-      expect(page).to have_selector(locale_switcher)
+      expect(page).to have_selector locale_switcher
     end
 
     it_behaves_like "a locale selector"
@@ -59,24 +63,24 @@ feature "Locale selector" do
     end
 
     it "is not shown in the layout" do
-      expect(page).to_not have_selector(locale_switcher)
+      expect(page).to_not have_selector locale_switcher
     end
 
     it "is shown on the users's profile page" do
-      click_link links[:account_settings]
-      within('.main') { expect(page).to have_selector(locale_switcher) }
+      click_link account_link
+      within('.main') { expect(page).to have_selector locale_switcher }
     end
 
     context "when a button is clicked" do
       it "updates the user's locale preference" do
-        click_link links[:account_settings]
+        click_link account_link
         within(locale_switcher) { click_button russian }
         expect(user.reload.locale).to eq :ru
       end
     end
 
     it_behaves_like "a locale selector" do
-      background { click_link links[:account_settings] }
+      background { click_link account_link }
     end
   end
 end

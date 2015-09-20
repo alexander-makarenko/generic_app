@@ -1,0 +1,3 @@
+%p= @greeting
+%p= t('v.user_mailer.email_change_confirmation.click_link', new_email: @user.email)
+%p= raw link_to(nil, @url, target: '_blank')
