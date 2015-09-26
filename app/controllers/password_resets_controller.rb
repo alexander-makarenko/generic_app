@@ -45,7 +45,7 @@ class PasswordResetsController < ApplicationController
         @user.password_reset_sent_at = nil
         @user.save
         session.delete(:token) && session.delete(:hashed_email)
-        sign_in @user        
+        sign_in @user
         redirect_to account_path, success: t('password_changed', scope: I18N_SCOPE)
       else
         render :edit

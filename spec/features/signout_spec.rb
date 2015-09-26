@@ -9,7 +9,7 @@ feature "Signout" do
     click_link signout_link
   end
 
-  it "does not sign the user in" do
+  it "signs the user out" do
     expect(page).to have_link(signin_link).and have_no_link(signout_link)
   end
 

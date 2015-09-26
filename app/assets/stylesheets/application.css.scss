@@ -15,7 +15,7 @@
 @import "bootstrap";
 @import "rails_bootstrap_forms";
 
-// nav {  
+// nav {
 //   ul {
 //     float: right;
 //     list-style: none;
@@ -49,8 +49,8 @@ div {
   // outline: 1px solid #eee;
 }
 
-footer {  
-  margin: 25px 0;  
+footer {
+  margin: 25px 0;
 }
 
 .gutter-half > [class*='col-'] {
@@ -62,7 +62,7 @@ footer {
   padding-top: 0 !important;
 }
 
-#signup, #login {  
+#signup, #login {
   span {
     padding-right: 5px;
     padding-left: 5px;
@@ -154,6 +154,18 @@ header ul {
 
 .alert {
   border-width: 2px;
+}
+
+#logo {
+  padding: 0;
+  font-size: 1.6em;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.navbar-text {
+  margin: 0;
+  padding: 15px;
 }
 
 // /* flash messages */

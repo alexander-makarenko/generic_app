@@ -1,11 +1,14 @@
 %header
   %nav.navbar.navbar-default.navbar-fixed-top
     .container
+      .navbar-header
+        = link_to image_tag('logo.png'), root_path, { class: 'navbar-brand', id: 'logo' }
       %ul.nav.navbar-nav.navbar-right
         - if policy(:session).new? # if user is not signed in
           %li= link_to t('v.layouts._header.nav_links.sign_in'), signin_path
         - else
-          %li.navbar-text= current_user.name          
-          %li= link_to t('v.layouts._header.nav_links.settings'), account_path          
+          %li
+            %p.navbar-text= current_user.name
+          %li= link_to t('v.layouts._header.nav_links.settings'), account_path
           %li= link_to t('v.layouts._header.nav_links.sign_out'), signout_path,
           method: :delete

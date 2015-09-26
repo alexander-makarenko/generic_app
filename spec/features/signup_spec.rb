@@ -22,7 +22,7 @@ feature "Signup form" do
       expect(page).to_not have_selector '.validation-errors'
     end
   end
-  
+
   feature "on submission" do
     def submit
       sign_up_as user
@@ -30,7 +30,7 @@ feature "Signup form" do
 
     context "with invalid data" do
       given(:user) { FactoryGirl.build(:user, :invalid) }
-      
+
       it "does not save the user" do
         expect { submit }.to_not change(User, :count)
       end
@@ -53,7 +53,7 @@ feature "Signup form" do
     context "with valid data" do
       given(:signout_link) { t 'v.layouts._header.nav_links.sign_out' }
       given(:signin_link) { t 'v.layouts._header.nav_links.sign_in' }
-      
+
       it "saves the user" do
         expect { submit }.to change(User, :count).from(0).to(1)
       end
