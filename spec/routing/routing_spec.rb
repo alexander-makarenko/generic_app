@@ -192,4 +192,24 @@ describe "Routing" do
       end
     end
   end
+
+  describe "in Avatars controller" do
+    locale_prefixes.each do |prefix|
+
+      describe "#{prefix}/user/avatar", method: :get, is_routable: true do
+        let(:target) { 'avatars#new' }
+        let(:params) { locale_prefix_to_param(prefix) }
+      end
+
+      describe "#{prefix}/user/avatar", method: :post, is_routable: true do
+        let(:target) { 'avatars#create' }
+        let(:params) { locale_prefix_to_param(prefix) }
+      end
+
+      describe "#{prefix}/user/avatar", method: :delete, is_routable: true do
+        let(:target) { 'avatars#destroy' }
+        let(:params) { locale_prefix_to_param(prefix) }
+      end
+    end
+  end
 end

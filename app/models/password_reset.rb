@@ -13,6 +13,6 @@ class PasswordReset
   end
 
   def verify_email_belongs_to_existing_user    
-    errors.add(:email, :nonexistent) unless self.user = User.find_by(email: email)
+    errors.add(:base, :nonexistent_email) unless self.user = User.find_by(email: email)
   end
 end

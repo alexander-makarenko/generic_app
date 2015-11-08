@@ -1,0 +1,7 @@
+$('.alert-success, .validation-errors').remove();
+- if @user.save
+  - flash.now[:success] = @success_message
+  $('#avatar').attr('src', "#{@user.avatar.url(:medium)}");
+  $('.main div:first').prepend("#{j(render 'layouts/flash.html.haml')}");
+- else
+  $('.main div:first').prepend("#{j(render 'shared/validation_errors', obj: @user)}");

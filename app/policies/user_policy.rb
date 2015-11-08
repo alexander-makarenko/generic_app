@@ -1,10 +1,4 @@
 class UserPolicy < ApplicationPolicy
-  class Scope < Scope
-    def resolve
-      scope
-    end
-  end
-
   attr_reader :current_user, :user
 
   def initialize(current_user, user)

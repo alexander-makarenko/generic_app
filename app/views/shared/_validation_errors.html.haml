@@ -4,7 +4,8 @@
   %div{ class: 'alert alert-danger validation-errors alert-dismissible', role: 'alert' }
     %button.close{ 'aria-label' => 'Close', 'data-dismiss' => 'alert', type: 'button' }
       %span{ 'aria-hidden' => 'true'} &times;
-      
-    - errors.each do |error|
-      = error.mb_chars.capitalize.to_s + '.'
+
+    - errors.each do |error|      
+      - error[0] = error[0].mb_chars.capitalize.to_s
+      = error << '.'
       %br

@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  get 'avatars/new'
+
+  get 'avatars/create'
+
+  get 'avatars/destroy'
+
   mount JasmineRails::Engine => '/specs' if defined?(JasmineRails)
   
   root 'static_pages#home'
@@ -48,6 +54,12 @@ Rails.application.routes.draw do
       scope controller: :name_changes do
         get  'change-name' => :new,    as: 'new_name_change'
         post 'change-name' => :create, as: 'name_changes'
+      end
+
+      scope controller: :avatars do
+        get    'avatar' => :new,    as: 'new_avatar'
+        post   'avatar' => :create, as: 'avatars'
+        delete 'avatar' => :destroy
       end
     end
 

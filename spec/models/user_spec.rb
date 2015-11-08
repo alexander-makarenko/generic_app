@@ -19,6 +19,64 @@ describe User do
   it { is_expected.to be_valid }
   it { is_expected.to have_attributes(email_confirmed: false) }
 
+  it "has an avatar attachment" do
+    expect(subject).to have_attached_file(:avatar)
+  end
+
+  describe "with an avatar attachment that" do
+    let(:errors_hash) { subject.errors.messages }
+
+    context "is too large" do
+      before { subject.avatar_file_size = 2.megabytes }
+      
+      it { is_expected.to have_errors(1) }
+
+      it "does not has an :avatar key in the errors hash" do
+        subject.valid?
+        expect(errors_hash).to_not include :avatar
+      end
+
+      it "has an :avatar_file_size key in the errors hash" do
+        subject.valid?
+        expect(errors_hash).to include :avatar_file_size
+      end
+    end
+
+    context "has invalid content type" do
+      let(:invalid_content_types) { %w[ text/plain text/xml text/html ] }
+      
+      it "is invalid and has 1 error" do
+        invalid_content_types.each do |type|
+          subject.avatar_content_type = type
+          expect(subject).to have_errors(1)
+        end
+      end
+
+      it "does not have an :avatar key in the errors hash" do
+        subject.avatar_content_type = invalid_content_types.first
+        subject.valid?
+        expect(errors_hash).to_not include :avatar
+      end
+
+      it "has an :avatar_content_type key in the errors hash" do
+        subject.avatar_content_type = invalid_content_types.first
+        subject.valid?
+        expect(errors_hash).to include :avatar_content_type
+      end
+    end
+
+    context "has valid content type" do
+      let(:valid_content_types) { %w[ image/png image/gif image/jpeg ] }
+
+      it "is valid" do
+        valid_content_types.each do |type|
+          subject.avatar_content_type = type
+          expect(subject).to be_valid
+        end
+      end
+    end
+  end
+  
   describe "with a first name that" do
     context "is blank" do
       let(:first_name) { ' ' }
@@ -67,7 +125,7 @@ describe User do
     context "is of invalid format" do
       it "is invalid and has 1 error" do
         INVALID_EMAILS.each do |email|
-          subject.email = email          
+          subject.email = email
           expect(subject).to have_errors(1)
         end
       end
@@ -95,8 +153,10 @@ describe User do
 
   describe "with a password that" do
     context "is blank" do
+      let(:blank_password) { ' ' * 6 }
+
       context "on create" do
-        let(:password) { ' ' * 6 }
+        let(:password) { blank_password }
         it { is_expected.to have_errors(1) }
       end
 
@@ -104,10 +164,17 @@ describe User do
         subject(:persisted_user) { User.find_by(email: user.email) }
         before do
           user.save
-          subject.password = ' ' * 6
+          subject.password = blank_password
         end
 
         it { is_expected.to have_errors(1) }
+      end
+
+      context "and the skip_password_validation attribute set to true" do
+        let(:password) { blank_password }
+        before { subject.skip_password_validation = true }
+
+        it { is_expected.to be_valid }
       end
     end
 

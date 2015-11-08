@@ -7,7 +7,7 @@ feature "Profile page" do
   given(:email_change_link) { t 'v.users.show.email_change' }
   given(:password_change_link) { t 'v.users.show.password_change' }
   given(:password_recovery_link) { t 'v.users.show.password_reset' }
-  given(:form_heading) { t 'v.users.show.heading' }
+  given(:account_page_heading) { t 'v.users.show.heading' }
 
   background do
     visit signin_path
@@ -16,7 +16,7 @@ feature "Profile page" do
   end
   
   it "has a proper heading" do
-    expect(page).to have_selector 'h2', text: form_heading
+    expect(page).to have_selector 'h2', text: account_page_heading
   end
 
   context "when the email is not confirmed" do

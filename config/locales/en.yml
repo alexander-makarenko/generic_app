@@ -42,12 +42,15 @@ en:
               confirmation: "does not match the %{attribute}"
         password_reset:
           attributes:
+            base:
+              nonexistent_email: "no user found with specified email"
             email:
               blank: "is required"
-              nonexistent: "no user found with specified email"
   activerecord:
     attributes:
       user:
+        avatar_content_type: "photo"
+        avatar_file_size: "file size"
         first_name: "first name"
         last_name: "last name"
         email: "email"
@@ -57,6 +60,10 @@ en:
       models:
         user:
           attributes:
+            avatar_content_type:
+              invalid: "is invalid (only PNG, GIF and JPEG images are allowed)"
+            avatar_file_size:
+              less_than: "of the photo must be less than %{count}"
             first_name:
               blank: "is required"
             last_name:
@@ -71,6 +78,8 @@ en:
               blank: "is required"
               confirmation: "does not match the %{attribute}"
   c: # controllers
+    avatars:
+      avatar_changed: "Photo successfully changed."
     email_changes:
       create:
         success: "Confirmation email sent to %{email}."
@@ -122,7 +131,7 @@ en:
       email_confirmation:
         subject: "Email confirmation"
       email_change_confirmation:
-        subject: "Confirm email change"
+        subject: "Email change confirmation"
       email_changed_notice:
         subject: "Your account will no longer be associated with this address"
       password_reset:
@@ -149,8 +158,8 @@ en:
           new_email: "New email"
           new_email_confirmation: "Confirm email"
           current_password: "Password"
-        submit: "Update email"
-        cancel: "Cancel"      
+        submit: "Save"
+        cancel: "Cancel"
     name_changes:
       new:
         heading:
@@ -172,18 +181,18 @@ en:
     password_resets:
       new:
         heading: "Reset password"
-        invitation: "Enter your email address to reset your password. You may
-          need to check your spam folder."
+        invitation: "Please enter your email address, on which to send the
+          password reset instructions."
         fields:
           email: "Email"
-        submit_button: "Submit"
+        submit_button: "Confirm password reset"
       edit:
         heading: "Set password"
         invitation: "Please enter your new password below:"
         fields:
           password: "Password"
           password_confirmation: "Retype password"
-        submit_button: "Save"      
+        submit_button: "Save"
     sessions:
       new:
         heading: "Sign in"
@@ -212,9 +221,9 @@ en:
         your account. In order to complete the process, refer to the
         instructions that were sent to your new email address."
       email_confirmation:
-        click_link: "Click the link below to confirm your email address:"
+        click_link: "Please click the link below to confirm your email address:"
       password_reset:
-        click_link: "To reset your password, click the link below:"
+        click_link: "To reset your password, please click the link below:"
         ignore: "If you didn't request your password to be reset, please ignore
           this email and your password will remain unchanged."
       welcome: "You have successfully created an account. Welcome to our
@@ -238,6 +247,12 @@ en:
           language: "Language"
           password: "Password"
         name_change: "Change name"
-        email_change: "Change email"
+        email_change: "Change"
         password_reset: "Forgot password?"
         password_change: "Change password"
+        image_format_hint: "To avoid cropping and/or upscaling, select a square
+          image no smaller than 200 x 200 pixels. PNG, GIF and JPEG images are
+          supported."
+        avatar_change: "Change photo"
+        avatar_fileselect: "Choose a file..."
+        avatar_submit: "Upload"

@@ -7,8 +7,8 @@ class LocaleChangesController < ApplicationController
         cookies[:locale] = I18n.locale = locale
         current_user.try(:locale=, locale) && current_user.save(validate: false)
         break
-      end      
-    end    
-    redirect_to(request.referrer || root_path)
+      end
+    end
+    redirect_to (current_user ? account_path : request.referrer)
   end
 end

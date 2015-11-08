@@ -41,4 +41,6 @@ Rails.application.configure do
 
   # Redefine bcrypt's cost factor to speed up tests.
   ActiveModel::SecurePassword.min_cost = true
+
+  # Paperclip::Attachment.default_options[:path] = "#{Rails.root}/spec/test_files/:class/:id_partition/:style.:extension"
 end

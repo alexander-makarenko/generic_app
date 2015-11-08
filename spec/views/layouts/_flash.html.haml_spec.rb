@@ -12,40 +12,24 @@ describe "layouts/_flash" do
     end
   end
 
-  context "when the flash has" do
-    context "a key that references a string" do
-      before { flash[:success] = 'foo' }
+  context "when the flash is not empty" do    
+    before { flash[:success] = 'foo >' }
 
-      it "renders the string" do
-        expect(subject).to match(/success/).and match(/foo/)
-      end
+    it "renders its value" do
+      expect(subject).to match(/success/).and match(/foo/)
     end
 
-    context "a key that references an array" do
-      before { flash[:success] = ['foo', 'bar', 'baz'] }
-
-      it "renders its first 2 elements" do
-        expect(subject).to match(/success/).and match(/foo/).and match(/bar/)
-        expect(subject).to_not match(/baz/)
-      end
+    it "treats the string as HTML-safe" do
+      expect(subject).to match(/foo >/)
     end
+  end
 
-    context "multiple keys that reference either a string or a 2-element array" do
-      before { flash[:success], flash[:info] = 'foo', ['bar', 'baz'] }
+  context "when the flash contains multiple keys" do
+    before { flash[:success], flash[:info] = 'foo', 'bar' }
 
-      it "renders both the string and the array" do
-        expect(subject).to match(/success/).and match(/info/)
-        expect(subject).to match(/foo/).and match(/bar/).and match(/baz/)
-      end
-    end
-
-    context "a key that references neither a string nor an array" do
-      before { flash[:danger], flash[:info] = {}, 'foo' }
-
-      it "does not render it" do
-        expect(subject).to match(/info/).and match(/foo/)
-        expect(subject).to_not match(/danger/)
-      end
+    it "renders them all" do
+      expect(subject).to match(/success/).and match(/info/)
+      expect(subject).to match(/foo/).and match(/bar/)
     end
   end
 end

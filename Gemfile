@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.1.2'
+ruby '2.2.3'
 #ruby-gemset=generic_app
 
 gem 'rails'
@@ -19,7 +19,8 @@ gem 'pundit', github: 'elabs/pundit'
 gem 'rails-i18n'
 # gem 'coffee-rails'
 # gem 'lodash-rails'
-# gem 'paperclip', github: 'thoughtbot/paperclip'
+gem 'paperclip', github: 'thoughtbot/paperclip'
+gem 'jquery-fileupload-rails'
 
 group :development, :test do
   gem 'rspec-rails'
@@ -31,13 +32,14 @@ group :development, :test do
 end
 
 group :test do
-  gem 'capybara'
-  gem 'capybara-webkit'
+  gem 'capybara', github: 'jnicklas/capybara'
+  gem 'capybara-webkit', github: 'thoughtbot/capybara-webkit'
   gem 'selenium-webdriver'
   gem 'libnotify'
   gem 'factory_girl_rails'
   gem 'launchy'
   gem 'timecop'
+  gem 'database_cleaner', github: 'DatabaseCleaner/database_cleaner'
 end
 
 group :production do  

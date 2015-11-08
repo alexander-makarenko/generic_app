@@ -8,7 +8,7 @@ describe EmailChangePolicy do
     let(:current_user) { nil }
 
     it { is_expected.to_not permit(:new)     }
-    it { is_expected.to_not permit(:create)  }    
+    it { is_expected.to_not permit(:create)  }
     it { is_expected.to_not permit(:destroy) }
   end
 

@@ -1,11 +1,17 @@
-class User < ActiveRecord::Base 
+class User < ActiveRecord::Base
+  attr_accessor :skip_password_validation
+
   before_validation :ensure_locale_is_set, on: :create
+  after_validation  :remove_avatar_error_duplicates
   before_save       :downcase_email
   before_create     :generate_auth_digest,
                     :generate_email_confirmation_digest,
                     :generate_password_reset_digest
 
   has_secure_password
+
+  has_attached_file :avatar, styles: { medium: '200x200#', small: '80x80#' },
+    default_url: 'avatar/:style/missing.png'
 
   store_accessor :preferences, :locale
 
@@ -14,9 +20,12 @@ class User < ActiveRecord::Base
   validates :email,      presence: true, length: { maximum: 50 },
                          uniqueness: { case_sensitive: false }
   validates :email,      format: { with: EMAIL_REGEX }, if: -> { email.present? }
-  validates :password,   presence: true
+  validates :password,   presence: true, unless: :skip_password_validation
   validates :password,   length: { in: 6..30 }, if: -> { password.present? }
   validates :locale,     inclusion: I18n.available_locales
+  
+  validates_attachment :avatar, content_type: { content_type: ['image/png',
+    'image/gif', 'image/jpeg'] }, size: { less_than: 1.megabytes }
 
   class << self
     def digest(token)
@@ -155,5 +164,9 @@ class User < ActiveRecord::Base
 
     def ensure_locale_is_set
       self.locale ||= I18n.default_locale.to_s
+    end
+
+    def remove_avatar_error_duplicates
+      errors.delete(:avatar)
     end
 end

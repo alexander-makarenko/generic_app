@@ -27,5 +27,8 @@ module GenericApp
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de    
     config.i18n.available_locales = [:en, :ru]
+
+    # Don't suppress Active Record errors raised within after_rollback/after_commit callbacks
+    config.active_record.raise_in_transactional_callbacks = true
   end
 end

@@ -114,13 +114,8 @@ footer {
   margin: 0;
 }
 
-.account-settings > div {
-  padding-top: 5px;
-  padding-bottom: 20px;
-}
-
 .validation-errors {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   p {
     margin: 0;
     line-height: 2em;
@@ -217,3 +212,59 @@ header ul {
 //     opacity: .4;
 //   }
 // }
+
+.btn-file {
+  position: relative;
+  overflow: hidden;
+  // .form-group {
+  //   margin-bottom: 0;
+  // }
+  input[type=file] {
+    position: absolute;
+    right: 0;
+    top: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+  }  
+}
+
+#avatar-selector {
+  padding: 15px 0 0;
+  max-width: 500px;
+  .input-group {
+    .btn {
+      min-width: 90px;
+    }
+    > span:first-child {
+      text-align: right;
+    }
+  }  
+}
+
+#avatar-change-btn {
+  display: block;
+}
+
+.account-settings {
+  margin-top: 20px;
+  .row {
+    padding-bottom: 25px;
+  }
+  a {
+    outline:none;
+  }  
+  > div:first-child {
+    min-width: 220px;
+    text-align: center;
+    img {      
+      padding: 10px;
+    }
+  }
+}

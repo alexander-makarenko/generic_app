@@ -88,21 +88,19 @@ describe ApplicationController do
           get :index
         end
 
-        it "sets the locale based on the user preferences" do
+        it "sets the locale based on the user's preferences" do
           expect(subject).to eq user.locale
         end
       end
 
       context "when the user is not signed in" do
-        let(:default_locale) { I18n.default_locale }
-
         shared_examples "shared" do
           it "sets the default locale" do
-            expect(subject).to eq default_locale
+            expect(subject).to eq I18n.default_locale
           end
 
           it "saves the default locale in the cookie" do
-            expect(response.cookies['locale']).to eq default_locale.to_s
+            expect(response.cookies['locale']).to eq I18n.default_locale.to_s
           end
         end
 

@@ -1,17 +1,15 @@
 require 'rails_helper'
 
 feature "Locale selector" do  
+  given(:user) { FactoryGirl.create(:user) }
   given(:locale_switcher) { '#locale-selector' }
-  given(:english) { t 'v.shared._locale_selector.en' }
-  given(:russian) { t 'v.shared._locale_selector.ru' }
   given(:account_link) { t 'v.layouts._header.nav_links.settings' }
 
   shared_examples "a locale selector" do
-    subject { page.find(locale_switcher) }
+    given(:english) { t 'v.shared._locale_selector.en' }
+    given(:russian) { t 'v.shared._locale_selector.ru' }
 
-    def current_locale
-      I18n.locale
-    end
+    subject { page.find(locale_switcher) }
 
     def locale_cookie
       get_me_the_cookie('locale')[:value]
@@ -24,28 +22,31 @@ feature "Locale selector" do
     end
 
     it "has a button for all locales except the current one" do
-      within(locale_switcher) { click_button russian }
-      expect(subject).to     have_button english
-      expect(subject).to_not have_button russian
+      expect(subject).to_not  have_button english
+      expect(subject).to      have_button russian
     end
 
     context "when a button is clicked" do
-      it "switches the locale" do
-        expect(current_locale).to eq :en
-        subject.click_button russian
-        expect(current_locale).to eq :ru
+      it "switches the current locale" do
+        expect { subject.click_button russian }.to change {
+          I18n.locale
+        }.from(:en).to(:ru)
       end
 
       it "sets the locale cookie" do
-        expect(locale_cookie).to eq 'en'
-        subject.click_button russian
-        expect(locale_cookie).to eq 'ru'
+        expect { subject.click_button russian }.to change {
+          locale_cookie
+        }.from('en').to('ru')
+      end
+
+      it "leaves the user on the same page" do
+        expect { subject.click_button russian }.to_not change { current_path }
       end
     end
   end
 
   context "when the user is not signed in" do
-    background { visit root_path }
+    background { visit signin_path }
 
     it "is shown in the layout" do
       expect(page).to have_selector locale_switcher
@@ -55,32 +56,21 @@ feature "Locale selector" do
   end
   
   context "when the user is signed in" do
-    given(:user) { FactoryGirl.create(:user) }
-
     background do
       visit signin_path
       sign_in_as user
+      click_link account_link
     end
 
     it "is not shown in the layout" do
+      visit root_path
       expect(page).to_not have_selector locale_switcher
     end
 
     it "is shown on the users's profile page" do
-      click_link account_link
       within('.main') { expect(page).to have_selector locale_switcher }
     end
 
-    context "when a button is clicked" do
-      it "updates the user's locale preference" do
-        click_link account_link
-        within(locale_switcher) { click_button russian }
-        expect(user.reload.locale).to eq :ru
-      end
-    end
-
-    it_behaves_like "a locale selector" do
-      background { click_link account_link }
-    end
+    it_behaves_like "a locale selector"
   end
 end

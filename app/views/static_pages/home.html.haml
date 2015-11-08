@@ -3,11 +3,40 @@
 #feature-list
   %h2 Feature list
 
-  %h4 Authorization (based on Pundit)
-  %p Clearly defined permissions:
+  %h4 Authentication (based on has_secure_password)
   %ul
-    %li signed in users cannot sign up;
-    %li signed in users cannot sign in another time;
+    %li users have the ability to sign up, sign in and sign out;
+    %li a "keep me signed in" option on the signin form.
+
+  %h4 User profile
+  %p Allows registered users to:
+  %ul
+    %li view and modify their name and email;
+    %li change and reset their password;
+    %li set the preferred language.
+
+  %h4 Validations
+  %ul
+    %li validation of all user data submitted to the server;
+    %li Ajax validation on the signup form.
+
+  %h4 Password recovery
+  %ul
+    %li a password reset link is sent upon a user's request;
+    %li the link contains the user's email address (hashed) and a random token;
+    %li after visiting the link and setting a new password, the user is automatically signed in;
+    %li links expire after 2 hours.
+
+  %h4 Email confirmation
+  %ul
+    %li an email confirmation link is sent: (a) upon request after signup; (b) automatically when a user changes the email;
+    %li the link contains the user's email address (hashed) and a random token;
+    %li links expire after 3 days.
+
+  %h4 Authorization (based on Pundit)
+  %p Permissions:
+  %ul
+    %li signed in users cannot sign up or sign in another time;
     %li visitors cannot sign out;
     %li email confirmation links can be requested only by signed in users who have not yet confirmed their email;
     %li email confirmation links can be accessed by anyone except signed in users who have already confirmed their email;
@@ -22,43 +51,13 @@
   %ul
     %li two available locales: English (default) and Russian;
     %li visitors can select their preferred locale on any page;
-    %li registered users can set their preferred locale in the account settings;
-    %li for visitors the locale is set based on a cookie, for registered users - read from the database;
+    %li logged users can set their preferred locale in the account settings;
+    %li for visitors the locale is set based on a cookie, for registered users - according to their preferences, stored in the database;
     %li the locale can be passed as a parameter in the url, in which case it always takes precedence.
-
-  %h4 Authentication (based on Rails' has_secure_password)
-  %ul    
-    %li users have the ability to sign up, sign in and sign out;
-    %li a "keep me signed in" option is available.
-
-  %h4 Validations
-  %ul
-    %li server-side Ajax validations on the signup form;
-    %li appropriate validations on all other forms.
 
   %h4 Email features
   %ul
     %li after signing up, a user is sent a welcome email;
     %li when agreeing to confirm their email address, a user is sent a confirmation link;
-    %li after requesting their password to be reset, a user is sent the relevant instructions;
+    %li after requesting their password to be reset, a user is emailed the relevant instructions;
     %li after changing their email, a user is sent a notification to their old address and a confirmation link to the new one.
-
-  %h4 Password recovery
-  %ul
-    %li a password reset link is sent upon a user's request;
-    %li the link contains the user's email address (hashed) and a random token;
-    %li after visiting the link and setting a new password, the user is automatically signed in;
-    %li password reset links expire after 2 hours.
-
-  %h4 Email confirmation
-  %ul
-    %li an email confirmation link is sent: (a) upon request after signup; (b) automatically when a user changes the email;
-    %li the link contains the user's email address (hashed) and a random token;
-    %li email confirmation links expire after 3 days.
-
-  %h4 User profile
-  %p Allows registered users to:
-  %ul
-    %li view and modify their name and email;
-    %li change and reset their password;
-    %li set the preferred language.
