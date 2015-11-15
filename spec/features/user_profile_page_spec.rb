@@ -1,15 +1,15 @@
 require 'rails_helper'
 
-feature "Profile page" do
-  given(:user) { FactoryGirl.create(:user) }
-  given(:account_link) { t 'v.layouts._header.nav_links.settings' }
-  given(:name_change_link) { t 'v.users.show.name_change' }
-  given(:email_change_link) { t 'v.users.show.email_change' }
-  given(:password_change_link) { t 'v.users.show.password_change' }
-  given(:password_recovery_link) { t 'v.users.show.password_reset' }
-  given(:account_page_heading) { t 'v.users.show.heading' }
+describe "User profile page" do
+  let(:user) { FactoryGirl.create(:user) }
+  let(:account_link) { t 'v.layouts._header.nav_links.settings' }
+  let(:name_change_link) { t 'v.users.show.name_change' }
+  let(:email_change_link) { t 'v.users.show.email_change' }
+  let(:password_change_link) { t 'v.users.show.password_change' }
+  let(:password_recovery_link) { t 'v.users.show.password_reset' }
+  let(:account_page_heading) { t 'v.users.show.heading' }
 
-  background do
+  before do
     visit signin_path
     sign_in_as user
     click_link account_link
@@ -20,10 +20,10 @@ feature "Profile page" do
   end
 
   context "when the email is not confirmed" do
-    given(:get_confirmation_link) { t 'c.users.show.confirm' }
+    let(:get_confirmation_link) { t 'c.users.show.confirm' }
 
     context "and a confirmation link has not been requested" do
-      given(:email_not_confirmed) do
+      let(:email_not_confirmed) do
         t('c.users.show.email_not_confirmed', link: get_confirmation_link)
       end
 
@@ -33,13 +33,13 @@ feature "Profile page" do
     end
 
     context "after a confirmation link has been requested" do
-      given(:get_new_confirmation_link) { t 'c.users.show.here' }
-      given(:confirmation_sent) do
+      let(:get_new_confirmation_link) { t 'c.users.show.here' }
+      let(:confirmation_sent) do
         t('c.users.show.confirmation_sent', email: user.email,
           link: get_new_confirmation_link)
       end
 
-      background do
+      before do
         click_link get_confirmation_link
         visit current_path
       end
@@ -50,14 +50,14 @@ feature "Profile page" do
     end
 
     context "after an email change has been requested" do
-      given(:new_email) { 'new.email@example.com' }      
-      given(:email_change_pending) do
+      let(:new_email) { 'new.email@example.com' }      
+      let(:email_change_pending) do
         t('c.users.show.email_change_pending', email: new_email,
           resend_link: t('c.users.show.resend'), cancel_link: t('c.users.show.cancel'))
       end
 
-      background do
-        click_link email_change_link
+      before do
+        within('.account-settings .email') { click_link email_change_link }        
         change_email(new_email: new_email, current_password: user.password)
         visit current_path
       end
@@ -69,7 +69,7 @@ feature "Profile page" do
   end
 
   context "when the email is confirmed" do
-    given(:user) { FactoryGirl.create(:user, :email_confirmed) }
+    let(:user) { FactoryGirl.create(:user, :email_confirmed) }
 
     it "shows no flash" do
       expect(page).to_not have_flash :warning

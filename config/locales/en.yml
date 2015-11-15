@@ -79,7 +79,8 @@ en:
               confirmation: "does not match the %{attribute}"
   c: # controllers
     avatars:
-      avatar_changed: "Photo successfully changed."
+      changed: "Photo successfully changed."
+      deleted: "Photo removed."
     email_changes:
       create:
         success: "Confirmation email sent to %{email}."
@@ -151,6 +152,15 @@ en:
           sign_in: "Sign in"
           sign_out: "Sign out"
           settings: "Account"
+    avatars:
+      change_link: "Change"
+      delete_link: "Delete"
+      file_select_button: "Choose a file..."
+      file_input_label: "Upload profile photo"
+      file_format_tips: "To avoid cropping and/or upscaling, select a square
+        image no smaller than 200 x 200 pixels. PNG, GIF and JPEG images are
+        supported."
+      submit_button: "Upload"
     email_changes:
       new:
         heading: "Update email"
@@ -243,16 +253,11 @@ en:
       show:
         heading: "Account"
         subheadings:
-          email: "Email"
+          email: "Email"          
           language: "Language"
           password: "Password"
+          photo: "Photo"
         name_change: "Change name"
         email_change: "Change"
         password_reset: "Forgot password?"
         password_change: "Change password"
-        image_format_hint: "To avoid cropping and/or upscaling, select a square
-          image no smaller than 200 x 200 pixels. PNG, GIF and JPEG images are
-          supported."
-        avatar_change: "Change photo"
-        avatar_fileselect: "Choose a file..."
-        avatar_submit: "Upload"

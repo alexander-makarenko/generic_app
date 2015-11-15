@@ -1,0 +1,13 @@
+$('.alert-success, .validation-errors').remove();
+
+:plain
+  var flashHtml,
+      avatarImage = $('#avatar'),
+      avatarDeleteLink = $('.photo form.button_to');
+
+- flash.now[:success] = @message
+flashHtml = "#{j(render 'layouts/flash')}";
+
+avatarImage.attr('src', "#{asset_path(@user.avatar.url(:medium))}");
+$('.main div:first').prepend(flashHtml);
+avatarDeleteLink.remove();

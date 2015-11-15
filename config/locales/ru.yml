@@ -93,7 +93,8 @@ ru:
               confirmation: "не совпадает с указанным паролем"
   c: # controllers
     avatars:
-      avatar_changed: "Фото успешно изменено."
+      changed: "Фото успешно изменено."
+      deleted: "Фото удалено."
     email_changes:
       create:
         success: "Письмо подтверждения отправлено на %{email}."
@@ -166,6 +167,15 @@ ru:
           sign_in: "Вход"
           sign_out: "Выход"
           settings: "Профиль"
+    avatars:
+      change_link: "Изменить"
+      delete_link: "Удалить"
+      file_select_button: "Выбрать файл..."
+      file_input_label: "Загрузить фотографию профиля"
+      file_format_tips: "To avoid cropping and/or upscaling, select a square
+        image no smaller than 200 x 200 pixels. PNG, GIF and JPEG images are
+        supported."
+      submit_button: "Загрузить"
     email_changes:
       new:
         heading: "Update email"
@@ -236,7 +246,7 @@ ru:
         your account. In order to complete the process, refer to the
         instructions that were sent to your new email address."
       email_confirmation:
-        click_link: "Для подтверждения адреса электронной, пожалуйста, перейдите
+        click_link: "Для подтверждения адреса электронной почты, пожалуйста, перейдите
           по ссылке ниже:"
       password_reset:
         click_link: "Для сброса пароля, пожалуйста, перейдите по ссылке ниже:"
@@ -261,6 +271,7 @@ ru:
           email: "Адрес электронной почты"
           language: "Язык"
           password: "Пароль"
+          photo: "Фото"
         name_change: "Изменить имя"
         email_change: "Изменить"
         password_reset: "Забыли пароль?"
@@ -268,6 +279,7 @@ ru:
         image_format_hint: "To avoid cropping and/or upscaling, select a square
           image no smaller than 200 x 200 pixels. PNG, GIF and JPEG images are
           supported."
-        avatar_change: "Изменить фото"
+        avatar_change: "Изменить"
         avatar_fileselect: "Выбрать файл..."
         avatar_submit: "Загрузить"
+        avatar_delete: "Удалить"

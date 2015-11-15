@@ -163,37 +163,6 @@ header ul {
   padding: 15px;
 }
 
-// /* flash messages */
-
-// .flash {
-//   position: relative;
-//   line-height: 1.4em;
-//   margin-bottom: 10px;
-//   padding: 10px 20px;
-//   color: $gray-dark;  
-//   border-radius: 5px;
-// }
-
-// .flash-success {
-//   background-color: $green-light;
-//   border: 1px solid $green-darker;
-// }
-
-// .flash-notice {
-//   background-color: $blue;
-//   border: 1px solid $blue-dark;
-// }
-
-// .flash-alert {
-//   background-color: $yellow;
-//   border: 1px solid $yellow-dark;
-// }
-
-// .flash-error {  
-//   background-color: $red-lighter;
-//   border: 1px solid $red;
-// }
-
 // .close-button {
 //   cursor: pointer;
 //   position: absolute;
@@ -213,12 +182,23 @@ header ul {
 //   }
 // }
 
+.account-settings {
+  margin-top: 20px;
+  .row {
+    padding-bottom: 25px;
+  }
+  > div:first-child {
+    min-width: 220px;
+    text-align: center;
+    img {
+      padding: 10px;
+    }
+  }
+}
+
 .btn-file {
   position: relative;
   overflow: hidden;
-  // .form-group {
-  //   margin-bottom: 0;
-  // }
   input[type=file] {
     position: absolute;
     right: 0;
@@ -232,39 +212,33 @@ header ul {
     background: white;
     cursor: inherit;
     display: block;
-  }  
-}
-
-#avatar-selector {
-  padding: 15px 0 0;
-  max-width: 500px;
-  .input-group {
-    .btn {
-      min-width: 90px;
-    }
-    > span:first-child {
-      text-align: right;
-    }
-  }  
-}
-
-#avatar-change-btn {
-  display: block;
-}
-
-.account-settings {
-  margin-top: 20px;
-  .row {
-    padding-bottom: 25px;
   }
+}
+
+.photo {
   a {
     outline:none;
-  }  
-  > div:first-child {
-    min-width: 220px;
-    text-align: center;
-    img {      
-      padding: 10px;
+    padding-right: 10px;
+    margin-right: 10px;
+  }
+  .btn-link {
+    vertical-align: top;
+  }
+  .button_to input[type='submit'] {
+    padding: 0;
+    border-width: 0;
+  }
+  form:last-child {
+    clear: left;
+    padding: 15px 0 0;
+    max-width: 500px;
+    .input-group {
+      .btn {
+        min-width: 90px;
+      }
+      > span:first-child {
+        text-align: right;
+      }
     }
   }
 }

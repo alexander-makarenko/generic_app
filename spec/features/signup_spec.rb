@@ -10,7 +10,7 @@ feature "Signup form" do
     expect(page).to have_selector 'form h3', text: form_heading
   end
   
-  context "on typing invalid data", js: true do
+  context "on typing invalid data", :js do
     background { fill_in 'user_email', with: 'invalid' }
 
     it "shows validation errors" do

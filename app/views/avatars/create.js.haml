@@ -1,7 +1,24 @@
 $('.alert-success, .validation-errors').remove();
+
+:plain
+  var flashHtml,
+      validationErrorsHtml,
+      avatarImage = $('#avatar'),
+      avatarUploadForm = $('.photo form:last-child'),
+      avatarDeleteLink = $('.photo form.button_to'),
+      avatarDeleteLinkHtml;
+
 - if @user.save
-  - flash.now[:success] = @success_message
-  $('#avatar').attr('src', "#{@user.avatar.url(:medium)}");
-  $('.main div:first').prepend("#{j(render 'layouts/flash.html.haml')}");
+  
+  - flash.now[:success] = @message
+  flashHtml = "#{j(render 'layouts/flash')}";
+  avatarDeleteLinkHtml = "#{j(render 'avatars/delete_link')}";
+
+  avatarImage.attr('src', "#{asset_path(@user.avatar.url(:medium))}");
+  if (!avatarDeleteLink.length) { avatarUploadForm.before(avatarDeleteLinkHtml); }
+  $('.main div:first').prepend(flashHtml);
+
 - else
-  $('.main div:first').prepend("#{j(render 'shared/validation_errors', obj: @user)}");
+
+  validationErrorsHtml = "#{j(render 'shared/validation_errors', obj: @user)}";
+  $('.main div:first').prepend(validationErrorsHtml);

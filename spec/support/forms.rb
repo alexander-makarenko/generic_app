@@ -44,3 +44,13 @@ def change_email(**args)
   args.each { |key, value| fill_in "email_change_#{key}", with: value }
   click_button t('v.email_changes.new.submit')
 end
+
+def attach_photo(file_name)
+  # Change the file upload button's overflow property so that capybara-webkit
+  # could click on it.
+  if Capybara.current_driver == Capybara.javascript_driver
+    execute_script("$('.btn-file').css('overflow', 'visible');")
+  end
+
+  attach_file('file-select', 'spec/support/attachments/users/avatars/' + file_name)
+end

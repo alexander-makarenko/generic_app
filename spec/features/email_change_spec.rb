@@ -11,7 +11,7 @@ feature "Email change" do
     visit signin_path
     sign_in_as user
     click_link account_link
-    click_link email_change_link
+    within('.account-settings .email') { click_link email_change_link }
   end
 
   it "page has a proper heading" do

@@ -30,7 +30,11 @@ FactoryGirl.define do
     trait :email_change_pending do
       old_email              Faker::Internet.safe_email
       old_email_confirmed    true
-      old_email_confirmed_at 1.week.ago      
+      old_email_confirmed_at 1.week.ago
+    end
+
+    trait :photo_uploaded do
+      avatar { File.new("#{Rails.root}/spec/support/attachments/users/avatars/valid.jpg") }
     end
 
     # trait :email_not_confirmed_in_time do

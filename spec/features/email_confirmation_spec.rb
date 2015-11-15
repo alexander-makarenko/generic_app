@@ -110,7 +110,7 @@ feature "Email confirmation" do
         end
 
         background do
-          click_link email_change_link
+          within('.account-settings .email') { click_link email_change_link }          
           change_email(new_email: new_email, current_password: user.password)
           visit subject
         end

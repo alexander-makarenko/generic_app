@@ -1,0 +1,14 @@
+= link_to t('v.avatars.change_link'), '#', class: 'pull-left'
+- if user.avatar.file?
+  = render 'avatars/delete_link'  
+= form_tag avatars_path, multipart: true do
+  .input-group.form-group
+    %span.input-group-btn
+      %span.btn.btn-default.btn-file
+        = t('v.avatars.file_select_button')
+        = label_tag 'file-select', 'Upload profile image', class: 'sr-only'
+        = file_field_tag 'file-select'
+    = text_field_tag 'file-name', nil, readonly: true, class: 'form-control hidden'
+    %span.input-group-btn
+      = submit_tag t('v.avatars.submit_button'), class: 'btn btn-default btn-primary'
+  %p.text-justify.text-muted= t('v.avatars.file_format_tips')

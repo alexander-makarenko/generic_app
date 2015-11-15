@@ -57,9 +57,9 @@ Rails.application.routes.draw do
       end
 
       scope controller: :avatars do
-        get    'avatar' => :new,    as: 'new_avatar'
-        post   'avatar' => :create, as: 'avatars'
-        delete 'avatar' => :destroy
+        get    'avatar' => :new,     as: 'new_avatar'
+        post   'avatar' => :create,  as: 'avatars'
+        delete 'avatar' => :destroy, as: 'avatar'
       end
     end
 
