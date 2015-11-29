@@ -11,6 +11,12 @@ class AvatarPolicy < ApplicationPolicy
   end
 
   def destroy?
-    signed_in?
+    signed_in? && has_avatar?
   end
+
+  private
+
+    def has_avatar?
+      current_user.avatar.file?
+    end
 end

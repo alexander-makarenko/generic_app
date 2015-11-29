@@ -1,2 +1,13 @@
-%h1 Users#index
-%p Find me in app/views/users/index.html.haml
+%h2.text-center= t('v.users.index.heading')
+
+= render 'search'
+
+%ul#users
+  = render @users
+
+.text-center.ajax-in-progress.hidden
+  = image_tag('ajax-in-progress.gif', size: '24')
+  %span.text-muted= t('v.users.index.loading')
+
+.text-center
+  = will_paginate @users

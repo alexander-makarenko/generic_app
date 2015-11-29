@@ -1,6 +1,41 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
+
+function toggleEmailConfirmationFields() {
+  var $toggleableRows = $('.user-info .padded'),
+      $toggle = $('.user-info .collapse-toggle'),
+      $spanWithIcon = $toggle.find('span.glyphicon');
+
+  $toggleableRows.hide();
+  $toggle.on('click', function() {
+    $toggleableRows.toggle();
+    $spanWithIcon.toggleClass('glyphicon-menu-down glyphicon-menu-up');
+  });
+}
+
+function pageIsScrolledToAlmostBottom() {
+  return $(window).scrollTop() > $(document).height() - $(window).height() - 250;
+}
+
+
+function enableEndlessScrolling() {
+  if ($('.pagination').length) {
+    $(window).scroll(function() {
+      var url = $('.pagination .next a').attr('href');
+      if (url && url !== '#' && pageIsScrolledToAlmostBottom()) {
+        $('.pagination').empty();
+        $('.ajax-in-progress').removeClass('hidden');
+        $.getScript(url, function() {
+          $('.ajax-in-progress').addClass('hidden');
+        });
+      }
+    });
+    $(window).scroll();
+  }
+};
+
+
 function Validator(settings) {
 
   var self = this;
@@ -151,6 +186,7 @@ Validator.prototype = {
 };
 
 $(document).on('page:change', function() {
+  
   new Validator({
     model: 'user',
     form: '#signup',
@@ -158,4 +194,8 @@ $(document).on('page:change', function() {
       $('#signup .panel-body').prepend(errors);
     }
   }).enable();
+
+  toggleEmailConfirmationFields();
+
+  enableEndlessScrolling();
 });

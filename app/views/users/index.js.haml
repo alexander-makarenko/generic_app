@@ -1,0 +1,6 @@
+$('#users').append("#{j(render @users)}");
+
+- if @users.next_page
+  $('div.pagination').replaceWith("#{j(will_paginate @users)}");
+- else
+  $('div.pagination').remove();

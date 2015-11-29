@@ -1,12 +1,12 @@
 class UsersController < ApplicationController
+  before_action { authorize User }
+
   def new
     @user = User.new
-    authorize @user
   end
 
   def create
     @user = User.new(user_params)
-    authorize @user
     if @user.save
       sign_in @user
       @user.send_email(:welcome)
@@ -17,11 +17,21 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = current_user || User.new
-    authorize @user
-    unless @user.email_confirmed || flash[:success]
-      flash.now[:warning] = email_confirmation_message_for(@user)
+    if params[:id]
+      (redirect_to root_path and return) unless current_user.admin?
+      @user = User.find(params[:id])
+      render 'show_admin'
+    else
+      @user = current_user
+      unless @user.email_confirmed || flash[:success]
+        flash.now[:warning] = email_confirmation_message_for(@user)
+      end
+      render 'show'
     end
+  end
+
+  def index
+    @users = User.order('id ASC').paginate(page: params[:page]) # you can also add 'per_page: 30'
   end
 
   def validate

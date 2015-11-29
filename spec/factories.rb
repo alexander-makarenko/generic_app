@@ -13,6 +13,10 @@ FactoryGirl.define do
       email      'invalid'
       password   { Faker::Internet.password(4) }
     end
+
+    trait :admin do
+      admin true
+    end
     
     trait :email_confirmed do
       email_confirmed    true

@@ -17,10 +17,19 @@ describe User do
   }
 
   it { is_expected.to be_valid }
+  it { is_expected.to_not be_admin }
   it { is_expected.to have_attributes(email_confirmed: false) }
 
   it "has an avatar attachment" do
     expect(subject).to have_attached_file(:avatar)
+  end
+
+  describe "with the admin attribute set to true" do
+    before do
+      subject.toggle!(:admin)
+    end
+
+    it { is_expected.to be_admin }
   end
 
   describe "with an avatar attachment that" do

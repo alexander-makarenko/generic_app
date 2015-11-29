@@ -11,24 +11,28 @@ describe UserPolicy do
     it { is_expected.to     permit(:create)   }
     it { is_expected.to     permit(:validate) }
     it { is_expected.to_not permit(:show)     }
+    it { is_expected.to_not permit(:index)     }
   end
 
   context "when the user is signed in" do
-    let(:current_user) { FactoryGirl.build_stubbed(:user) }
+    context "as a regular user" do
+      let(:current_user) { FactoryGirl.build_stubbed(:user) }
 
-    it { is_expected.to_not permit(:new)      }
-    it { is_expected.to_not permit(:create)   }
-    it { is_expected.to_not permit(:validate) }
-    it { is_expected.to     permit(:show)     }
+      it { is_expected.to_not permit(:new)      }
+      it { is_expected.to_not permit(:create)   }
+      it { is_expected.to_not permit(:validate) }
+      it { is_expected.to     permit(:show)     }
+      it { is_expected.to_not permit(:index)    }
+    end
 
-    # context "as another user" do
-    #   it { is_expected.to_not permit(:show) }
-    # end
+    context "as an admin user" do
+      let(:current_user) { FactoryGirl.build_stubbed(:user, :admin) }
 
-    # context "as target user" do
-    #   let(:current_user) { user }
-
-    #   it { is_expected.to permit(:show) }
-    # end
+      it { is_expected.to_not permit(:new)      }
+      it { is_expected.to_not permit(:create)   }
+      it { is_expected.to_not permit(:validate) }
+      it { is_expected.to     permit(:show)     }
+      it { is_expected.to     permit(:index)    }
+    end
   end
 end

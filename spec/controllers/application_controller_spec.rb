@@ -61,6 +61,59 @@ describe ApplicationController do
     end
   end
 
+  describe "#set_last_seen_at" do
+    controller do
+      def index
+        render nothing: true # do nothing other than invoke filters
+      end
+    end
+
+    let(:user) { FactoryGirl.create(:user) }
+
+    subject { get(:index, {}, last_seen_at: last_seen_at) } # the last parameter is a session hash
+
+    before { sign_in_as(user, no_capybara: true) }
+
+    shared_examples "shared" do
+      it "stores the current time in it" do
+        expect { subject }.to change {
+          session[:last_seen_at]
+        }.to(ActiveSupport::TimeWithZone)
+      end
+
+      it "updates the current user's last_seen_at attribute" do
+        expect { subject }.to change{
+          user.reload.last_seen_at
+        }.from(nil).to(ActiveSupport::TimeWithZone)
+      end
+    end
+
+    context "when the last_seen_at session key is not set" do
+      let(:last_seen_at) { nil }
+
+      include_examples "shared"
+    end
+
+    context "when the last_seen_at session key was last updated 3 or more minutes ago" do
+      let(:last_seen_at) { 3.minutes.ago }
+
+      include_examples "shared"
+    end
+
+    context "when the last_seen_at session key was last updated less than 3 minutes ago" do
+      let(:last_seen_at) { 2.minutes.ago }
+
+      it "does not change it" do
+        subject
+        expect(session[:last_seen_at]).to eq(last_seen_at)        
+      end
+
+      it "does not change the current user's last_seen_at attribute" do
+        expect { subject }.to_not change{ user.reload.last_seen_at }
+      end
+    end
+  end
+
   describe "#set_locale" do
     controller do
       def index
@@ -69,6 +122,7 @@ describe ApplicationController do
     end
 
     subject(:current_locale) { I18n.locale }
+
     before { I18n.locale = I18n.default_locale }
 
     context "when a locale param is passed in the url" do

@@ -126,6 +126,11 @@ en:
           mind."
         resend: "resend"
         cancel: "cancel"
+  h: # helpers
+    users_helper:
+      "yes": "Yes"
+      "no": "No"
+      ago: "ago"
   m: # mailers
     user_mailer:
       greeting: "Hi %{first_name},"
@@ -149,9 +154,9 @@ en:
     layouts:
       _header:
         nav_links:
-          sign_in: "Sign in"
-          sign_out: "Sign out"
-          settings: "Account"
+          sign_in: "sign in"
+          sign_out: "sign out"
+          settings: "account"
     avatars:
       change_link: "Change"
       delete_link: "Delete"
@@ -261,3 +266,19 @@ en:
         email_change: "Change"
         password_reset: "Forgot password?"
         password_change: "Change password"
+      show_admin:
+        heading: "User info"
+        full_name: "Full name"
+        email: "Email"
+        email_status: "Сonfirmed"
+        email_confirmation_sent_at: "Сonfirmation sent at"
+        locale: "Locale"
+        registered_on: "Registration date"
+        last_seen: "Last seen"
+      index:
+        heading: "All users"
+        loading: "Fetching more items..."
+  will_paginate:
+    previous_label: "&#8592; Previous"
+    next_label: "Next &#8594;"
+    page_gap: "&hellip;"

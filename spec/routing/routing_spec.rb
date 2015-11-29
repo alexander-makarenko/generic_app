@@ -154,8 +154,16 @@ describe "Routing" do
   describe "in Users controller" do
     locale_prefixes.each do |prefix|
 
-      # describe "#{prefix}/users", method: :get, is_routable: false do; end         # resourceful index
-      # describe "#{prefix}/users/42", method: :get, is_routable: false do; end      # resourceful show
+      describe "#{prefix}/users", method: :get, is_routable: true do # resourceful index
+        let(:target) { 'users#index' }
+        let(:params) { locale_prefix_to_param(prefix) }
+      end         
+      
+      describe "#{prefix}/users/42", method: :get, is_routable: true do # resourceful show
+        let(:target) { 'users#show' }
+        let(:params) { { id: '42' }.merge locale_prefix_to_param(prefix) }
+      end
+      
       # describe "#{prefix}/users/42/edit", method: :get, is_routable: false do; end # resourceful edit
       # describe "#{prefix}/users/42", method: :put, is_routable: false do; end      # resourceful update
       # describe "#{prefix}/users/42", method: :patch, is_routable: false do; end    # resourceful update

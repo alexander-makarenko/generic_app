@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   # get ':locale/*path', locale: /en|ru/, to: redirect('%{path}')
 
   scope '(:locale)', locale: /en|ru/ do
-    # resources :users, only: [:show]
+    resources :users, only: [:show, :index]
 
     scope controller: :users do
       get  'signup'         => :new

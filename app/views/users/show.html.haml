@@ -10,7 +10,7 @@
         = link_to t('v.users.show.name_change'), new_name_change_path
     .row.photo
       .col-sm-12
-        %p.text-muted= t('v.users.show.subheadings.photo')        
+        %p.text-muted= t('v.users.show.subheadings.photo')
         = render 'avatars/select_form', user: @user
     .row.email
       .col-sm-12

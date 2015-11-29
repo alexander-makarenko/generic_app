@@ -141,6 +141,11 @@ ru:
           mind."
         resend: "resend"
         cancel: "cancel"
+  h: # helpers
+    users_helper:
+      "yes": "Да"
+      "no": "Нет"
+      ago: "назад"
   m: # mailers
     user_mailer:
       greeting: "Здравствуйте, %{first_name}!"
@@ -164,9 +169,9 @@ ru:
     layouts:
       _header:
         nav_links:
-          sign_in: "Вход"
-          sign_out: "Выход"
-          settings: "Профиль"
+          sign_in: "вход"
+          sign_out: "выход"
+          settings: "профиль"
     avatars:
       change_link: "Изменить"
       delete_link: "Удалить"
@@ -283,3 +288,19 @@ ru:
         avatar_fileselect: "Выбрать файл..."
         avatar_submit: "Загрузить"
         avatar_delete: "Удалить"
+      show_admin:
+        heading: "Информация о пользователе"
+        full_name: "Полное имя"
+        email: "Адрес электронной почты"
+        email_status: "Подтверждён"
+        email_confirmation_sent_at: "Подтверждение отправлено"
+        locale: "Язык"
+        registered_on: "Дата регистрации"
+        last_seen: "Последнее посещение"
+      index:
+        heading: "Все пользователи"
+        loading: "Загрузка..."
+  will_paginate:
+    previous_label: "&#8592; Предыдущая"
+    next_label: "Следующая &#8594;"
+    page_gap: "&hellip;"

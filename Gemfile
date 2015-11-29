@@ -21,6 +21,7 @@ gem 'rails-i18n'
 # gem 'lodash-rails'
 gem 'paperclip', github: 'thoughtbot/paperclip'
 gem 'jquery-fileupload-rails'
+gem 'bootstrap-will_paginate'
 
 group :development, :test do
   gem 'rspec-rails'

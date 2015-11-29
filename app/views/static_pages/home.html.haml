@@ -8,18 +8,11 @@
     %li users have the ability to sign up, sign in and sign out;
     %li a "keep me signed in" option on the signin form.
 
-  %h4 User profile
-  %p Allows registered users to:
-  %ul
-    %li view and modify their name and email;
-    %li change their profile photo;
-    %li change and reset their password;
-    %li set the preferred language.
-
-  %h4 Ajax
+  %h4 Ajax and JavaScript
   %ul
     %li validation on the signup form;
-    %li profile photo upload and deletion.
+    %li profile photo upload and deletion;
+    %li endless scrolling on the users index page.
 
   %h4 Validations
   %ul
@@ -48,9 +41,24 @@
     %li anyone can request and access password reset links;
     %li anyone can change the locale;
     %li only signed in users can view their profile, change their name, photo, password and email;
+    %li only signed in admin users can view the profiles of other users;
     %li only signed in users who have a pending email change request can cancel it.
   %p Error handling and messaging customizable on a per-controller and per-action basis.
   %p Friendly redirection of users that are asked to sign in to access a protected page.
+
+  %h4 User profile
+  %p Allows registered users to:
+  %ul
+    %li view and modify their name and email;
+    %li change their profile photo;
+    %li change and reset their password;
+    %li set the preferred language;
+
+  %h4 User roles
+  %p Admin users рave additional permissions and the ability to:
+  %ul
+    %li view the information about other users, including their registration date and last activity time;
+    %li view the list of all users.
 
   %h4 Internationalization and localization
   %ul

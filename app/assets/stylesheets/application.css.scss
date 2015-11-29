@@ -151,8 +151,12 @@ header ul {
   border-width: 2px;
 }
 
+// div {
+//   outline: 1px solid gray;
+// }
+
 #logo {
-  padding: 0;
+  padding: 0 15px;
   font-size: 1.6em;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -161,6 +165,12 @@ header ul {
 .navbar-text {
   margin: 0;
   padding: 15px;
+}
+
+.nav.navbar-right li {
+  text-transform: uppercase;
+  font-size: 0.95em;
+  font-weight: bold;
 }
 
 // .close-button {
@@ -182,7 +192,7 @@ header ul {
 //   }
 // }
 
-.account-settings {
+.account-settings, .user-info {
   margin-top: 20px;
   .row {
     padding-bottom: 25px;
@@ -240,5 +250,51 @@ header ul {
         text-align: right;
       }
     }
+  }
+}
+
+table {
+  th:first-child {
+    width:1%;
+    white-space:nowrap;
+    padding-right: 45px !important;
+  }
+  .padded td:first-child {
+    padding-left: 25px;
+  }  
+}
+
+#users {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  li {
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    :last-child {
+      padding: 0;
+      border-bottom: none;
+    }
+  }  
+  img {
+    padding-right: 20px;
+  }
+  p {
+    display: inline-block;
+    padding-right: 20px;
+    :last-child {
+      padding-right: 0;
+    }
+  }
+}
+
+div.pagination {
+  margin: 0;
+}
+
+.ajax-in-progress {
+  padding: 12px 0;
+  span {
+    padding-left: 10px;
   }
 }

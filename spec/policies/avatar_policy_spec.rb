@@ -12,9 +12,18 @@ describe AvatarPolicy do
   end
 
   context "when the user is signed in" do
-    let(:current_user) { FactoryGirl.build_stubbed(:user) }
+    context "and has the default profile photo" do
+      let(:current_user) { FactoryGirl.build_stubbed(:user) }
     
-    it { is_expected.to permit(:create)  }
-    it { is_expected.to permit(:destroy) }
+      it { is_expected.to     permit(:create)  }
+      it { is_expected.to_not permit(:destroy) }
+    end
+
+    context "and has a custom profile photo" do
+      let(:current_user) { FactoryGirl.build_stubbed(:user, :photo_uploaded) }
+
+      it { is_expected.to permit(:create)  }
+      it { is_expected.to permit(:destroy) }
+    end
   end
 end

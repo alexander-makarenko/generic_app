@@ -18,14 +18,28 @@ describe AvatarsController do
 
     context "when the user is signed in" do
       before { sign_in_as(user, no_capybara: true) }
-   
-      it "permits POST to #create" do
-        expect { post :create }.to be_permitted
+
+      context "and has the default profile image" do
+        it "permits POST to #create" do
+          expect { post :create }.to be_permitted
+        end
+
+        it "permits DELETE to #destroy" do
+          expect { delete :destroy }.to_not be_permitted
+        end
       end
 
-      it "permits DELETE to #destroy" do
-        expect { delete :destroy }.to be_permitted
-      end
+      context "and has a custom profile image" do
+        let(:user) { FactoryGirl.create(:user, :photo_uploaded) }
+
+        it "permits POST to #create" do
+          expect { post :create }.to be_permitted
+        end
+
+        it "permits DELETE to #destroy" do
+          expect { delete :destroy }.to be_permitted
+        end
+      end      
     end
   end
 end

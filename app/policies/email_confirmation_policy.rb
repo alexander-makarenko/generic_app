@@ -15,6 +15,7 @@ class EmailConfirmationPolicy < ApplicationPolicy
   end
 
   private
+
     def email_confirmed?
       current_user.email_confirmed?
     end
