@@ -54,3 +54,10 @@ def attach_photo(file_name)
 
   attach_file('file-select', 'spec/support/attachments/users/avatars/' + file_name)
 end
+
+def find_user(string)
+  within('form.search') do
+    find('input[type="text"]').set(string)
+    find('button[type="submit"]').click
+  end
+end

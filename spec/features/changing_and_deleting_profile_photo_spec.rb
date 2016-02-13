@@ -72,8 +72,8 @@ describe "Changing and deleting the profile photo." do
     end
 
     shared_examples "invalid submission" do
-      it "the profile photo is not changed" do
-        expect(page.find('#avatar')).to have_xpath("//img[contains(@src, 'missing.png')]")
+      it "the profile photo is not changed" do        
+        expect(page.find('#avatar')).to have_xpath("//img[contains(@src, 'missing')]")
       end
 
       it "validation errors are shown" do
@@ -184,7 +184,7 @@ describe "Changing and deleting the profile photo." do
         end
 
         it "the profile photo is changed to default" do
-          expect(page.find('#avatar')).to have_xpath("//img[contains(@src, 'missing.png')]")
+          expect(page.find('#avatar')).to have_xpath("//img[contains(@src, 'missing')]")
         end
 
         it "an appropriate flash is shown" do

@@ -1,4 +1,6 @@
-%li
-  = image_tag user.avatar.url(:small)
-  %p= user.name
-  %p= user.email
+%tr
+  %td= user.id
+  %td= user.first_name
+  %td= user.last_name
+  %td= user.email
+  %td= user.created_at

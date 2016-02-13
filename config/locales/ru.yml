@@ -298,8 +298,14 @@ ru:
         registered_on: "Дата регистрации"
         last_seen: "Последнее посещение"
       index:
+        th_id: "ID"
+        th_first_name: "Имя"
+        th_last_name: "Фамилия"
+        th_email: "Адрес электронной почты"
+        th_created_at: "Дата регистрации"
         heading: "Все пользователи"
-        loading: "Загрузка..."
+        loading: "Загрузка..."        
+        search_placeholder: "Поиск..."
   will_paginate:
     previous_label: "&#8592; Предыдущая"
     next_label: "Следующая &#8594;"

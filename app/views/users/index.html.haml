@@ -2,8 +2,16 @@
 
 = render 'search'
 
-%ul#users
-  = render @users
+%table.table.table-bordered.table-hover#users
+  %thead
+    %tr
+      %th= sortable 'id', t('v.users.index.th_id')      
+      %th= sortable 'first_name', t('v.users.index.th_first_name')
+      %th= sortable 'last_name', t('v.users.index.th_last_name')
+      %th= sortable 'email', t('v.users.index.th_email')
+      %th= sortable 'created_at', t('v.users.index.th_created_at')
+  %tbody
+    = render @users
 
 .text-center.ajax-in-progress.hidden
   = image_tag('ajax-in-progress.gif', size: '24')

@@ -253,7 +253,7 @@ header ul {
   }
 }
 
-table {
+.user-info table {
   th:first-child {
     width:1%;
     white-space:nowrap;
@@ -293,8 +293,31 @@ div.pagination {
 }
 
 .ajax-in-progress {
-  padding: 12px 0;
+  padding: 20px 0;
   span {
     padding-left: 10px;
+  }
+}
+
+form.search {
+  padding: 15px 0 30px;
+}
+
+#users th {
+  overflow: hidden;
+  a {
+    text-decoration: none;
+    display: block;
+    margin: -10px;
+    padding: 10px;
+  }
+  .current:after {
+    float: right;
+  }  
+  .asc:after {
+    content: '▲';
+  }
+  .desc:after {
+    content: '▼';
   }
 }

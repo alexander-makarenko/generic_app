@@ -276,8 +276,14 @@ en:
         registered_on: "Registration date"
         last_seen: "Last seen"
       index:
+        th_id: "ID"
+        th_first_name: "First name"
+        th_last_name: "Last name"
+        th_email: "Email"
+        th_created_at: "Registered on"
         heading: "All users"
         loading: "Fetching more items..."
+        search_placeholder: "Search..."
   will_paginate:
     previous_label: "&#8592; Previous"
     next_label: "Next &#8594;"

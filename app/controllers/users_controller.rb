@@ -1,6 +1,8 @@
 class UsersController < ApplicationController
   before_action { authorize User }
 
+  helper_method :sort_column, :sort_direction
+
   def new
     @user = User.new
   end
@@ -31,7 +33,13 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.order('id ASC').paginate(page: params[:page]) # you can also add 'per_page: 30'
+    # if params[:search]
+      # @users = User.where("email LIKE ?", "%#{params[:search]}%").order('id ASC').paginate(page: params[:page])
+      # .where("name LIKE ? OR email LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%")
+    # else      
+      @users = User.order(sort_column + ' ' + sort_direction)
+                   .paginate(page: params[:page]) # you can also add 'per_page: 30'      
+    # end
   end
 
   def validate
@@ -72,5 +80,13 @@ class UsersController < ApplicationController
 
     def user_not_authorized
       action_name == 'show' ? super : redirect_to(root_path)
+    end
+
+    def sort_column
+      User.column_names.include?(params[:sort]) ? params[:sort] : 'id'
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : 'asc'
     end
 end
