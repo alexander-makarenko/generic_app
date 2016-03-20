@@ -55,9 +55,11 @@ def attach_photo(file_name)
   attach_file('file-select', 'spec/support/attachments/users/avatars/' + file_name)
 end
 
-def find_user(string)
-  within('form.search') do
-    find('input[type="text"]').set(string)
-    find('button[type="submit"]').click
+def find_user(query = nil)
+  if query
+    within('thead tr#users_search') do
+      query.each { |attribute, value| fill_in "search[#{attribute}]", with: value }
+    end
   end
+  find('body').click
 end

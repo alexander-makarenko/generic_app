@@ -27,13 +27,31 @@ class User < ActiveRecord::Base
   validates_attachment :avatar, content_type: { content_type: ['image/png',
     'image/gif', 'image/jpeg'] }, size: { less_than: 1.megabytes }
 
-  class << self
+  class << self    
     def digest(token)
       Digest::SHA1.hexdigest(token.to_s)
     end
 
     def new_token
       SecureRandom.urlsafe_base64
+    end
+
+    def search(search)
+      users = all
+      if search
+        search.each { |key, value| value.downcase! }
+        users = users.where(id: search[:id]) if search[:id].present?
+        users = users.where("lower(first_name) LIKE ?", "%#{search[:first_name]}%") if search[:first_name].present?
+        users = users.where("lower(last_name) LIKE ?", "%#{search[:last_name]}%") if search[:last_name].present?
+        users = users.where("lower(email) LIKE ?", "%#{search[:email]}%") if search[:email].present?
+        if search[:created_at].present?
+          created_at = Date.parse(search[:created_at])
+          users = users.where(created_at: created_at.beginning_of_day..created_at.end_of_day)
+        end
+      end
+      users
+    rescue ArgumentError
+      users
     end
   end
 

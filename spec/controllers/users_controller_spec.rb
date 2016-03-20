@@ -103,16 +103,16 @@ describe UsersController do
   end
 
   describe "#index" do
-    let(:user) { FactoryGirl.create(:user, :admin) }
-
-    before do
-      FactoryGirl.create_list(:user, 4)
-      sign_in_as(user, no_capybara: true)
-      get :index, { sort: :email, direction: :desc }
-    end
+    let(:admin) { FactoryGirl.create(:user, :admin) }
 
     describe "when the sorting params are provided" do
-      it "sorts @users accordingly" do        
+      before do
+        FactoryGirl.create_list(:user, 2)
+        sign_in_as(admin, no_capybara: true)
+        get :index, { sort: :email, direction: :desc }
+      end
+
+      it "sorts @users accordingly" do
         expect(assigns(:users).map(&:email)).to eq(User.pluck(:email).sort.reverse)
       end
     end

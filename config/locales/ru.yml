@@ -183,10 +183,10 @@ ru:
       submit_button: "Загрузить"
     email_changes:
       new:
-        heading: "Update email"
+        heading: "Изменить адрес электронной почты"
         fields:
-          new_email: "New email"
-          new_email_confirmation: "Confirm email"
+          new_email: "Новый адрес"
+          new_email_confirmation: "Подтверждение"
           current_password: "Пароль"
         submit: "Сохранить"
         cancel: "Отменить"
@@ -201,7 +201,7 @@ ru:
         cancel: "Отменить"
     password_changes:
       new:
-        heading: "Изменение пароля"
+        heading: "Изменить пароль"
         fields:
           current_password: "Текущий пароль"
           new_password: "Новый пароль"
@@ -212,7 +212,7 @@ ru:
       new:
         heading: "Сбросить пароль"
         invitation: "Пожалуйста, введите адрес электронной почты, на который
-          следует выслать инструкции по сбросу пароля."
+          следует выслать инструкции по сбросу пароля"
         fields:
           email: "Адрес электронной почты"
         submit_button: "Подтвердить"
@@ -304,8 +304,7 @@ ru:
         th_email: "Адрес электронной почты"
         th_created_at: "Дата регистрации"
         heading: "Все пользователи"
-        loading: "Загрузка..."        
-        search_placeholder: "Поиск..."
+        loading: "Загрузка..."
   will_paginate:
     previous_label: "&#8592; Предыдущая"
     next_label: "Следующая &#8594;"

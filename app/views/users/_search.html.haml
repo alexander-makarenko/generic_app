@@ -1,7 +1,0 @@
-= form_tag users_path, method: :get, class: 'search pull-right' do
-  .input-group
-    = text_field_tag :search, nil, class: 'form-control',
-    placeholder: t('v.users.index.search_placeholder')
-    %span.input-group-btn
-      = button_tag(name: nil, type: 'submit', class: 'btn btn-default') do
-        %span{ class: 'glyphicon glyphicon-search' }

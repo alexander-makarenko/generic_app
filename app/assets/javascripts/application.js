@@ -15,6 +15,7 @@
 //= require bootstrap-sprockets
 //= require jquery-fileupload/basic
 //= require turbolinks
+//= require bootstrap-datepicker
 //= require_tree .
 
 var callDelayed = (function() {

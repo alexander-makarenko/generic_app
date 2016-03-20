@@ -38,11 +38,12 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
   config.before :each do
-    if Capybara.current_driver == :rack_test
-      DatabaseCleaner.strategy = :transaction
-    else
-      DatabaseCleaner.strategy = :truncation
-    end
+    # if Capybara.current_driver == :rack_test
+    #   DatabaseCleaner.strategy = :transaction
+    # else
+    #   DatabaseCleaner.strategy = :truncation
+    # end
+    DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.start
   end
 

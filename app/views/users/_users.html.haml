@@ -1,0 +1,36 @@
+= form_tag users_path, method: :get, enforce_utf8: false do
+  = hidden_field_tag :sort, params[:sort]
+  = hidden_field_tag :direction, params[:direction]
+  
+  %table.table.table-bordered.table-hover
+    %thead
+      %tr.sorting
+        %th= sortable 'id',         t('v.users.index.th_id')
+        %th= sortable 'first_name', t('v.users.index.th_first_name')
+        %th= sortable 'last_name',  t('v.users.index.th_last_name')
+        %th= sortable 'email',      t('v.users.index.th_email')
+        %th= sortable 'created_at', t('v.users.index.th_created_at')        
+      %tr.hidden#users_search
+        = fields_for :search do |ff|
+          %td.form-group
+            = ff.label :id, t('v.users.index.th_id'), class: 'sr-only control-label'
+            = ff.text_field :id, value: params[:search].try(:[], :id), class: 'form-control'
+          %td.form-group
+            = ff.label :first_name, t('v.users.index.th_first_name'), class: 'sr-only control-label'
+            = ff.text_field :first_name, value: params[:search].try(:[], :first_name), class: 'form-control'
+          %td.form-group
+            = ff.label :last_name, t('v.users.index.th_last_name'), class: 'sr-only control-label'
+            = ff.text_field :last_name, value: params[:search].try(:[], :last_name), class: 'form-control'
+          %td.form-group
+            = ff.label :email, t('v.users.index.th_email'), class: 'sr-only control-label'
+            = ff.text_field :email, value: params[:search].try(:[], :email), class: 'form-control'
+          %td.form-group
+            = ff.label :created_at, t('v.users.index.th_created_at'), class: 'sr-only control-label'
+            = ff.text_field :created_at, value: params[:search].try(:[], :created_at), class: 'form-control',
+            'data-provide' => 'datepicker', 'data-date-format' => 'yyyy-mm-dd'
+      %tbody        
+        = render @users
+
+.text-center
+  = render 'loading_spinner'
+  = will_paginate @users

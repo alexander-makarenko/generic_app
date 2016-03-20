@@ -1,8 +1,7 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
-
-function toggleEmailConfirmationFields() {
+function makeEmailConfirmationFieldsTogglable() {
   var $toggleableRows = $('.user-info .padded'),
       $toggle = $('.user-info .collapse-toggle'),
       $spanWithIcon = $toggle.find('span.glyphicon');
@@ -14,26 +13,84 @@ function toggleEmailConfirmationFields() {
   });
 }
 
-function pageIsScrolledToAlmostBottom() {
-  return $(window).scrollTop() > $(document).height() - $(window).height() - 250;
+function showSearchFields() {
+  $('#users tr.hidden').removeClass('hidden');
 }
 
+function toggleLoadingSpinner() {
+  $('.loading').toggleClass('hidden');
+}
+
+function togglePaginationLinks() {
+  $('div.pagination').toggleClass('hidden');
+}
+
+function pageIsScrolledToAlmostBottom() {
+  return $(window).scrollTop() > $(document).height() - $(window).height() - 300;
+}
 
 function enableEndlessScrolling() {
+  $(window).off('scroll');
   if ($('.pagination').length) {
+    var ready = true;
     $(window).scroll(function() {
-      var url = $('.pagination .next a').attr('href');
-      if (url && url !== '#' && pageIsScrolledToAlmostBottom()) {
-        $('.pagination').empty();
-        $('.ajax-in-progress').removeClass('hidden');
-        $.getScript(url, function() {
-          $('.ajax-in-progress').addClass('hidden');
+      var url = $('div.pagination .next a').attr('href');
+      if (ready && url && url !== '#' && pageIsScrolledToAlmostBottom()) {
+        ready = false;
+        var data = { task: 'load_next_page' };
+        togglePaginationLinks();
+        toggleLoadingSpinner();
+        $.ajax({
+          url: url,
+          data: data,
+          dataType: 'script'
+        })
+        .done(togglePaginationLinks)
+        .done(toggleLoadingSpinner)
+        .done(function() {
+          ready = true;
         });
       }
     });
     $(window).scroll();
   }
 };
+
+function makeUsersTableSortableViaAjax() {
+  $('.main').on('click', '#users th a', function() {
+    var url, $form, data;
+    url = this.href;
+    $form = $(this).closest('form');
+    $form.find(':hidden').remove(); // remove the hidden form fields, because the information about sort order and direction is available in the url
+    data = $form.serializeArray();
+    data.push({ name: 'task', value: 'sort' });    
+    $.ajax({
+      url: url,
+      data: data,
+      dataType: 'script'
+    })
+    .done(showSearchFields)
+    .done(enableEndlessScrolling);    
+    return false;
+  });
+}
+
+function makeUsersTableSearchableViaAjax() {
+  $('.main').on('blur', '#users :text', function() {
+    var url, $form, data;
+    $form = $(this.form);
+    url = $form.attr('action');
+    data = $form.serializeArray();
+    data.push({ name: 'task', value: 'search' });
+    $.ajax({
+      url: url,
+      data: data,
+      dataType: 'script'
+    })
+    .done(enableEndlessScrolling);
+    return false;
+  });
+}
 
 
 function Validator(settings) {
@@ -195,7 +252,11 @@ $(document).on('page:change', function() {
     }
   }).enable();
 
-  toggleEmailConfirmationFields();
+  makeEmailConfirmationFieldsTogglable();
 
   enableEndlessScrolling();
+  showSearchFields();
+  makeUsersTableSortableViaAjax();
+  makeUsersTableSearchableViaAjax();
+
 });

@@ -21,7 +21,7 @@ feature "Password change page" do
     expect(page).to have_selector 'h2', text: form_heading
   end
 
-  context "on submitting invalid data" do
+  context "on submission of invalid data" do
     given(:new_password) { '' }
 
     background { subject }
@@ -35,7 +35,7 @@ feature "Password change page" do
     end
   end
 
-  context "on submitting valid data" do
+  context "on submission of valid data" do
     given(:new_password) { 'qwerty' }
     given(:password_changed) { t 'c.password_changes.password_changed' }
 

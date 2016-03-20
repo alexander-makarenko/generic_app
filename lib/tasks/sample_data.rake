@@ -14,7 +14,7 @@ namespace :db do
     99.times do |n|
       first_name = Faker::Name.first_name
       last_name = Faker::Name.last_name
-      email = Faker::Internet.safe_email
+      email = ('a'..'z').to_a.shuffle.first(4).join + '_' + Faker::Internet.safe_email
       password = Faker::Internet.password(8, 14)
 
       unless User.exists?(email: email)

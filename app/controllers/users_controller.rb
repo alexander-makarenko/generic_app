@@ -33,13 +33,11 @@ class UsersController < ApplicationController
   end
 
   def index
-    # if params[:search]
-      # @users = User.where("email LIKE ?", "%#{params[:search]}%").order('id ASC').paginate(page: params[:page])
-      # .where("name LIKE ? OR email LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%")
-    # else      
-      @users = User.order(sort_column + ' ' + sort_direction)
-                   .paginate(page: params[:page]) # you can also add 'per_page: 30'      
-    # end
+    @task = params[:task]
+    @users = User
+      .search(params[:search])
+      .order(sort_column + ' ' + sort_direction)
+      .paginate(page: params[:page]) # you can also add 'per_page: 30'    
   end
 
   def validate

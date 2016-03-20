@@ -1,6 +1,18 @@
-$('#users').append("#{j(render @users)}");
+- case @task
 
-- if @users.next_page
-  $('div.pagination').replaceWith("#{j(will_paginate @users)}");
-- else
-  $('div.pagination').remove();
+- when 'search'
+  $('#users tbody').html("#{j(render @users)}");
+  - if @users.next_page
+    $('div.pagination').replaceWith("#{j(will_paginate @users)}");
+  - else
+    $('div.pagination').empty();
+
+- when 'sort'
+  $('#users').html("#{j(render 'users')}");
+
+- when 'load_next_page'
+  $('#users tbody').append("#{j(render @users)}");
+  - if @users.next_page
+    $('div.pagination').replaceWith("#{j(will_paginate @users)}");
+  - else
+    $('div.pagination').empty();

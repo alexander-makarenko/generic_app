@@ -3,7 +3,7 @@ FactoryGirl.define do
   factory :user do
     sequence(:first_name) { Faker::Name.first_name }
     sequence(:last_name)  { Faker::Name.last_name }
-    sequence(:email)      { Faker::Internet.safe_email }
+    sequence(:email)      { ('a'..'z').to_a.shuffle.first(4).join + '_' + Faker::Internet.safe_email }
     password              { Faker::Internet.password(8, 14) }
     password_confirmation { password }
 

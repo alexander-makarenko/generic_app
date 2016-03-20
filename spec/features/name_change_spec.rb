@@ -23,7 +23,7 @@ feature "Name change page" do
     expect(page).to have_selector 'h2', text: form_heading
   end
 
-  context "on submitting invalid data" do
+  context "on submission of invalid data" do
     given(:new_first_name) { 'Foo' }
     given(:new_last_name) { '' }
     
@@ -46,7 +46,7 @@ feature "Name change page" do
     end
   end
 
-  context "on submitting valid data" do
+  context "on submission of valid data" do
     given(:new_first_name) { 'Foo' }
     given(:new_last_name) { 'Bar' }
     given(:name_changed) { t 'c.name_changes.name_changed' }

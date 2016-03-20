@@ -85,7 +85,7 @@ describe User do
       end
     end
   end
-  
+
   describe "with a first name that" do
     context "is blank" do
       let(:first_name) { ' ' }
@@ -208,8 +208,8 @@ describe User do
       context "on update" do
         subject(:persisted_user) { User.find_by(email: user.email) }
         before do
-          user.save          
-          subject.attributes = { password: password, locale: 'es' }          
+          user.save
+          subject.attributes = { password: password, locale: 'es' }
         end
 
         it { is_expected.to have_errors(1) }
@@ -310,7 +310,7 @@ describe User do
 
     it "updates the email attribute" do
       expect { subject }.to change(user, :email).to(new_email)
-    end    
+    end
   end
 
   describe "#cancel_email_change" do
@@ -387,7 +387,7 @@ describe User do
 
     it "restores the original email's confirmation time from the old_email_confirmed_at attribute" do
       expect { subject }.to change(user, :email_confirmed_at).to(original_email_confirmed_at)
-    end    
+    end
   end
 
   describe "#clear_old_email_attrs" do
@@ -404,7 +404,7 @@ describe User do
       ).from(true).to(false)
     end
 
-    it "clears the old_email_confirmed_at time" do      
+    it "clears the old_email_confirmed_at time" do
       expect { subject }.to change(
         user, :old_email_confirmed_at
       ).from(ActiveSupport::TimeWithZone).to(nil)
@@ -478,6 +478,96 @@ describe User do
       let(:email_type) { :email_change_confirmation }
       let(:sent_at_attr) { :email_confirmation_sent_at }
       include_examples "shared"
+    end
+  end
+
+  describe "#search" do
+    let!(:matched_user) { FactoryGirl.create(:user) }
+    let!(:other_user)   { FactoryGirl.create(:user, created_at: 1.week.ago) }
+
+    subject { User.search(query) }
+
+    shared_examples users_found: :all do
+      it "returns an instance of ActiveRecord::Relation with all users" do
+        expect(subject).to be_a ActiveRecord::Relation
+        expect(subject.to_a).to eq User.all
+      end
+    end
+
+    shared_examples users_found: :matched do
+      it "returns an instance of ActiveRecord::Relation with the user" do        
+        expect(subject).to be_a ActiveRecord::Relation
+        expect(subject.to_a).to contain_exactly(matched_user)
+      end
+    end
+
+    shared_examples users_found: :none do
+      it "returns an instance of ActiveRecord::Relation that is empty" do
+        expect(subject).to be_a ActiveRecord::Relation
+        expect(subject.to_a).to be_empty
+      end
+    end
+
+    describe "with nil", users_found: :all do
+      let(:query) { nil }
+    end
+
+    describe "with all attributes empty", users_found: :all do
+      let(:query) { Hash.new('') }
+    end
+
+    describe "with id" do
+      context "that matches an existing user", users_found: :matched do
+        let(:query) { { id: matched_user.id.to_s } }
+      end
+
+      context "that does not match any existing users", users_found: :none do
+        let(:query) { { id: 'mismatch' } }
+      end
+    end
+
+    describe "with first_name" do
+      context "that partially matches an existing user, but is written in a different case", users_found: :matched do
+        let(:query) { { first_name: matched_user.first_name[0..-2].upcase } }        
+      end
+
+      context "that does not match any existing users", users_found: :none do
+        let(:query) { { first_name: 'mismatch' } }
+      end
+    end
+
+    describe "with last_name" do
+      context "that partially matches an existing user, but is written in a different case", users_found: :matched do
+        let(:query) { { last_name: matched_user.last_name[0..-2].upcase } }
+      end
+
+      context "that does not match any existing users", users_found: :none do
+        let(:query) { { last_name: 'mismatch' } }
+      end
+    end
+
+    describe "with email" do
+      context "that partially matches an existing user, but is written in a different case", users_found: :matched do
+        let(:query) { { email: matched_user.email[0..-2].upcase } }
+      end
+
+      context "that does not match any existing users", users_found: :none do
+        let(:query) { { email: 'mismatch' } }
+      end
+    end
+
+    describe "with created_at" do
+      context "that matches an existing user to the day", users_found: :matched do
+        let(:query) { { created_at: matched_user.created_at.beginning_of_day.strftime('%Y-%m-%d') } }
+      end
+
+      context "that doesn't match any existing users", users_found: :none do
+        let(:query) { { created_at: 2.days.from_now.strftime('%Y-%m-%d') } }
+      end
+
+      context "that cannot be parsed as a date", users_found: :all do
+        let(:query) { { created_at: 'invalid' } }
+      end
     end
   end
 

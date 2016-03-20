@@ -8,6 +8,6 @@ module ApplicationHelper
       direction = sort_direction == 'asc' ? 'desc' : 'asc'
     end
 
-    link_to title, { sort: column, direction: direction }, { class: css_class }    
+    link_to title, { sort: column, direction: direction }, class: css_class
   end
 end

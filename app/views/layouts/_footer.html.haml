@@ -1,4 +1,4 @@
-%footer
-  - if policy(:session).new? # if user is not signed in
+- if policy(:session).new? # if user is not signed in
+  %footer
     %nav.text-center
       = render 'shared/locale_selector'

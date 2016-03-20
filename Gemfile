@@ -22,8 +22,10 @@ gem 'rails-i18n'
 gem 'paperclip', github: 'thoughtbot/paperclip'
 gem 'jquery-fileupload-rails'
 gem 'bootstrap-will_paginate'
+gem 'bootstrap-datepicker-rails', require: 'bootstrap-datepicker-rails',
+  github:'Nerian/bootstrap-datepicker-rails'
 
-group :development, :test do
+group :development, :test do  
   gem 'rspec-rails'
   gem 'jasmine-rails'
   gem 'guard-rspec'
