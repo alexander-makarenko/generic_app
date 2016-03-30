@@ -1,21 +1,16 @@
 = render 'shared/validation_errors', obj: @email_change
 %h2.text-center= t('v.email_changes.new.heading')
-
 = bootstrap_form_for @email_change, inline_errors: false,
-html: { id: 'change-email', class: 'center-block' } do |f|
-
+html: { id: 'emailChange', class: 'center-block' } do |f|
   = f.text_field :new_email, hide_label: true,
   label: t('v.email_changes.new.fields.new_email'),
   placeholder: t('v.email_changes.new.fields.new_email')
-
   = f.text_field :new_email_confirmation, hide_label: true,
   label: t('v.email_changes.new.fields.new_email_confirmation'),
   placeholder: t('v.email_changes.new.fields.new_email_confirmation')
-
   = f.password_field :current_password, hide_label: true,
   label: t('v.email_changes.new.fields.current_password'),
   placeholder: t('v.email_changes.new.fields.current_password')
-
   .text-center
     = f.form_group do
       = f.primary t('v.email_changes.new.submit')

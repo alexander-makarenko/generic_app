@@ -116,7 +116,7 @@ en:
         confirm: "confirm"
         confirmation_sent: "A confirmation email has been sent to %{email}.
           Please click the link it contains to confirm your email address. If
-          you can't find it, check your spam folder or resend the email by
+          you can't find it, check your spam folder or resend the mail by
           clicking %{link}."
         here: "here"
         email_change_pending: "A confirmation email has been sent to your new
@@ -154,17 +154,19 @@ en:
     layouts:
       _header:
         nav_links:
-          sign_in: "sign in"
-          sign_out: "sign out"
-          settings: "account"
+          account: "Account"
+          sign_in: "Sign in"
+          sign_out: "Sign out"
+          settings: "Settings"
+          users: "Users"
     avatars:
       change_link: "Change"
       delete_link: "Delete"
       file_select_button: "Choose a file..."
       file_input_label: "Upload profile photo"
       file_format_tips: "To avoid cropping and/or upscaling, select a square
-        image no smaller than 200 x 200 pixels. PNG, GIF and JPEG images are
-        supported."
+        image no smaller than 200 x 200 pixels. The supported formats are: PNG,
+        GIF and JPEG."
       submit_button: "Upload"
     email_changes:
       new:
@@ -196,14 +198,14 @@ en:
     password_resets:
       new:
         heading: "Reset password"
-        invitation: "Please enter your email address, on which to send the
-          password reset instructions"
+        invitation: "Please enter your email address on which to send the
+          password reset instructions:"
         fields:
           email: "Email"
         submit_button: "Confirm password reset"
       edit:
         heading: "Set password"
-        invitation: "Please enter your new password below:"
+        invitation: "Please enter your new password:"
         fields:
           password: "Password"
           password_confirmation: "Retype password"
@@ -216,8 +218,7 @@ en:
           password: "Password"
         password_reset: "Forgot password?"
         keep_signed_in: "Keep me signed in"
-        submit_button: "Sign in"
-        or: "or"
+        submit_button: "Sign in"        
         signup_link: "Sign up"
     shared:
       _validation_errors:
@@ -233,14 +234,14 @@ en:
           account be changed to %{new_email}. Please click the following link to
           confirm this address:"
       email_changed_notice: "You requested to change the email associated with
-        your account. In order to complete the process, refer to the
-        instructions that were sent to your new email address."
+        your account. Further instructions have been sent to your new email
+        address."
       email_confirmation:
         click_link: "Please click the link below to confirm your email address:"
       password_reset:
         click_link: "To reset your password, please click the link below:"
         ignore: "If you didn't request your password to be reset, please ignore
-          this email and your password will remain unchanged."
+          this message and your password will remain unchanged."
       welcome: "You have successfully created an account. Welcome to our
         website!"
     users:
@@ -252,9 +253,8 @@ en:
           email: "Email"
           password: "Password"
           password_confirmation: "Retype password"
-        submit_button: "Sign up"
-        or: "or"
         signin_link: "Sign in"
+        submit_button: "Sign up"        
       show:
         heading: "Account"
         subheadings:
@@ -281,7 +281,7 @@ en:
         th_last_name: "Last name"
         th_email: "Email"
         th_created_at: "Registered on"
-        heading: "All users"
+        heading: "Users"
         loading: "Loading..."
   will_paginate:
     previous_label: "&#8592; Previous"

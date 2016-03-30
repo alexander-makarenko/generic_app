@@ -26,6 +26,8 @@ ActiveRecord::Migration.maintain_test_schema!
 include ActionView::Helpers::DateHelper
 
 RSpec.configure do |config|
+  config.alias_it_should_behave_like_to :it_has_behavior, 'has behavior:'
+
   config.include Rails.application.routes.url_helpers
 
   Capybara.javascript_driver = :webkit

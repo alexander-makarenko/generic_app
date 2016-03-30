@@ -1,6 +1,6 @@
 = render 'shared/validation_errors', obj: @user
 %h2.text-center= t('v.users.show.heading')
-.row.account-settings
+.row#accountSettings
   .col-xs-4
     = image_tag @user.avatar.url(:medium), id: 'avatar'
   .col-xs-8

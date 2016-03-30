@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-shared_examples "sortable table" do
+shared_examples "sortability" do
   feature "sort order indicator" do
     scenario "an up-pointing triangle in the respective column denotes ascending order" do
       within('thead tr.sorting') do
@@ -105,7 +105,7 @@ feature "Users index" do
         end
       end
 
-      it_behaves_like "sortable table"
+      it_has_behavior "sortability"
     end
   end
 
@@ -114,12 +114,18 @@ feature "Users index" do
       visit users_path
     end
 
-    feature "page" do
+    feature "page" do      
       scenario "has proper appearance" do
         within('thead') do
           expect(page.find('tr#users_search')[:class]).to_not include('hidden')
           expect(page).to have_selector('input', count: columns_in_table)
         end
+      end
+
+      scenario "clicking a row in the table redirects to the respective user's show page" do
+        user = User.third
+        page.find('tbody tr', text: user.email).click
+        expect(page).to have_selector('#userInfo', text: user.email)
       end
     end
 
@@ -141,6 +147,14 @@ feature "Users index" do
         expect(page).to have_selector('tbody tr', count: pagination_limit)
         scroll_to_bottom
         expect(page).to have_selector('tbody tr', count: User.count)
+      end
+
+      scenario "newly loaded rows are clickable and redirect to the respective user's show page" do
+        user = User.last
+        expect(page).to_not have_selector('tbody tr', text: user.email)
+        scroll_to_bottom
+        page.find('tbody tr', text: user.email).click
+        expect(page).to have_selector('#userInfo', text: user.email)
       end
 
       scenario "pagination links are not shown once all users are loaded" do
@@ -176,7 +190,7 @@ feature "Users index" do
     end
 
     feature "sorting" do
-      it_behaves_like "sortable table"
+      it_has_behavior "sortability"
 
       scenario "does not affect the search results" do
         searched_user = User.last

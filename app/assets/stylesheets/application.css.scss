@@ -16,34 +16,12 @@
 @import "rails_bootstrap_forms";
 @import "bootstrap-datepicker";
 
-// nav {
-//   ul {
-//     float: right;
-//     list-style: none;
-//   }
-//   li {
-//     float: left;    
-//     margin-right: 10px;
-//     color: $gray-lighter;
-//     &:last-child {
-//       margin-right: 0;
-//     }
-//   }
-//   a {
-//     text-decoration: none;
-//   }
-//   .username {
-//     color: $gray-dark;
-//     font-weight: bold;
-//   }
-// }
-
-// .shadowed {
-//   box-shadow: 0 5px 20px 0px rgba(0,0,0,.5);
-// }
-
 body {
   padding-top: 70px;
+}
+
+a:focus {
+  outline: none;
 }
 
 footer {
@@ -57,65 +35,47 @@ footer {
   }
 }
 
-.gutter-half > [class*='col-'] {
-  padding-right: 7.5px;
-  padding-left: 7.5px;
-}
-
 .checkbox {
   padding-top: 0 !important;
 }
 
-#signup, #login {
-  span {
-    padding-right: 5px;
-    padding-left: 5px;
-  }
+.vertical-alignment-helper {
+    display: table;
+    height: 100%;
+    width: 100%;
+    pointer-events:none; /* This makes sure that we can still click outside of the modal to close it */
 }
 
-#login {
-  max-width: 350px;
+.vertical-align-center {
+    /* To center vertically */
+    display: table-cell;
+    vertical-align: middle;
+    pointer-events:none;
 }
-
-#signup {
-  max-width: 400px;
-  .row {
-    margin: 0;
-    [class*='col-'] {
-      padding: 0;
-    }
-    > .col-xs-6 {
-      &:nth-of-type(2n-1) {
-        padding-right: 7.5px;
-      }
-      &:nth-of-type(2n) {
-        padding-left: 7.5px;
-      }
-    }
-  }
-}
-
-#password-reset-new, #change-name, #change-password, #change-email {
-  max-width: 300px;
-}
-
-#password-reset-edit {
-  max-width: 200px;
-}
-
-#email-confirmation-new, #user-settings {
-  max-width: 300px;
-  @media (min-width: 768px) {
+.modal-content {
+    /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
     max-width: 400px;
+    // width:inherit;
+    height: inherit;
+    /* To center horizontally */
+    margin: 0 auto;
+    pointer-events: all;
+}
+
+.main #signinForm, .main #signupForm {
+  max-width: 350px;
+  .form-group:last-child {
+    padding-top: 10px;
+    border-top: 1px solid $gray-lighter;
   }
 }
 
-.panel-body div:last-child .form-group {
-  margin-bottom: 0;
+#passwordResetNew, #emailChange, #nameChange {
+  max-width: 300px;
 }
 
-.panel-heading h3 {
-  margin: 0;
+#passwordResetEdit, #passwordChange {
+  max-width: 250px;
 }
 
 .validation-errors {
@@ -132,11 +92,9 @@ footer {
   }
   ul {
     margin: 0;
-    padding: 5px;
-    padding-left: 12px;
+    padding: 5px 10px 5px 25px;
     background-color: #ffdbdb;
     text-align: left;
-    list-style-type: none;
     border: 1px solid #cc3f3f;
     border-radius: 0 0 5px 5px;
     border-top: none;
@@ -166,44 +124,20 @@ nav {
   .navbar-fixed-top {
     margin-bottom: 35px;
   }
-  .navbar-text {
-    margin: 0;
-    padding: 15px;
-  }
-
   .navbar-right li {
-    text-transform: uppercase;
-    font-size: 0.95em;
-    font-weight: bold;
-  }
+    .glyphicon {
+      margin-right: 5px;
+    }
+  }  
 }
 
-// .close-button {
-//   cursor: pointer;
-//   position: absolute;
-//   text-align: center;
-//   font-size: 1.45em;
-//   font-weight: bold;
-//   text-shadow: 0 -1px 0 $white;
-//   line-height: 18px;
-//   width: 18px;
-//   height: 18px;  
-//   top: 2px;
-//   right: 2px;
-//   color: $black;
-//   opacity: .3;
-//   &:hover {
-//     opacity: .4;
-//   }
-// }
-
-.account-settings, .user-info {  
+#accountSettings, #userInfo {
   .row {
     padding-bottom: 25px;
   }
   > div:first-child {
     min-width: 220px;
-    text-align: center;    
+    text-align: center;
   }
 }
 
@@ -254,7 +188,7 @@ nav {
   }
 }
 
-.user-info table {
+#userInfo table {
   th:first-child {
     width:1%;
     white-space:nowrap;
@@ -262,10 +196,15 @@ nav {
   }
   .padded td:first-child {
     padding-left: 25px;
-  }  
+  }
 }
 
-#users {  
+#avatar {
+  padding: 10px;
+  border: 1px solid $gray-lighter;
+}
+
+#users {
   th {
     overflow: hidden;
     a {
@@ -295,13 +234,14 @@ nav {
   }
 }
 
+.clickable-row {
+  cursor: pointer;
+}
+
 div.pagination {
   margin: 0;
 }
 
-.loading {
-  
-  span {
-    padding-left: 10px;
-  }
+.loading span {
+  padding-left: 10px;
 }

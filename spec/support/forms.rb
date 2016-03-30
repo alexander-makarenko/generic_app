@@ -10,10 +10,12 @@ def sign_in_as(user, **opts)
   if opts[:no_capybara] # sign in without Capybara
     sign_in(user, keep_signed_in = opts[:keep_signed_in])
   else
-    fill_in 'email',    with: user.email.upcase
-    fill_in 'password', with: user.password
-    check t('v.sessions.new.keep_signed_in') if opts[:keep_signed_in]
-    click_button t('v.sessions.new.submit_button')
+    within(opts[:modal] ? '#signinModal #signinForm' : '.main #signinForm') do
+      fill_in 'email',    with: user.email.upcase
+      fill_in 'password', with: user.password
+      check t('v.sessions.new.keep_signed_in') if opts[:keep_signed_in]
+      click_button t('v.sessions.new.submit_button')
+    end
   end
 end
 
@@ -61,5 +63,5 @@ def find_user(query = nil)
       query.each { |attribute, value| fill_in "search[#{attribute}]", with: value }
     end
   end
-  find('body').click
+  find('h2').click
 end

@@ -6,12 +6,15 @@ class SessionsController < ApplicationController
 
   def create
     user = User.find_by(email: params[:email].downcase)
-    if user.try(:authenticate, params[:password])
-      sign_in(user, params[:keep_signed_in])
-      redirect_back_or root_path
-    else
-      flash.now[:danger] = t('c.sessions.invalid_credentials')
-      render :new
+    respond_to do |format|
+      if user.try(:authenticate, params[:password])
+        sign_in(user, params[:keep_signed_in])        
+        format.html { redirect_back_or root_path }
+      else
+        flash.now[:danger] = t('c.sessions.invalid_credentials')
+        format.html { render :new }
+      end
+      format.js
     end
   end
 

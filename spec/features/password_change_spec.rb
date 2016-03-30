@@ -2,14 +2,16 @@ require 'rails_helper'
 
 feature "Password change page" do
   given(:user) { FactoryGirl.create(:user, :email_confirmed) }
-  given(:account_link) { t 'v.layouts._header.nav_links.settings' }
+  given(:settings_link) { t 'v.layouts._header.nav_links.settings' }
   given(:password_change_link) { t 'v.users.show.password_change' }
   given(:form_heading) { t 'v.password_changes.new.heading' }
+  given(:success_box) { '.main .alert-success' }
   
   background do
     visit signin_path
     sign_in_as user
-    click_link account_link
+    page.find('#accountDropdown').click
+    click_link settings_link
     click_link password_change_link
   end
 
@@ -46,7 +48,7 @@ feature "Password change page" do
     end
 
     it "shows an appropriate flash" do
-      expect(page).to have_flash :success, password_changed
+      expect(page).to have_selector(success_box, text: password_changed)
     end
   end
 

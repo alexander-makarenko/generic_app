@@ -2,8 +2,8 @@
 // All this logic will automatically be available in application.js.
 
 function makeEmailConfirmationFieldsTogglable() {
-  var $toggleableRows = $('.user-info .padded'),
-      $toggle = $('.user-info .collapse-toggle'),
+  var $toggleableRows = $('#userInfo .padded'),
+      $toggle = $('#userInfo .collapse-toggle'),
       $spanWithIcon = $toggle.find('span.glyphicon');
 
   $toggleableRows.hide();
@@ -19,6 +19,12 @@ function showSearchFields() {
 
 function toggleLoadingSpinner() {
   $('.loading').toggleClass('hidden');
+}
+
+function makeUsersTableRowsClickable() {
+  $('.clickable-row').off('click').on('click', function() {
+    window.document.location = $(this).data('href');
+  });
 }
 
 function togglePaginationLinks() {
@@ -45,6 +51,7 @@ function enableEndlessScrolling() {
           data: data,
           dataType: 'script'
         })
+        .done(makeUsersTableRowsClickable)
         .done(togglePaginationLinks)
         .done(toggleLoadingSpinner)
         .done(function() {
@@ -76,6 +83,7 @@ function makeUsersTableSortableViaAjax() {
 }
 
 function makeUsersTableSearchableViaAjax() {
+  showSearchFields();
   $('.main').on('blur', '#users :text', function() {
     var url, $form, data;
     $form = $(this.form);
@@ -246,17 +254,15 @@ $(document).on('page:change', function() {
   
   new Validator({
     model: 'user',
-    form: '#signup',
+    form: '#signupForm',
     errorPlacement: function(errors) {
-      $('#signup .panel-body').prepend(errors);
+      $('#signupForm').prepend(errors);
     }
   }).enable();
 
-  makeEmailConfirmationFieldsTogglable();
-
-  enableEndlessScrolling();
-  showSearchFields();
+  makeEmailConfirmationFieldsTogglable();  
+  enableEndlessScrolling();  
   makeUsersTableSortableViaAjax();
   makeUsersTableSearchableViaAjax();
-
+  makeUsersTableRowsClickable();
 });

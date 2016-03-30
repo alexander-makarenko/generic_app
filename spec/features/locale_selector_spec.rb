@@ -3,7 +3,7 @@ require 'rails_helper'
 feature "Locale selector" do  
   given(:user) { FactoryGirl.create(:user) }
   given(:locale_switcher) { '#locale-selector' }
-  given(:account_link) { t 'v.layouts._header.nav_links.settings' }
+  given(:settings_link) { t 'v.layouts._header.nav_links.settings' }
 
   shared_examples "a locale selector" do
     given(:english) { t 'v.shared._locale_selector.en' }
@@ -59,7 +59,8 @@ feature "Locale selector" do
     background do
       visit signin_path
       sign_in_as user
-      click_link account_link
+      page.find('#accountDropdown').click
+      click_link settings_link
     end
 
     it "is not shown in the layout" do

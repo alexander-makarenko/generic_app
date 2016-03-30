@@ -2,7 +2,7 @@
 %h2.text-center= t('v.password_resets.edit.heading')
 %p.text-center= t('v.password_resets.edit.invitation')
 = bootstrap_form_for @user, url: password_resets_path, method: :patch,
-inline_errors: false, html: { id: 'password-reset-edit',
+inline_errors: false, html: { id: 'passwordResetEdit',
 class: 'center-block' } do |f|
   = f.password_field :password, hide_label: true,
   label: t('v.password_resets.edit.fields.password'),
@@ -12,4 +12,4 @@ class: 'center-block' } do |f|
   placeholder: t('v.password_resets.edit.fields.password_confirmation')
   .text-center
     = f.form_group do
-      = f.submit t('v.password_resets.edit.submit_button'), class: 'btn btn-primary'
+      = f.primary t('v.password_resets.edit.submit_button')

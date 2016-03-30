@@ -2,12 +2,12 @@ require 'rails_helper'
 
 feature "Signup form" do
   given(:user) { FactoryGirl.build(:user) }
-  given(:form_heading) { t 'v.users.new.heading' }
+  given(:heading) { t 'v.users.new.heading' }
 
   background { visit signup_path }
 
   specify "has a proper heading" do
-    expect(page).to have_selector 'form h3', text: form_heading
+    expect(page).to have_selector 'h2', text: heading
   end
   
   context "on typing invalid data", :js do
@@ -41,7 +41,7 @@ feature "Signup form" do
 
       it "re-renders the page" do
         submit
-        expect(page).to have_selector 'form h3', text: form_heading
+        expect(page).to have_selector 'h2', text: heading
       end
 
       it "shows validation errors" do

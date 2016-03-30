@@ -1,0 +1,16 @@
+:plain
+  var $modal = $('#signinModal'),
+      $modalBody = $modal.find('.modal-body'),
+      $errorDiv = $modalBody.find('.alert');
+
+- if signed_in?
+  $modal.modal('hide');
+  $('header nav ul').html("#{j(render 'layouts/navlinks_user')}");
+- else
+  :plain
+    var errorHtml = "#{j(render 'layouts/flash', no_close_button: true)}";
+    if (($errorDiv).length) {
+      $errorDiv.replaceWith(errorHtml);
+    } else {
+      $(errorHtml).prependTo($modalBody).hide().slideDown(100);
+    }

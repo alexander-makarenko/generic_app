@@ -4,12 +4,16 @@ feature "Password" do
   given(:user) { FactoryGirl.create(:user) }
   given(:nonexistent_user) { FactoryGirl.build(:user) }
   given(:forgot_password_link) { t 'v.sessions.new.password_reset' }
-  given(:account_link) { t 'v.layouts._header.nav_links.settings' }
+  given(:settings_link) { t 'v.layouts._header.nav_links.settings' }
   given(:form_heading) { t 'v.password_resets.new.heading' }
+
+  given(:info_box) { '.main .alert-info' }
+  given(:success_box) { '.main .alert-success' }
+  given(:danger_box) { '.main .alert-danger' }
   
   background do
     visit signin_path
-    click_link forgot_password_link
+    first(:link, forgot_password_link).click
   end
 
   feature "reset" do
@@ -30,7 +34,8 @@ feature "Password" do
         background do
           visit signin_path
           sign_in_as user
-          click_link account_link
+          page.find('#accountDropdown').click
+          click_link settings_link
           click_link forgot_password_link
         end
         
@@ -86,7 +91,7 @@ feature "Password" do
         end
 
         it "shows an appropriate flash" do
-          expect(page).to have_flash :info, instructions_sent
+          expect(page).to have_selector(info_box, text: instructions_sent)
         end
       end
     end
@@ -112,7 +117,7 @@ feature "Password" do
         end
 
         it "shows an appropriate flash" do
-          expect(page).to have_flash :danger, link_invalid
+          expect(page).to have_selector(danger_box, text: link_invalid)
         end
       end
 
@@ -126,7 +131,7 @@ feature "Password" do
         end
 
         it "shows an appropriate flash" do
-          expect(page).to have_flash :danger, link_invalid
+          expect(page).to have_selector(danger_box, text: link_invalid)
         end
       end
 
@@ -141,7 +146,7 @@ feature "Password" do
         end
 
         it "shows an appropriate flash" do
-          expect(page).to have_flash :danger, link_expired
+          expect(page).to have_selector(danger_box, text: link_expired)
         end
       end
 
@@ -163,7 +168,7 @@ feature "Password" do
           end
 
           it "shows an appropriate flash" do
-            expect(page).to have_flash :danger, link_expired
+            expect(page).to have_selector(danger_box, text: link_expired)
           end
         end
       end
@@ -211,7 +216,7 @@ feature "Password" do
       end
 
       it "shows an appropriate flash" do
-        expect(page).to have_flash :success, password_changed
+        expect(page).to have_selector(success_box, text: password_changed)
       end
     end
   end

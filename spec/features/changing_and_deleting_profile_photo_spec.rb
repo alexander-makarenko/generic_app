@@ -2,18 +2,20 @@ require 'rails_helper'
 
 describe "Changing and deleting the profile photo." do
   let(:user) { FactoryGirl.create(:user, :email_confirmed) }
-  let(:account_link) { t 'v.layouts._header.nav_links.settings' }
+  let(:settings_link) { t 'v.layouts._header.nav_links.settings' }
   let(:account_page_heading) { t 'v.users.show.heading' }
   let(:change_photo_link) { t 'v.avatars.change_link' }
   let(:submit_photo_button) { t 'v.avatars.submit_button' }
   let(:remove_photo_link) { t 'v.avatars.delete_link' }
+  let(:success_box) { '.main .alert-success' }
 
   subject { page.find('.photo') }
 
   before do
     visit signin_path
     sign_in_as user
-    click_link account_link
+    page.find('#accountDropdown').click
+    click_link settings_link
     within(subject) { click_link change_photo_link }
   end
 
@@ -88,8 +90,8 @@ describe "Changing and deleting the profile photo." do
         expect(page.find('#avatar')).to have_xpath("//img[contains(@src, file_name)]")
       end
 
-      it "an appropriate flash is shown" do
-        expect(page).to have_flash :success, photo_changed
+      it "an appropriate flash is shown" do        
+        expect(page).to have_selector(success_box, text: photo_changed)
       end
     end
 
@@ -188,7 +190,7 @@ describe "Changing and deleting the profile photo." do
         end
 
         it "an appropriate flash is shown" do
-          expect(page).to have_flash :success, photo_removed
+          expect(page).to have_selector(success_box, text: photo_removed)
         end
       end
 

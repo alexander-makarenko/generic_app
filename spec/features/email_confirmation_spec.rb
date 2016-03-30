@@ -2,15 +2,20 @@ require 'rails_helper'
 
 feature "Email confirmation" do
   given(:user) { FactoryGirl.create(:user) }
-  given(:account_link) { t 'v.layouts._header.nav_links.settings' }
+  given(:settings_link) { t 'v.layouts._header.nav_links.settings' }
   given(:sign_out_link) { t 'v.layouts._header.nav_links.sign_out' }
   given(:get_confirmation_link) { t 'c.users.show.confirm' }
   given(:get_new_confirmation_link) { t 'c.email_confirmations.get_new_link' }
 
+  given(:success_box) { '.main .alert-success' }
+  given(:warning_box) { '.main .alert-warning' }
+  given(:danger_box) { '.main .alert-danger' }
+
   background do
     visit signin_path
     sign_in_as user
-    click_link account_link
+    page.find('#accountDropdown').click
+    click_link settings_link
     within('.alert') { click_link get_confirmation_link }
   end
 
@@ -24,8 +29,8 @@ feature "Email confirmation" do
     end
 
     it "shows an appropriate flash" do
-      expect(page).to have_flash :success, email_sent
-      expect(page).to_not have_flash :warning
+      expect(page).to have_selector(success_box, text: email_sent)
+      expect(page).to_not have_selector(warning_box)
     end
   end
 
@@ -49,7 +54,7 @@ feature "Email confirmation" do
       end
 
       it "shows an appropriate flash" do
-        expect(page).to have_flash :danger, link_invalid
+        expect(page).to have_selector(danger_box, text: link_invalid)
       end
     end
 
@@ -63,7 +68,7 @@ feature "Email confirmation" do
       end
 
       it "shows an appropriate flash" do
-        expect(page).to have_flash :danger, link_invalid
+        expect(page).to have_selector(danger_box, text: link_invalid)
       end
     end
 
@@ -78,7 +83,7 @@ feature "Email confirmation" do
       end
 
       it "shows an appropriate flash" do
-        expect(page).to have_flash :danger, link_expired
+        expect(page).to have_selector(danger_box, text: link_expired)
       end
     end
 
@@ -110,13 +115,13 @@ feature "Email confirmation" do
         end
 
         background do
-          within('.account-settings .email') { click_link email_change_link }          
+          within('#accountSettings .email') { click_link email_change_link }          
           change_email(new_email: new_email, current_password: user.password)
           visit subject
         end
 
         it "shows an appropriate flash" do
-          expect(page).to have_flash :success, email_changed
+          expect(page).to have_selector(success_box, text: email_changed)
         end
       end
 
@@ -128,7 +133,7 @@ feature "Email confirmation" do
         background { visit subject }
 
         it "shows an appropriate flash" do
-          expect(page).to have_flash :success, email_confirmed
+          expect(page).to have_selector(success_box, text: email_confirmed)
         end
       end
     end

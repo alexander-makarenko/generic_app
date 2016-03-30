@@ -1,20 +1,5 @@
 include ActionView::Helpers::TextHelper
 
-module Capybara
-  class Session
-    def has_flash?(type, contents = nil)
-      case contents
-      when Array
-        contents.each do |element|
-          return false unless has_selector?("div.alert-#{type.to_s}", text: element)
-        end
-      else
-        has_selector?("div.alert-#{type.to_s}", contents ? { text: contents } : {})
-      end
-    end
-  end
-end
-
 # Pundit
 RSpec::Matchers.define :permit do |action|
   match do |policy|

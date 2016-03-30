@@ -25,7 +25,7 @@ ru:
               too_long: "должно быть длиной не более %{count} символов"
               unchanged: "должен отличаться от текущего"
             new_email_confirmation:
-              confirmation: "не совпадает с указанным имейлом"
+              confirmation: "не совпадает с указанным адресом"
             current_password:
               invalid: "текущий пароль"
         name_change:
@@ -102,10 +102,10 @@ ru:
         info: "Запрос на изменение адреса электронной почты отменён."
     email_confirmations:
       email_sent: "Письмо подтверждения отправлено на %{email}."
-      link_expired: "The link has expired. To request a new one, please click
-        %{get_new_link}."
-      link_invalid: "The link is invalid. To request a new one, please click
-        %{get_new_link}."
+      link_expired: "Срок действия ссылки истёк. Для получения новой,
+        пожалуйста, нажмите %{get_new_link}."
+      link_invalid: "Ссылка недействительна. Для получения новой,
+        пожалуйста, нажмите %{get_new_link}."
       email_confirmed: "Адрес %{email} успешно подтверждён."
       email_changed: "Адрес электронной почты изменён на %{email}."
       get_new_link: "здесь"
@@ -114,11 +114,11 @@ ru:
     password_changes:
       password_changed: "Новый пароль сохранён."
     password_resets:
-      instructions_sent: "Дальнейшие инструкции высланы на %{email}."
-      link_expired: "The link has expired. If you still want to reset your
-          password, please click %{get_new_link}."
-      link_invalid: "The link is invalid. Если вы все ещё хотите сбросить ваш
-          пароль, пожалуйста, нажмите %{get_new_link}."
+      instructions_sent: "Дальнейшие инструкции отправлены на %{email}."
+      link_expired: "Срок действия ссылки истёк. Если вы все ещё хотите сбросить
+        свой пароль, пожалуйста, нажмите %{get_new_link}."
+      link_invalid: "Ссылка недействительна. Если вы все ещё хотите сбросить
+        свой пароль, пожалуйста, нажмите %{get_new_link}."
       get_new_link: "здесь"
       password_changed: "Новый пароль сохранён."
     sessions:
@@ -129,18 +129,18 @@ ru:
           %{link} адрес электронной почты."
         confirm: "подтвердить"
         confirmation_sent: "Письмо подтверждения отправлено на %{email}.
-          Пожалуйста, перейдите по ссылке в нём, чтобы подтвердить ваш адрес
+          Пожалуйста, перейдите по ссылке в нём, чтобы подтвердить свой адрес
           электронной почты. Если вы не можете найти указанное письмо, проверьте
           папку нежелательной почты, либо нажмите %{link}, чтобы отправить его
           ещё раз."
         here: "здесь"
-        email_change_pending: "A confirmation email has been sent to your new
-          email address, %{email}. Please click the link it contains to confirm
-          your email change. You can %{resend_link} the email if you have not
-          received it, or %{cancel_link} the request if you have changed your
-          mind."
-        resend: "resend"
-        cancel: "cancel"
+        email_change_pending: "Письмо подтверждения отправлено на ваш новый
+          адрес, %{email}. Пожалуйста, перейдите по ссылке в нём, чтобы
+          подтвердить изменение. Если вы не получили указанное письмо, нажмите
+          %{resend_link}, чтобы отправить его ещё раз, либо же %{cancel_link}
+          свой запрос, если решили оставить свой адрес прежним."
+        resend: "здесь"
+        cancel: "отмените"
   h: # helpers
     users_helper:
       "yes": "Да"
@@ -154,32 +154,35 @@ ru:
       email_change_confirmation:
         subject: "Подтверждение изменения адреса электронной почты"
       email_changed_notice:
-        subject: "Your account will no longer be associated with this address"
+        subject: "Ваша учётная запись больше не привязана к данному адресу"
       password_reset:
         subject: "Восстановление пароля"
       welcome:
         subject: "Добро пожаловать на наш сайт!"
   p: #policies
-    default: "Please sign in to access this page."
+    default: "Пожалуйста, войдите в свою учётную запись для доступа к данной
+      странице."
     email_confirmation:
-      create?: "You will be able to request a new confirmation email in your
-        account settings after signing in."
+      create?: "Вы сможете запросить новое письмо подтверждения в настройках
+        профиля после того как войдёте в свою учётную запись."
       edit?: "Вы уже подтвердили свой адрес электронной почты."
   v: # views
     layouts:
       _header:
-        nav_links:
-          sign_in: "вход"
-          sign_out: "выход"
-          settings: "профиль"
+        nav_links:          
+          account: "Профиль"
+          sign_in: "Войти"
+          sign_out: "Выход"
+          settings: "Настройки"
+          users: "Пользователи"
     avatars:
       change_link: "Изменить"
       delete_link: "Удалить"
       file_select_button: "Выбрать файл..."
       file_input_label: "Загрузить фотографию профиля"
-      file_format_tips: "To avoid cropping and/or upscaling, select a square
-        image no smaller than 200 x 200 pixels. PNG, GIF and JPEG images are
-        supported."
+      file_format_tips: "Во избежание обрезания и/или масштабирования, выбирайте
+        квадратное изображение размером не менее 200 x 200 пикселей.
+        Поддерживаемые форматы: PNG, GIF и JPEG."
       submit_button: "Загрузить"
     email_changes:
       new:
@@ -212,13 +215,13 @@ ru:
       new:
         heading: "Сбросить пароль"
         invitation: "Пожалуйста, введите адрес электронной почты, на который
-          следует выслать инструкции по сбросу пароля"
+          следует отправить инструкции по сбросу пароля:"
         fields:
           email: "Адрес электронной почты"
         submit_button: "Подтвердить"
       edit:
-        heading: "Set password"
-        invitation: "Please enter your new password below:"
+        heading: "Установка пароля"
+        invitation: "Введите ваш новый пароль"
         fields:
           password: "Пароль"
           password_confirmation: "Подтвердите пароль"
@@ -231,32 +234,32 @@ ru:
           password: "Пароль"
         password_reset: "Забыли пароль?"
         keep_signed_in: "Запомнить"
-        submit_button: "Войти"
-        or: "или"
+        submit_button: "Войти"        
         signup_link: "Зарегистрироваться"
     shared:
       _validation_errors:
         message:
           one: "Обнаружена ошибка:"
-          other: "Обнаружены следующие ошибки:"
+          few: "Обнаружено %{count} ошибки:"
+          many: "Обнаружено %{count} ошибок:"
       _locale_selector:
         en: "English"
         ru: "Русский"
     user_mailer:
       email_change_confirmation:
-        click_link: "You have requested that the email address linked to your
-          account be changed to %{new_email}. Please click the following link to
-          confirm this address:"
-      email_changed_notice: "You requested to change the email associated with
-        your account. In order to complete the process, refer to the
-        instructions that were sent to your new email address."
+        click_link: "Вы оставляли запрос на изменение адреса электронной почты,
+          связанного с вашей учётной записью, на %{new_email}. Пожалуйста,
+          перейдите по ссылке ниже для подтвержения данного адреса."
+      email_changed_notice: "Вы оставляли запрос на изменение адреса электронной
+        почты, связанного с вашей учётной записью. Письмо с дальнейшими
+        инструкциями было отправлено на ваш новый адрес."
       email_confirmation:
-        click_link: "Для подтверждения адреса электронной почты, пожалуйста, перейдите
-          по ссылке ниже:"
+        click_link: "Для подтверждения адреса электронной почты, пожалуйста,
+          перейдите по ссылке ниже:"
       password_reset:
         click_link: "Для сброса пароля, пожалуйста, перейдите по ссылке ниже:"
-        ignore: "If you didn't request your password to be reset, please ignore
-          this email and your password will remain unchanged."
+        ignore: "Если вы не запрашивали сброс пароля, можете не обращать
+          внимание на это сообщение; ваш пароль останется прежним."
       welcome: "Вы успешно зарегистрировались. Добро пожаловать на наш сайт!"
     users:
       new:
@@ -267,9 +270,8 @@ ru:
           email: "Адрес электронной почты"
           password: "Пароль"
           password_confirmation: "Подтвердите пароль"
-        submit_button: "Создать"
-        or: "или"
         signin_link: "Войти"
+        submit_button: "Создать"
       show:
         heading: "Профиль"
         subheadings:
@@ -280,10 +282,7 @@ ru:
         name_change: "Изменить имя"
         email_change: "Изменить"
         password_reset: "Забыли пароль?"
-        password_change: "Изменить пароль"
-        image_format_hint: "To avoid cropping and/or upscaling, select a square
-          image no smaller than 200 x 200 pixels. PNG, GIF and JPEG images are
-          supported."
+        password_change: "Изменить пароль"        
         avatar_change: "Изменить"
         avatar_fileselect: "Выбрать файл..."
         avatar_submit: "Загрузить"
@@ -303,7 +302,7 @@ ru:
         th_last_name: "Фамилия"
         th_email: "Адрес электронной почты"
         th_created_at: "Дата регистрации"
-        heading: "Все пользователи"
+        heading: "Пользователи"
         loading: "Загрузка..."
   will_paginate:
     previous_label: "&#8592; Предыдущая"

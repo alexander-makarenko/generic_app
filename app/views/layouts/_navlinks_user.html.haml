@@ -1,0 +1,18 @@
+%li
+  = link_to users_path do
+    %span.glyphicon.glyphicon-list-alt
+    = t('v.layouts._header.nav_links.users')
+%li.dropdown
+  = link_to '#', class: 'dropdown-toggle', id: 'accountDropdown', 'data-toggle': 'dropdown', role: 'button' do
+    %span.glyphicon.glyphicon-user
+    = current_user.name
+    %span.caret
+  %ul.dropdown-menu{ 'aria-labelledby': 'accountDropdown' }
+    %li
+      = link_to account_path do
+        %span.glyphicon.glyphicon-wrench
+        = t('v.layouts._header.nav_links.settings')
+    %li
+      = link_to signout_path, method: :delete do
+        %span.glyphicon.glyphicon-log-out
+        = t('v.layouts._header.nav_links.sign_out')

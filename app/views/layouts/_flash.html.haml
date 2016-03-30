@@ -1,5 +1,6 @@
 - flash.each do |key, value|
   %div{ class: "alert alert-#{key} alert-dismissible", role: 'alert' }
-    %button.close{ 'aria-label' => 'Close', 'data-dismiss' => 'alert', type: 'button' }
-      %span{ 'aria-hidden' => 'true'} &times;
+    - unless local_assigns[:no_close_button]
+      %button.close{ 'aria-label' => 'Close', 'data-dismiss' => 'alert', type: 'button' }
+        %span{ 'aria-hidden' => 'true'} &times;
     %p= value.html_safe

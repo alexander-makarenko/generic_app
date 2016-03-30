@@ -1,6 +1,7 @@
 !!!
 %html
   = render 'layouts/head'
+  = render 'layouts/signin_modal' unless signed_in? # if user is not signed in
   %body
     .container
       = render 'layouts/header'

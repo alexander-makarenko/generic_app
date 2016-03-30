@@ -2,7 +2,7 @@
 %h2.text-center= t('v.password_changes.new.heading')
 
 = bootstrap_form_for @password_change, inline_errors: false,
-html: { id: 'change-password', class: 'center-block' } do |f|
+html: { id: 'passwordChange', class: 'center-block' } do |f|
 
   = f.password_field :current_password, hide_label: true,
     label: t('v.password_changes.new.fields.current_password'),

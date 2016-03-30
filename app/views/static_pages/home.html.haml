@@ -1,22 +1,16 @@
-%h1.text-center Home page
+%h2.text-center Feature list
 
 #feature-list
-  %h2 Feature list
-
   %h4 Authentication (based on has_secure_password)
   %ul
     %li users have the ability to sign up, sign in and sign out;
     %li a "keep me signed in" option on the signin form.
 
-  %h4 Ajax and JavaScript
+  %h4 Email confirmation
   %ul
-    %li validation on the signup form;
-    %li profile photo upload and deletion;
-    %li endless scrolling on the users index page.
-
-  %h4 Validations
-  %ul
-    %li validation of all user data submitted to the server.  
+    %li an email confirmation link is sent: (a) upon request after signup; (b) automatically when a user changes the email;
+    %li the link contains the user's email address (hashed) and a random token;
+    %li links expire after 3 days.
 
   %h4 Password recovery
   %ul
@@ -25,11 +19,9 @@
     %li after visiting the link and setting a new password, the user is automatically signed in;
     %li links expire after 2 hours.
 
-  %h4 Email confirmation
+  %h4 Validations
   %ul
-    %li an email confirmation link is sent: (a) upon request after signup; (b) automatically when a user changes the email;
-    %li the link contains the user's email address (hashed) and a random token;
-    %li links expire after 3 days.
+    %li validation of all user data submitted to the server.
 
   %h4 Authorization (based on Pundit)
   %p Permissions:
@@ -46,6 +38,12 @@
   %p Error handling and messaging customizable on a per-controller and per-action basis.
   %p Friendly redirection of users that are asked to sign in to access a protected page.
 
+  %h4 User roles
+  %p Admin users have additional permissions and the ability to:
+  %ul
+    %li view the information about other users, including their registration date and last activity time;
+    %li view the list of all users.  
+
   %h4 User profile
   %p Allows registered users to:
   %ul
@@ -54,11 +52,12 @@
     %li change and reset their password;
     %li set the preferred language.
 
-  %h4 User roles
-  %p Admin users рave additional permissions and the ability to:
+  %h4 Ajax and JavaScript
   %ul
-    %li view the information about other users, including their registration date and last activity time;
-    %li view the list of all users.
+    %li signin via a modal window;
+    %li validation on the signup form;
+    %li profile photo upload and deletion;
+    %li sorting, searching and endless scrolling of the all users list.
 
   %h4 Internationalization and localization
   %ul
@@ -74,7 +73,3 @@
     %li when agreeing to confirm their email address, a user is sent a confirmation link;
     %li after requesting their password to be reset, a user is emailed the relevant instructions;
     %li after changing their email, a user is sent a notification to their old address and a confirmation link to the new one.
-
-  %h4 Other features
-  %ul
-    %li the table with the list of all users can be sorted by different columns in ascending and descending order.

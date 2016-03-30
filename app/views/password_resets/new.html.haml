@@ -1,10 +1,10 @@
 = render 'shared/validation_errors', obj: @password_reset
 %h2.text-center= t('v.password_resets.new.heading')
-%p.text-center= t('v.password_resets.new.invitation')
 = bootstrap_form_for @password_reset, inline_errors: false,
-html: { id: 'password-reset-new', class: 'center-block' } do |f|
+html: { id: 'passwordResetNew', class: 'center-block' } do |f|
+  %p.text-center= t('v.password_resets.new.invitation')
   = f.text_field :email, label: t('v.password_resets.new.fields.email'),
-  hide_label: true, value: (policy(:session).new? ? nil : current_user.email)
+  hide_label: true, value: (signed_in? ? current_user.email : nil)
   .text-center
     = f.form_group do
-      = f.submit t('v.password_resets.new.submit_button'), class: 'btn btn-primary'
+      = f.primary t('v.password_resets.new.submit_button')

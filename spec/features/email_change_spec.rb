@@ -3,15 +3,16 @@ require 'rails_helper'
 feature "Email change" do
   given(:user) { FactoryGirl.create(:user, :email_confirmed) }
   given(:original_email) { user.email }
-  given(:account_link) { t 'v.layouts._header.nav_links.settings' }
+  given(:settings_link) { t 'v.layouts._header.nav_links.settings' }
   given(:email_change_link) { t 'v.users.show.email_change' }
   given(:form_heading) { t 'v.email_changes.new.heading' }
 
   background do
     visit signin_path
     sign_in_as user
-    click_link account_link
-    within('.account-settings .email') { click_link email_change_link }
+    page.find('#accountDropdown').click
+    click_link settings_link
+    within('#accountSettings .email') { click_link email_change_link }
   end
 
   it "page has a proper heading" do
@@ -27,7 +28,7 @@ feature "Email change" do
       background { subject }
 
       it "does not update the user's email" do
-        click_link account_link
+        click_link settings_link
         within '.main' do
           expect(page).to have_content original_email
           expect(page).to_not have_content new_email
@@ -49,9 +50,8 @@ feature "Email change" do
 
     context "on submission of valid data" do
       given(:new_email) { 'new.email@example.com' }
-      given(:confirmation_email_sent) do
-        t('c.email_changes.create.success', email: new_email)
-      end
+      given(:confirmation_email_sent) { t('c.email_changes.create.success', email: new_email) }      
+      given(:success_box) { '.main .alert-success' }
 
       it "updates the user's email" do
         subject
@@ -75,8 +75,8 @@ feature "Email change" do
       end
 
       it "shows an appropriate flash" do
-        subject
-        expect(page).to have_flash :success, confirmation_email_sent
+        subject        
+        expect(page).to have_selector(success_box, text: confirmation_email_sent)
       end
     end
 
@@ -95,6 +95,7 @@ feature "Email change" do
         given(:cancel_link) { t 'c.users.show.cancel' }
         given(:request_cancelled) { t'c.email_changes.destroy.info' }
         given(:new_email) { 'new.email@example.com' }
+        given(:info_box) { '.main .alert-info' }
         
         background do
           subject
@@ -114,7 +115,7 @@ feature "Email change" do
         end
 
         it "shows an appropriate flash" do
-          expect(page).to have_flash :info, request_cancelled
+          expect(page).to have_selector(info_box, text: request_cancelled)
         end
       end
     end

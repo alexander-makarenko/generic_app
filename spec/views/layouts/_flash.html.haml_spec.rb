@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe "layouts/_flash" do
   subject do
-    render
+    render 'layouts/flash'
     rendered
   end
 
