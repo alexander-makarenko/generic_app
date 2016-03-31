@@ -1,17 +1,15 @@
 !!!
 %html
   = render 'layouts/head'
-  = render 'layouts/signin_modal' unless signed_in? # if user is not signed in
+  = render 'layouts/signin_modal' unless signed_in?
   %body
+    = render 'layouts/header'
     .container
-      = render 'layouts/header'
       .row.main
         .col-xs-12
           = render 'layouts/flash'
           = yield
       .row
         .col-xs-12
-          = render 'layouts/footer'
-      .row
-        .col-xs-12
           = debug(params) if Rails.env.development?
+    = render 'layouts/footer'

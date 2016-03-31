@@ -1,4 +1,5 @@
-- if policy(:session).new? # if user is not signed in
-  %footer
-    %nav.text-center
-      = render 'shared/locale_selector'
+%footer
+  .container
+    - unless signed_in?
+      .text-center
+        = render 'shared/locale_selector'

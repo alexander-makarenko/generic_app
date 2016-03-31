@@ -9,7 +9,7 @@ feature "Locale selector" do
     given(:english) { t 'v.shared._locale_selector.en' }
     given(:russian) { t 'v.shared._locale_selector.ru' }
 
-    subject { page.find(locale_switcher) }
+    subject { find(locale_switcher) }
 
     def locale_cookie
       get_me_the_cookie('locale')[:value]
@@ -59,7 +59,7 @@ feature "Locale selector" do
     background do
       visit signin_path
       sign_in_as user
-      page.find('#accountDropdown').click
+      find('#accountDropdown').click
       click_link settings_link
     end
 

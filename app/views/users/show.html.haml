@@ -1,30 +1,30 @@
 = render 'shared/validation_errors', obj: @user
 %h2.text-center= t('v.users.show.heading')
 .row#accountSettings
-  .col-xs-4
+  .col-xs-12.col-sm-4
     = image_tag @user.avatar.url(:medium), id: 'avatar'
-  .col-xs-8
+  .col-xs-12.col-sm-8
     .row.name
       .col-sm-12
         %h4= @user.name
         = link_to t('v.users.show.name_change'), new_name_change_path
-    .row.photo
-      .col-sm-12
-        %p.text-muted= t('v.users.show.subheadings.photo')
-        = render 'avatars/select_form', user: @user
     .row.email
       .col-sm-12
-        %p.text-muted= t('v.users.show.subheadings.email')
+        %p= t('v.users.show.subheadings.email')
         = @user.email
         %br
         = link_to t('v.users.show.email_change'), new_email_change_path
     .row.password
       .col-sm-12
-        %p.text-muted= t('v.users.show.subheadings.password')
+        %p= t('v.users.show.subheadings.password')
         = link_to t('v.users.show.password_change'), new_password_change_path
         %br
         = link_to t('v.users.show.password_reset'), new_password_reset_path
+    .row.photo
+      .col-sm-12
+        %p= t('v.users.show.subheadings.photo')
+        = render 'avatars/select_form', user: @user    
     .row.language
       .col-sm-12
-        %p.text-muted= t('v.users.show.subheadings.language')
+        %p= t('v.users.show.subheadings.language')
         = render 'shared/locale_selector'

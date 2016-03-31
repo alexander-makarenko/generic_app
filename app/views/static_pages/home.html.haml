@@ -1,75 +1,150 @@
 %h2.text-center Feature list
 
-#feature-list
-  %h4 Authentication (based on has_secure_password)
-  %ul
-    %li users have the ability to sign up, sign in and sign out;
-    %li a "keep me signed in" option on the signin form.
+#feature-list.panel-group{ role: 'tablist' }
 
-  %h4 Email confirmation
-  %ul
-    %li an email confirmation link is sent: (a) upon request after signup; (b) automatically when a user changes the email;
-    %li the link contains the user's email address (hashed) and a random token;
-    %li links expire after 3 days.
+  .panel.panel-default
+    .panel-heading{ role: 'tab', id: 'heading-1' }
+      .panel-title
+        = link_to '#collapse-1', role: 'button', 'data-toggle': 'collapse', 'aria-expanded': 'false', 'aria-controls': 'collapse-1' do
+          %span.glyphicon.glyphicon-chevron-right
+          Authentication (based on has_secure_password)
+    #collapse-1.panel-collapse.collapse{ role: 'tabpanel', 'aria-labelledby': 'heading-1' }
+      .panel-body
+        %ul
+          %li users have the ability to sign up, sign in and sign out;
+          %li a "keep me signed in" option is available on the signin form.
 
-  %h4 Password recovery
-  %ul
-    %li a password reset link is sent upon a user's request;
-    %li the link contains the user's email address (hashed) and a random token;
-    %li after visiting the link and setting a new password, the user is automatically signed in;
-    %li links expire after 2 hours.
+  .panel.panel-default
+    .panel-heading{ role: 'tab', id: 'heading-2' }
+      .panel-title
+        = link_to '#collapse-2', role: 'button', 'data-toggle': 'collapse', 'aria-expanded': 'false', 'aria-controls': 'collapse-2' do
+          %span.glyphicon.glyphicon-chevron-right
+          Email confirmation
+    #collapse-2.panel-collapse.collapse{ role: 'tabpanel', 'aria-labelledby': 'heading-2' }
+      .panel-body
+        %ul
+          %li
+            an email confirmation link is sent:
+            %ul
+              %li upon the user's request request after signup;
+              %li automatically when the user changes the email;
+          %li the link contains the user's email address (hashed) and a random token;
+          %li links expire after 3 days.
 
-  %h4 Validations
-  %ul
-    %li validation of all user data submitted to the server.
+  .panel.panel-default
+    .panel-heading{ role: 'tab', id: 'heading-3' }
+      .panel-title
+        = link_to '#collapse-3', role: 'button', 'data-toggle': 'collapse', 'aria-expanded': 'false', 'aria-controls': 'collapse-3' do
+          %span.glyphicon.glyphicon-chevron-right
+          Password recovery
+    #collapse-3.panel-collapse.collapse{ role: 'tabpanel', 'aria-labelledby': 'heading-3' }
+      .panel-body
+        %ul
+          %li a password reset link is sent upon the user's request;
+          %li the link contains the user's email address (hashed) and a random token;
+          %li after visiting the link and setting a new password, the user is automatically signed in;
+          %li links expire after 2 hours.
 
-  %h4 Authorization (based on Pundit)
-  %p Permissions:
-  %ul
-    %li signed in users cannot sign up or sign in another time;
-    %li visitors cannot sign out;
-    %li email confirmation links can be requested only by signed in users who have not yet confirmed their email;
-    %li email confirmation links can be accessed by anyone except signed in users who have already confirmed their email;
-    %li anyone can request and access password reset links;
-    %li anyone can change the locale;
-    %li only signed in users can view their profile, change their name, photo, password and email;
-    %li only signed in admin users can view the profiles of other users;
-    %li only signed in users who have a pending email change request can cancel it.
-  %p Error handling and messaging customizable on a per-controller and per-action basis.
-  %p Friendly redirection of users that are asked to sign in to access a protected page.
+  .panel.panel-default
+    .panel-heading{ role: 'tab', id: 'heading-4' }
+      .panel-title
+        = link_to '#collapse-4', role: 'button', 'data-toggle': 'collapse', 'aria-expanded': 'false', 'aria-controls': 'collapse-4' do
+          %span.glyphicon.glyphicon-chevron-right
+          Validations
+    #collapse-4.panel-collapse.collapse{ role: 'tabpanel', 'aria-labelledby': 'heading-4' }
+      .panel-body
+        %ul
+          %li validation of all user data submitted to the server.
 
-  %h4 User roles
-  %p Admin users have additional permissions and the ability to:
-  %ul
-    %li view the information about other users, including their registration date and last activity time;
-    %li view the list of all users.  
+  .panel.panel-default
+    .panel-heading{ role: 'tab', id: 'heading-5' }
+      .panel-title
+        = link_to '#collapse-5', role: 'button', 'data-toggle': 'collapse', 'aria-expanded': 'false', 'aria-controls': 'collapse-5' do
+          %span.glyphicon.glyphicon-chevron-right
+          Authorization (based on Pundit)
+    #collapse-5.panel-collapse.collapse{ role: 'tabpanel', 'aria-labelledby': 'heading-5' }
+      .panel-body
+        %p Permissions:
+        %ul
+          %li signed in users cannot sign up or sign in another time;
+          %li visitors cannot sign out;
+          %li email confirmation links can be requested only by signed in users who have not yet confirmed their email;
+          %li email confirmation links can be accessed by anyone except signed in users who have already confirmed their email;
+          %li anyone can request and access password reset links;
+          %li anyone can change the locale;
+          %li only signed in users can view their profile, change their name, photo, password and email;
+          %li only signed in admin users can view the profiles of other users;
+          %li only signed in users who have a pending email change request can cancel it.
+        %p Friendly redirection of users that are asked to sign in to access a protected page.
+        %p Error handling and messaging customizable on a per-controller and per-action basis.
 
-  %h4 User profile
-  %p Allows registered users to:
-  %ul
-    %li view and modify their name and email;
-    %li change their profile photo;
-    %li change and reset their password;
-    %li set the preferred language.
+  .panel.panel-default
+    .panel-heading{ role: 'tab', id: 'heading-6' }
+      .panel-title
+        = link_to '#collapse-6', role: 'button', 'data-toggle': 'collapse', 'aria-expanded': 'false', 'aria-controls': 'collapse-6' do
+          %span.glyphicon.glyphicon-chevron-right
+          User roles
+    #collapse-6.panel-collapse.collapse{ role: 'tabpanel', 'aria-labelledby': 'heading-6' }
+      .panel-body
+        %p Admin users have additional permissions and the ability to:
+        %ul
+          %li view the information about other users, including their registration date and last activity time;
+          %li view the list of all users.
 
-  %h4 Ajax and JavaScript
-  %ul
-    %li signin via a modal window;
-    %li validation on the signup form;
-    %li profile photo upload and deletion;
-    %li sorting, searching and endless scrolling of the all users list.
+  .panel.panel-default
+    .panel-heading{ role: 'tab', id: 'heading-7' }
+      .panel-title
+        = link_to '#collapse-7', role: 'button', 'data-toggle': 'collapse', 'aria-expanded': 'false', 'aria-controls': 'collapse-7' do
+          %span.glyphicon.glyphicon-chevron-right
+          User profile
+    #collapse-7.panel-collapse.collapse{ role: 'tabpanel', 'aria-labelledby': 'heading-7' }
+      .panel-body
+        %p Allows registered users to:
+        %ul
+          %li view and modify their name and email;
+          %li change their profile photo;
+          %li change and reset their password;
+          %li set the preferred language.
 
-  %h4 Internationalization and localization
-  %ul
-    %li two available locales: English (default) and Russian;
-    %li visitors can select their preferred locale on any page;
-    %li logged users can set their preferred locale in the account settings;
-    %li for visitors the locale is set based on a cookie, for registered users - according to their preferences, stored in the database;
-    %li the locale can be passed as a parameter in the url, in which case it always takes precedence.
+  .panel.panel-default
+    .panel-heading{ role: 'tab', id: 'heading-8' }
+      .panel-title
+        = link_to '#collapse-8', role: 'button', 'data-toggle': 'collapse', 'aria-expanded': 'false', 'aria-controls': 'collapse-8' do
+          %span.glyphicon.glyphicon-chevron-right
+          Ajax and JavaScript
+    #collapse-8.panel-collapse.collapse{ role: 'tabpanel', 'aria-labelledby': 'heading-8' }
+      .panel-body
+        %ul
+          %li signin via a modal window;
+          %li validation on the signup form;
+          %li profile photo upload and deletion;
+          %li sorting, searching and endless scrolling of the list of all users.
 
-  %h4 Email features
-  %ul
-    %li after signing up, a user is sent a welcome email;
-    %li when agreeing to confirm their email address, a user is sent a confirmation link;
-    %li after requesting their password to be reset, a user is emailed the relevant instructions;
-    %li after changing their email, a user is sent a notification to their old address and a confirmation link to the new one.
+  .panel.panel-default
+    .panel-heading{ role: 'tab', id: 'heading-9' }
+      .panel-title
+        = link_to '#collapse-9', role: 'button', 'data-toggle': 'collapse', 'aria-expanded': 'false', 'aria-controls': 'collapse-9' do
+          %span.glyphicon.glyphicon-chevron-right
+          Internationalization and localization
+    #collapse-9.panel-collapse.collapse{ role: 'tabpanel', 'aria-labelledby': 'heading-9' }
+      .panel-body
+        %ul
+          %li two available locales: English (default) and Russian;
+          %li visitors can select their preferred locale on any page;
+          %li signed in users can set their preferred locale in the account settings;
+          %li for visitors the locale is set based on a cookie, for registered users - according to their preferences, stored in the database;
+          %li the locale can also be passed as a parameter in the url, in which case it always takes precedence.
+
+  .panel.panel-default
+    .panel-heading{ role: 'tab', id: 'heading-10' }
+      .panel-title
+        = link_to '#collapse-10', role: 'button', 'data-toggle': 'collapse', 'aria-expanded': 'false', 'aria-controls': 'collapse-10' do
+          %span.glyphicon.glyphicon-chevron-right
+          Email features
+    #collapse-10.panel-collapse.collapse{ role: 'tabpanel', 'aria-labelledby': 'heading-10' }
+      .panel-body
+        %ul
+          %li after signing up, the user is sent a welcome email;
+          %li when agreeing to confirm their email address, the user is sent a confirmation link;
+          %li after requesting their password to be reset, the user is emailed the relevant instructions;
+          %li after changing their email, the user is sent a notification to their old address and a confirmation link to the new one.

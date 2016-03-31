@@ -1,18 +1,6 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
 
-function makeEmailConfirmationFieldsTogglable() {
-  var $toggleableRows = $('#userInfo .padded'),
-      $toggle = $('#userInfo .collapse-toggle'),
-      $spanWithIcon = $toggle.find('span.glyphicon');
-
-  $toggleableRows.hide();
-  $toggle.on('click', function() {
-    $toggleableRows.toggle();
-    $spanWithIcon.toggleClass('glyphicon-menu-down glyphicon-menu-up');
-  });
-}
-
 function showSearchFields() {
   $('#users tr.hidden').removeClass('hidden');
 }
@@ -202,8 +190,8 @@ Validator.prototype = {
   },
 
   updateErrors: function() {
-    var $errorDiv = $('.' + this.errorDivClass),
-        $newErrorDiv = this.buildErrorDiv();
+    var $errorDiv    = $('.' + this.errorDivClass);
+    var $newErrorDiv = this.buildErrorDiv();
     if ($errorDiv.length) {
       if ($newErrorDiv.length) {
         if ($newErrorDiv.text() !== $errorDiv.text()) {
@@ -238,7 +226,7 @@ Validator.prototype = {
         self.considerEdited(this);
         callDelayed(function() {
           self.validate(self.dataToValidate());
-        }, 1000);
+        }, 750);
       })
       .on('blur', function() {
         self.validate(self.dataToValidate());
@@ -260,9 +248,8 @@ $(document).on('page:change', function() {
     }
   }).enable();
 
-  makeEmailConfirmationFieldsTogglable();  
   enableEndlessScrolling();  
   makeUsersTableSortableViaAjax();
   makeUsersTableSearchableViaAjax();
-  makeUsersTableRowsClickable();
+  makeUsersTableRowsClickable();  
 });

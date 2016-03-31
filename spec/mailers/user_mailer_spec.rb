@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe UserMailer do
-  let(:default_from) { ['noreply@example.com'] }
+  let(:default_from) { ['noreply@twilight-glade.herokuapp.com'] }
   let(:user) { FactoryGirl.create(:user) }
 
   describe "#welcome" do
@@ -17,6 +17,7 @@ describe UserMailer do
 
     it "renders the body" do
       expect(mail.body.encoded).to match t('v.user_mailer.welcome')
+      expect(mail.body.encoded).to include user.first_name
     end
   end
 
@@ -34,6 +35,7 @@ describe UserMailer do
     it "renders the body" do
       email_confirmation_link_regex = /\/confirm\/(.+)/i
       expect(mail.body.encoded).to match email_confirmation_link_regex
+      expect(mail.body.encoded).to include user.first_name
     end
   end
 
@@ -51,6 +53,7 @@ describe UserMailer do
     it "renders the body" do
       email_confirmation_link_regex = /\/confirm\/(.+)/i
       expect(mail.body.encoded).to match email_confirmation_link_regex
+      expect(mail.body.encoded).to include user.first_name
     end
   end
 
@@ -68,6 +71,7 @@ describe UserMailer do
 
     it "renders the body" do
       expect(mail.body.encoded).to match t('v.user_mailer.email_changed_notice')
+      expect(mail.body.encoded).to include user.first_name
     end
   end
 
@@ -85,6 +89,7 @@ describe UserMailer do
     it "renders the body" do
       password_reset_link_regex = /\/recover\/(.+)/i
       expect(mail.body.encoded).to match password_reset_link_regex
+      expect(mail.body.encoded).to include user.first_name
     end
   end
 end

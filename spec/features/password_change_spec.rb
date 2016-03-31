@@ -12,7 +12,7 @@ feature "Password change page" do
     sign_in_as user
     page.find('#accountDropdown').click
     click_link settings_link
-    click_link password_change_link
+    within('.password') { click_link password_change_link }
   end
 
   subject do

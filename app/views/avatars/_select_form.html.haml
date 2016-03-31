@@ -1,5 +1,6 @@
 = link_to t('v.avatars.change_link'), '#', class: 'pull-left'
 - if user.avatar.file?
+  %br
   = render 'avatars/delete_link'  
 = form_tag avatars_path, multipart: true do
   .input-group.form-group

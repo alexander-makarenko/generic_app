@@ -149,66 +149,36 @@ describe "The profile page" do
         expect(page).to have_selector '#avatar'
       end
 
-      describe "has a table that" do
-        subject { page.find('#userInfo') }
+      feature "table" do
+        given(:table) { find('table#userInfo') }
 
-        specify "contains the user's full name" do
-          expect(subject).to have_content user.name
+        scenario "contains the user's full name" do
+          expect(table).to have_content user.name
         end
 
-        specify "contains the user's email" do
-          expect(subject).to have_content user.email
+        scenario "contains the user's email" do
+          expect(table).to have_content user.email
         end
 
-        context "when the email row is clicked", :js do
-          before do
-            subject.find('.collapse-toggle').click
-          end
-
-          context "once" do
-            specify "the icon on it changes to an upward pointing arrow" do
-              expect(subject.find('span')[:class]).to include('glyphicon-menu-up')
-            end
-
-            specify "the user's email address status is shown" do
-              expect(subject).to have_content email_status
-            end
-            
-            specify "the user's confirmation email status is shown" do
-              expect(subject).to have_content confirmation_email_status
-            end
-          end          
-
-          context "twice" do
-            before do
-              subject.find('.collapse-toggle').click
-            end
-
-            specify "the icon on it changes to a downward pointing arrow" do
-              expect(subject.find('span')[:class]).to include('glyphicon-menu-down')
-            end
-
-            specify "the user's email address status is hidden" do
-              expect(subject).to_not have_content email_status
-            end
-            
-            specify "the user's confirmation email status is hidden" do
-              expect(subject).to_not have_content confirmation_email_status
-            end
-          end
-        end
-      
-        specify "contains the name of the user's locale" do
-          expect(subject).to have_content locale_name
+        scenario "contains the user's email status" do
+          expect(table).to have_content email_status
         end
 
-        specify "contains the user's registration date" do
-          expect(subject).to have_content user.created_at
+        scenario "contains the user's confirmation email status" do
+          expect(table).to have_content confirmation_email_status
         end
 
-        specify "contains the user's last seen at time" do
-          expect(subject).to have_content (/#{t('h.users_helper.ago')}/)
+        scenario "contains the name of the user's locale" do
+          expect(table).to have_content locale_name
         end
+
+        scenario "contains the user's registration date" do
+          expect(table).to have_content user.created_at
+        end
+
+        scenario "contains the user's last seen at time" do
+          expect(table).to have_content (/#{t('h.users_helper.ago')}/)
+        end        
       end
     end
   end

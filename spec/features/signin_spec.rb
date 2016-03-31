@@ -1,39 +1,5 @@
 require 'rails_helper'
 
-shared_examples "keep me signed in option" do
-  feature "keep me signed in option" do
-    context "if not checked" do
-      background do
-        sign_in_as(user)
-        expire_session_cookies
-        visit root_path
-      end
-      
-      scenario "the user gets signed out after they reopen the browser" do
-        within(navbar) do
-          expect(page).to have_link(signin_link)
-          expect(page).to_not have_link(signout_link)
-        end
-      end
-    end
-
-    context "if checked" do
-      background do
-        sign_in_as(user, keep_signed_in: true)
-        expire_session_cookies
-        visit root_path
-      end
-
-      scenario "the user stays signed in after they reopen the browser" do
-        within(navbar) do
-          expect(page).to_not have_link(signin_link)
-          expect(page).to have_link(signout_link)
-        end
-      end
-    end
-  end
-end
-
 feature "Signin" do
   given(:user) { FactoryGirl.create(:user) }
   given(:nonexistent_user) { FactoryGirl.build(:user) }
@@ -44,7 +10,80 @@ feature "Signin" do
   given(:error_message) { t 'c.sessions.invalid_credentials' }
 
   given(:navbar) { 'header nav' }
+  given(:footer) { 'footer' }
   given(:account_dropdown) { '#accountDropdown' }
+  given(:locale_selector)  { '#locale-selector' }
+
+  shared_examples "navigation bar changes as expected" do |user_role|
+    scenario "navigation bar changes as expected" do
+      within(navbar) do
+        expect(page).to have_no_link(signin_link)
+        expect(page).to (user_role.try(:to_sym) == :admin ? have_link(users_link) : have_no_link(users_link))
+        expect(page).to have_content(user.name)
+        find(account_dropdown).click
+        expect(page).to have_link(signout_link)
+      end
+    end
+  end
+
+  shared_examples "navigation bar doesn't change" do
+    scenario "navigation bar doesn't change" do
+      within(navbar) do
+        expect(page).to have_link(signin_link)
+        expect(page).to_not have_link(signout_link)
+      end
+    end
+  end
+
+  shared_examples "footer changes as expected" do
+    scenario "footer changes as expected" do
+      within(footer) do
+        expect(page).to have_no_selector(locale_selector)
+      end
+    end
+  end
+
+  shared_examples "footer doesn't change" do
+    scenario "footer doesn't change" do
+      within(footer) do
+        expect(page).to have_selector(locale_selector)
+      end
+    end
+  end
+
+  shared_examples "keep me signed in option" do
+    feature "keep me signed in option" do
+      context "if not checked" do
+        background do
+          sign_in_as(user)
+          expire_session_cookies
+          visit root_path
+        end
+        
+        scenario "the user gets signed out after they reopen the browser" do
+          within(navbar) do
+            expect(page).to have_link(signin_link)
+            expect(page).to_not have_link(signout_link)
+          end
+        end
+      end
+
+      context "if checked" do
+        background do
+          sign_in_as(user, keep_signed_in: true)
+          expire_session_cookies
+          visit root_path
+        end
+
+        scenario "the user stays signed in after they reopen the browser" do
+          within(navbar) do
+            expect(page).to_not have_link(signin_link)
+            expect(page).to have_link(signout_link)
+          end
+        end
+      end
+    end
+  end
 
   background do
     visit root_path
@@ -65,12 +104,9 @@ feature "Signin" do
         sign_in_as(nonexistent_user)
       end
 
-      scenario "navigation bar doesn't change" do
-        within(navbar) do
-          expect(page).to have_link(signin_link)
-          expect(page).to_not have_link(signout_link)
-        end
-      end
+      include_examples "navigation bar doesn't change"
+
+      include_examples "footer doesn't change"
 
       scenario "the user stays on the same page" do
         expect(page).to have_selector('h2', text: heading)
@@ -86,15 +122,17 @@ feature "Signin" do
         sign_in_as(user)
       end
 
-      scenario "navigation bar changes as expected" do
-        within(navbar) do
-          expect(page).to have_no_link(signin_link)
-          expect(page).to have_link(users_link)
-          expect(page).to have_content(user.name)
-          find(account_dropdown).click
-          expect(page).to have_link(signout_link)
-        end
+      context "that belong to a regular user" do
+        include_examples "navigation bar changes as expected"
       end
+
+      context "that belong to an admin user" do
+        given(:user) { FactoryGirl.create(:user, :admin) }
+
+        include_examples "navigation bar changes as expected", :admin
+      end
+
+      include_examples "footer changes as expected"
 
       scenario "the user is redirected to the home page" do
         expect(current_path).to eq root_path
@@ -145,12 +183,9 @@ feature "Signin" do
         wait_for_ajax
       end
 
-      scenario "navigation bar doesn't change" do
-        within(navbar) do
-          expect(page).to have_link(signin_link)
-          expect(page).to_not have_link(signout_link)
-        end
-      end
+      include_examples "navigation bar doesn't change"
+
+      include_examples "footer doesn't change"
 
       scenario "an error appears in the modal" do
         within(modal) do
@@ -184,15 +219,17 @@ feature "Signin" do
         wait_for_ajax
       end
 
-      scenario "navigation bar changes as expected" do
-        within(navbar) do
-          expect(page).to have_no_link(signin_link)
-          expect(page).to have_link(users_link)
-          expect(page).to have_content(user.name)
-          find(account_dropdown).click
-          expect(page).to have_link(signout_link)
-        end
+      context "that belong to a regular user" do
+        include_examples "navigation bar changes as expected"
       end
+
+      context "that belong to an admin user" do
+        given(:user) { FactoryGirl.create(:user, :admin) }
+
+        include_examples "navigation bar changes as expected", :admin
+      end
+
+      include_examples "footer changes as expected"
     end
   end
 

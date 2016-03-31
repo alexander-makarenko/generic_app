@@ -1,9 +1,9 @@
 $('.alert-success, .validation-errors').remove();
 
 :plain
-  var flashHtml,
-      avatarImage = $('#avatar'),
-      avatarDeleteLink = $('.photo form.button_to');
+  var flashHtml;
+  var avatarImage      = $('#avatar');
+  var avatarDeleteLink = $('.photo form.button_to');
 
 - flash.now[:success] = @message
 flashHtml = "#{j(render 'layouts/flash')}";

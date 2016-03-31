@@ -31,6 +31,10 @@ module SessionsHelper
     !current_user.nil?
   end
 
+  def admin?
+    current_user.admin?
+  end
+
   def store_location
     session[:return_to] = request.original_url if request.get?
   end

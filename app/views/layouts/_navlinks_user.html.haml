@@ -1,7 +1,8 @@
-%li
-  = link_to users_path do
-    %span.glyphicon.glyphicon-list-alt
-    = t('v.layouts._header.nav_links.users')
+- if admin?
+  %li
+    = link_to users_path do
+      %span.glyphicon.glyphicon-list-alt
+      = t('v.layouts._header.nav_links.users')
 %li.dropdown
   = link_to '#', class: 'dropdown-toggle', id: 'accountDropdown', 'data-toggle': 'dropdown', role: 'button' do
     %span.glyphicon.glyphicon-user

@@ -100,7 +100,7 @@ en:
     password_changes:
       password_changed: "New password saved."
     password_resets:
-      instructions_sent: "Further instructions have been sent to %{email})."
+      instructions_sent: "Further instructions have been sent to %{email}."
       link_expired: "The link has expired. If you still want to reset your
           password, please click %{get_new_link}."
       link_invalid: "The link is invalid. If you still want to reset your password
@@ -153,8 +153,7 @@ en:
   v: # views
     layouts:
       _header:
-        nav_links:
-          account: "Account"
+        nav_links:          
           sign_in: "Sign in"
           sign_out: "Sign out"
           settings: "Settings"
@@ -237,9 +236,9 @@ en:
         your account. Further instructions have been sent to your new email
         address."
       email_confirmation:
-        click_link: "Please click the link below to confirm your email address:"
+        click_link: "Please click the following link to confirm your email address:"
       password_reset:
-        click_link: "To reset your password, please click the link below:"
+        click_link: "To reset your password, please click the following link:"
         ignore: "If you didn't request your password to be reset, please ignore
           this message and your password will remain unchanged."
       welcome: "You have successfully created an account. Welcome to our
@@ -256,24 +255,24 @@ en:
         signin_link: "Sign in"
         submit_button: "Sign up"        
       show:
-        heading: "Account"
+        heading: "Settings"
         subheadings:
           email: "Email"          
           language: "Language"
           password: "Password"
           photo: "Photo"
-        name_change: "Change name"
+        name_change: "Change"
         email_change: "Change"
         password_reset: "Forgot password?"
-        password_change: "Change password"
+        password_change: "Change"
       show_admin:
         heading: "User info"
         full_name: "Full name"
         email: "Email"
-        email_status: "Сonfirmed"
-        email_confirmation_sent_at: "Сonfirmation sent at"
+        email_status: "Email confirmed"
+        email_confirmation_sent_at: "Email confirmation sent at"
         locale: "Locale"
-        registered_on: "Registration date"
+        registered_on: "Registered at"
         last_seen: "Last seen"
       index:
         th_id: "ID"

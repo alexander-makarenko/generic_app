@@ -1,11 +1,12 @@
 :plain
-  var $modal = $('#signinModal'),
-      $modalBody = $modal.find('.modal-body'),
-      $errorDiv = $modalBody.find('.alert');
+  var $modal     = $('#signinModal');
+  var $modalBody = $modal.find('.modal-body');
+  var $errorDiv  = $modalBody.find('.alert');
 
 - if signed_in?
   $modal.modal('hide');
   $('header nav ul').html("#{j(render 'layouts/navlinks_user')}");
+  $('footer').replaceWith("#{j(render 'layouts/footer')}");
 - else
   :plain
     var errorHtml = "#{j(render 'layouts/flash', no_close_button: true)}";

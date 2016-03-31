@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 feature "Signout" do
   given(:user) { FactoryGirl.create(:user, locale: :ru) }
   given(:signin_link) { t 'v.layouts._header.nav_links.sign_in' }

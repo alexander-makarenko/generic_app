@@ -1,12 +1,12 @@
 $('.alert-success, .validation-errors').remove();
 
 :plain
-  var flashHtml,
-      validationErrorsHtml,
-      avatarImage = $('#avatar'),
-      avatarUploadForm = $('.photo form:last-child'),
-      avatarDeleteLink = $('.photo form.button_to'),
-      avatarDeleteLinkHtml;
+  var flashHtml;
+  var validationErrorsHtml;
+  var avatarImage      = $('#avatar');
+  var avatarUploadForm = $('.photo form:last-child');
+  var avatarDeleteLink = $('.photo form.button_to');
+  var avatarDeleteLinkHtml;
 
 - if @user.save
   

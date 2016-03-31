@@ -2,8 +2,8 @@
   %div{ class: 'btn-group', id: 'locale-selector', role: 'group',
   'aria-label' => 'Site language' }
     - I18n.available_locales.each do |locale|
+      - locale_name = t("v.shared._locale_selector.#{locale}")
       - if I18n.locale == locale
-        = content_tag :span, t("v.shared._locale_selector.#{locale}"),
-        class: ['btn', 'btn-default', 'disabled']
+        = content_tag :span, locale_name, class: ['btn', 'btn-default', 'disabled']
       - else
-        = f.submit t("v.shared._locale_selector.#{locale}"), role: 'button'
+        = f.submit locale_name, role: 'button'

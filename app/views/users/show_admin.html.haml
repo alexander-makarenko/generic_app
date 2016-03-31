@@ -1,23 +1,21 @@
 %h2.text-center= t('v.users.show_admin.heading')
-.row#userInfo
-  .col-xs-4
+.row
+  .col-xs-12.col-sm-4
     = image_tag @user.avatar.url(:medium), id: 'avatar'
-  .col-xs-8
-    %table.table.table-bordered
+  .col-xs-12.col-sm-8
+    %table.table.table-bordered.table-hover#userInfo
       %tbody
         %tr
           %th= t('v.users.show_admin.full_name')
           %td= @user.name
-        %tr.collapse-toggle
+        %tr
           %th= t('v.users.show_admin.email')
-          %td
-            = @user.email
-            %span{ class: 'pull-right glyphicon glyphicon-menu-down', 'aria-hidden': 'true'}
-        %tr.padded
-          %td= t('v.users.show_admin.email_status')
+          %td= @user.email
+        %tr
+          %th= t('v.users.show_admin.email_status')
           %td= humanize_boolean(@user.email_confirmed)
-        %tr.padded
-          %td= t('v.users.show_admin.email_confirmation_sent_at')
+        %tr
+          %th= t('v.users.show_admin.email_confirmation_sent_at')
           %td= @user.email_confirmation_sent_at || '—'
         %tr
           %th= t('v.users.show_admin.registered_on')
