@@ -17,8 +17,6 @@ gem 'turbolinks'
 gem 'jbuilder'
 gem 'pundit', github: 'elabs/pundit'
 gem 'rails-i18n'
-# gem 'coffee-rails'
-# gem 'lodash-rails'
 gem 'paperclip', github: 'thoughtbot/paperclip', ref: '523bd46c768226893f23889079a7aa9c73b57d68'
 gem 'jquery-fileupload-rails'
 gem 'bootstrap-will_paginate'
@@ -49,7 +47,3 @@ group :production do
   gem 'rails_12factor'
   gem 'aws-sdk'
 end
-
-# group :doc do
-#   gem 'sdoc', '~> 0.4.0'
-# end

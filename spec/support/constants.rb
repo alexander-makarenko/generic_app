@@ -9,6 +9,7 @@ INVALID_EMAILS = %w[
 ]
 
 VALID_EMAILS = %w[
+  user@foo-bar.baz.com
   user@example.com
   first.last@somewhere.COM
   fir5t_la5t@somewhe.re
