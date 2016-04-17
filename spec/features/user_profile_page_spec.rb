@@ -132,7 +132,8 @@ describe "The profile page" do
 
     context "and is visited by an admin user" do
       let(:admin) { FactoryGirl.create(:user, :admin) }
-      let(:email_status) { t('v.users.show_admin.email_status') }
+      let(:role) { t('v.users.show_admin.admin') }
+      let(:email_status) { t('v.users.show_admin.email_status') }      
       let(:confirmation_email_status) { t('v.users.show_admin.email_confirmation_sent_at') }
       let(:locale_name) { t("v.shared._locale_selector.#{user.locale}") }
       
@@ -152,33 +153,37 @@ describe "The profile page" do
       feature "table" do
         given(:table) { find('table#userInfo') }
 
-        scenario "contains the user's full name" do
+        scenario "lists the user's full name" do
           expect(table).to have_content user.name
         end
 
-        scenario "contains the user's email" do
+        scenario "lists the user's email" do
           expect(table).to have_content user.email
         end
 
-        scenario "contains the user's email status" do
+        scenario "lists the user's email status" do
           expect(table).to have_content email_status
         end
 
-        scenario "contains the user's confirmation email status" do
+        scenario "lists the user's confirmation email status" do
           expect(table).to have_content confirmation_email_status
         end
 
-        scenario "contains the name of the user's locale" do
+        scenario "lists the name of the user's locale" do
           expect(table).to have_content locale_name
         end
 
-        scenario "contains the user's registration date" do
+        scenario "lists the user's registration date" do
           expect(table).to have_content user.created_at
         end
 
-        scenario "contains the user's last seen at time" do
+        scenario "lists the user's last seen at time" do
           expect(table).to have_content (/#{t('h.users_helper.ago')}/)
-        end        
+        end
+
+        scenario "lists the user's role" do
+          expect(table).to have_content role
+        end
       end
     end
   end

@@ -9,46 +9,48 @@ describe "Changing and deleting the profile photo." do
   let(:remove_photo_link) { t 'v.avatars.delete_link' }
   let(:success_box) { '.main .alert-success' }
 
-  subject { page.find('.photo') }
+  subject { find('.photo') }
 
   before do
     visit signin_path
     sign_in_as user
-    page.find('#accountDropdown').click
+    find('#accountDropdown').click
     click_link settings_link
     within(subject) { click_link change_photo_link }
   end
 
-  describe "Upload form." do
-    context "When the user has JS enabled,", :js do
-      describe "the form" do
-        it "is toggled when the user clicks the respective link" do
-          expect(subject).to have_selector('form', count: 1)
-          within(subject) { click_link change_photo_link }
-          expect(subject).to_not have_selector('form', count: 1)
-        end
-
-        it "has a text field" do
-          expect(subject.find('form')).to have_selector("input[type='text']")
-        end
-
-        it "has a disabled upload button" do
-          expect(subject.find_button(submit_photo_button)[:class]).to include('disabled')
-        end
+  describe "Upload form" do
+    context "with JS", :js do
+      it "is toggled when the user clicks the respective link" do
+        expect(subject).to have_selector('form', count: 1)
+        within(subject) { click_link change_photo_link }
+        expect(subject).to_not have_selector('form', count: 1)
       end
 
-      context "after the user selects a file, the form" do
-        let(:file_name) { 'valid.jpg' }
+      it "has a text field" do
+        expect(subject.find('form')).to have_selector("input[type='text']")
+      end
 
+      it "has an upload button that is disabled" do
+        expect(subject.find_button(submit_photo_button)[:class]).to include('disabled')
+      end
+      
+      context "when a file is selected" do
         before do
-          attach_photo(file_name)
+          attach_photo('valid.jpg')
         end
 
-        it "shows the file name in the text field" do
-          expect(subject.find("input[type='text']").value).to eq file_name
+        context "multiple times" do
+          before do
+            attach_photo('invalid.bmp')
+          end
+
+          specify "the text field shows the name of the last selected file" do
+            expect(subject.find("input[type='text']").value).to eq 'invalid.bmp'
+          end
         end
 
-        it "has the upload button enabled" do
+        specify "the upload button is enabled" do
           expect(subject.find_button(submit_photo_button)[:class]).to_not include('disabled')
         end
       end
@@ -74,8 +76,8 @@ describe "Changing and deleting the profile photo." do
     end
 
     shared_examples "invalid submission" do
-      it "the profile photo is not changed" do        
-        expect(page.find('#avatar')).to have_xpath("//img[contains(@src, 'missing')]")
+      it "the profile photo is not changed" do
+        expect(find('#avatar')).to have_xpath("//img[contains(@src, 'missing')]")
       end
 
       it "validation errors are shown" do
@@ -87,10 +89,10 @@ describe "Changing and deleting the profile photo." do
       let(:photo_changed) { t 'c.avatars.changed' }
 
       it "the profile photo is changed" do
-        expect(page.find('#avatar')).to have_xpath("//img[contains(@src, file_name)]")
+        expect(find('#avatar')).to have_xpath("//img[contains(@src, file_name)]")
       end
 
-      it "an appropriate flash is shown" do        
+      it "an appropriate flash is shown" do
         expect(page).to have_selector(success_box, text: photo_changed)
       end
     end
@@ -133,7 +135,7 @@ describe "Changing and deleting the profile photo." do
             expect(subject).to have_selector('form', count: 1)
           end
 
-          it "a delete link is added to the layout" do
+          it "a delete link is added to the layout" do          
             expect(subject).to have_button(remove_photo_link, count: 1)
           end
 
@@ -181,12 +183,12 @@ describe "Changing and deleting the profile photo." do
       shared_examples "shared" do
         let(:photo_removed) { t 'c.avatars.deleted' }
 
-        it "the delete link is removed from the layout" do
+        it "the delete link is removed from the the layout" do
           expect(page.find('.photo')).to_not have_button remove_photo_link
         end
 
         it "the profile photo is changed to default" do
-          expect(page.find('#avatar')).to have_xpath("//img[contains(@src, 'missing')]")
+          expect(find('#avatar')).to have_xpath("//img[contains(@src, 'missing')]")
         end
 
         it "an appropriate flash is shown" do
@@ -213,13 +215,13 @@ describe "Changing and deleting the profile photo." do
       context "and has JS enabled,", :js do
         context "after the user clicks the delete link," do
           before do
-            within(subject) do
+            within(subject) do              
               click_button remove_photo_link
             end
           end
 
           it "the page is not reloaded" do
-            expect(subject).to have_selector('form', count: 1)
+            expect(subject).to have_selector('form#avatarUpload', count: 1)
           end
 
           include_examples "shared"

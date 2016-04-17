@@ -2,12 +2,12 @@ $('.alert-success, .validation-errors').remove();
 
 :plain
   var flashHtml;
-  var avatarImage      = $('#avatar');
-  var avatarDeleteLink = $('.photo form.button_to');
+  var $avatar           = $('img#avatar');
+  var $avatarDeleteLink = $('.photo #avatarDelete');
 
 - flash.now[:success] = @message
 flashHtml = "#{j(render 'layouts/flash')}";
 
-avatarImage.attr('src', "#{asset_path(@user.avatar.url(:medium))}");
+$avatar.attr('src', "#{asset_path(@user.avatar.url(:medium))}");
 $('.main div:first').prepend(flashHtml);
-avatarDeleteLink.remove();
+$avatarDeleteLink.remove();

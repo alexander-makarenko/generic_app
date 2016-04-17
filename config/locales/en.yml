@@ -271,9 +271,10 @@ en:
         email: "Email"
         email_status: "Email confirmed"
         email_confirmation_sent_at: "Email confirmation sent at"
-        locale: "Locale"
+        locale: "Locale"        
         registered_on: "Registered at"
         last_seen: "Last seen"
+        admin: "Administrator"
       index:
         th_id: "ID"
         th_first_name: "First name"

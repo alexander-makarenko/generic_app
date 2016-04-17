@@ -195,17 +195,12 @@ nav {
       cursor: inherit;
       display: block;
     }
-  }
-  .btn-link {
-    vertical-align: top;
-  }
+  }  
   .button_to input[type='submit'] {
-    padding: 0;
-    border-width: 0;
+    padding: 0;    
   }
-  form:last-child {
-    clear: left;
-    padding: 15px 0 0;
+  form#avatarUpload {
+    padding: 10px 0 0;
     max-width: 500px;
     .input-group {
       .btn {
@@ -218,7 +213,7 @@ nav {
   }
 }
 
-#userInfo {  
+#userInfo {
   tr {
     cursor: pointer;
   } 

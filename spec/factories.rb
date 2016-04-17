@@ -40,9 +40,5 @@ FactoryGirl.define do
     trait :photo_uploaded do
       avatar { File.new("#{Rails.root}/spec/support/attachments/users/avatars/valid.jpg") }
     end
-
-    # trait :email_not_confirmed_in_time do
-    #   email_confirmation_sent_at { 3.days.ago }
-    # end
   end
 end

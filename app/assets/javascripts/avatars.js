@@ -4,7 +4,7 @@
 $(document).on('page:change', function() {
 
   var $avatarChangeLink = $('.photo a:first');
-  var $avatarUploadForm = $('.photo form:last-child');
+  var $avatarUploadForm = $('.photo #avatarUpload');
   var $fileInput        = $avatarUploadForm.find(':file');
   var $fileNameField    = $avatarUploadForm.find(':text');
   var $fileSubmitButton = $avatarUploadForm.find(':submit');
@@ -41,6 +41,7 @@ $(document).on('page:change', function() {
   $(function() {
     $fileInput.fileupload({
       dataType: 'script',
+      replaceFileInput: false,
       add: function(e, data) {
         $fileSubmitButton.off('click').on('click', function() {
           data.submit();

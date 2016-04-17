@@ -296,6 +296,7 @@ ru:
         locale: "Язык"
         registered_on: "Зарегистрирован"
         last_seen: "Последнее посещение"
+        admin: "Администратор"
       index:
         th_id: "ID"
         th_first_name: "Имя"

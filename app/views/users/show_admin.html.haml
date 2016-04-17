@@ -26,3 +26,6 @@
         %tr
           %th= t('v.users.show_admin.locale')
           %td= humanize_locale(@user.locale)
+        %tr
+          %th= t('v.users.show_admin.admin')
+          %td= humanize_boolean(@user.admin)
