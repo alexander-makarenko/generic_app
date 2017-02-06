@@ -1,6 +1,6 @@
 ## About
 
-A simple Ruby on Rails project ready to be deployed on Heroku.
+A Rails 4 app with a standard set of features, which I used as a playground to learn web-development.
 
 ## Key features
 
@@ -24,10 +24,8 @@ See this project deployed and running at [https://twilight-glade.herokuapp.com/]
 
 ### How to use
 
-1. Click *Sign in* on the navbar.
+1. Sign in as an admin with `admin@twilight-glade.herokuapp.com` / `qwerty`.
 
-2. Sign in as an admin with `admin@twilight-glade.herokuapp.com` / `qwerty`.
+2. Click around to see what's possible.
 
-3. Click around to see what's possible.
-
-4. Optionally, register your own (non-admin) account to try out the email features.
+You can also register your own (non-admin) account to try out the email features.

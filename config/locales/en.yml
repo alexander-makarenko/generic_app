@@ -47,6 +47,8 @@ en:
             email:
               blank: "is required"
   activerecord:
+    models:
+      attachment: "attachment"
     attributes:
       user:
         avatar_content_type: "photo"
@@ -153,7 +155,7 @@ en:
   v: # views
     layouts:
       _header:
-        nav_links:          
+        nav_links:
           sign_in: "Sign in"
           sign_out: "Sign out"
           settings: "Settings"
@@ -217,7 +219,7 @@ en:
           password: "Password"
         password_reset: "Forgot password?"
         keep_signed_in: "Keep me signed in"
-        submit_button: "Sign in"        
+        submit_button: "Sign in"
         signup_link: "Sign up"
     shared:
       _validation_errors:
@@ -253,11 +255,11 @@ en:
           password: "Password"
           password_confirmation: "Retype password"
         signin_link: "Sign in"
-        submit_button: "Sign up"        
+        submit_button: "Sign up"
       show:
         heading: "Settings"
         subheadings:
-          email: "Email"          
+          email: "Email"
           language: "Language"
           password: "Password"
           photo: "Photo"
@@ -271,7 +273,7 @@ en:
         email: "Email"
         email_status: "Email confirmed"
         email_confirmation_sent_at: "Email confirmation sent at"
-        locale: "Locale"        
+        locale: "Locale"
         registered_on: "Registered at"
         last_seen: "Last seen"
         admin: "Administrator"
